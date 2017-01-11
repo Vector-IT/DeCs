@@ -1,0 +1,8 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^admin/objeto/([^/]*)/? /admin/objeto.php?tb=$1 [L,PT]
+
+RewriteCond %{REQUEST_URI}  !\.(css|js|php|html?|shtml|jpg|gif|png|jpeg|eot|otf|svg|ttf|woff|woff2|pdf)$
+RewriteRule ^(.*)([^/])$ http://%{HTTP_HOST}/$1$2/ [L,R=301]
+</IfModule>

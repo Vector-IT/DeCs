@@ -1,0 +1,45 @@
+
+	<meta charset="UTF-8">
+	<meta name="author" content="Vector-IT" />
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+
+	<link rel="shortcut icon" href="img/favicon.png" type="image/png" />
+	<link rel="apple-touch-icon" href="img/favicon.png"/>
+
+	<title><?php echo $config->titulo ?></title>
+
+	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+<?php if (isset($_SESSION['is_logged_in'])) { ?>
+	<script src="<?php echo $config->raiz ?>admin/js/vectorMenu.js"></script>
+<?php }?>
+
+	<!-- BOOTSTRAP -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<!-- FONT AWESOME -->
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
+	<!-- DATETIME PICKER -->
+	<link rel="stylesheet" type="text/css" href="<?php echo $config->raiz ?>admin/css/bootstrap-datetimepicker.css">
+	<script src="<?php echo $config->raiz ?>admin/js/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+	<script src="<?php echo $config->raiz ?>admin/js/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.es.js"></script>
+
+	<!-- TEXTAREA AUTOGROW -->
+	<script src="<?php echo $config->raiz ?>admin/js/jquery.ns-autogrow.min.js"></script>
+
+	<!-- BOOTSTRAP-SELECT -->
+	<link rel="stylesheet" type="text/css" href="<?php echo $config->raiz ?>admin/css/bootstrap-select.min.css">
+	<script src="<?php echo $config->raiz ?>admin/js/bootstrap-select/bootstrap-select.min.js"></script>
+	<script src="<?php echo $config->raiz ?>admin/js/bootstrap-select/i18n/defaults-es_CL.min.js"></script>
+
+	<!-- CKEditor -->
+	<script src="<?php echo $config->raiz ?>admin/ckeditor/ckeditor.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="<?php echo $config->raiz ?>admin/css/estilos.css">
+
+	<?php
+		echo '<base href="'. $config->raiz .'admin/" />';
+	?>
+

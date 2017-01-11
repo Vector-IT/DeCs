@@ -1,0 +1,223 @@
+<?php
+/**
+ * Archivo de configuracion general
+ *
+ * @author Vector-IT
+ * @package vectorAdmin
+ *
+ */
+require_once 'tabla.php';
+
+class VectorForms {
+	private $dbhost;
+	private $db;
+	private $dbuser;
+	private $dbpass;
+
+	public $raiz;
+	public $titulo;
+	public $logo;
+	public $tablas;
+	public $showTitulo;
+	public $menuItems = [];
+	
+	public $imgCKEditor = '';
+
+	/**
+	 * Constructor de la clase Configuracion
+	 *
+	 * @param string $dbhost
+	 * @param string $db
+	 * @param string $dbuser
+	 * @param string $dbpass
+	 * @param string $raiz
+	 * @param string $title
+	 * @param string $logo
+	 */
+	public function __construct($dbhost='', $db='', $dbuser='', $dbpass='', $raiz='', $titulo='', $logo='', $showTitulo=true) {
+		$this->dbhost = $dbhost;
+		$this->db = $db;
+		$this->dbuser = $dbuser;
+		$this->dbpass = $dbpass;
+		$this->raiz = $raiz;
+		$this->titulo = $titulo;
+		$this->logo = $logo;
+		$this->showTitulo = $showTitulo;
+	}
+
+	/**
+	 * Nueva conexión a la BD
+	 *
+	 * @return mysqli
+	 */
+	private function newConn() {
+		global $config;
+
+		$conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->db);
+		$conn->set_charset("utf8");
+
+		return $conn;
+	}
+
+
+	/**
+	 * Ejecutar comando en la BD
+	 *
+	 * @param string $strSQL
+	 * @return boolean|string
+	 */
+	public function ejecutarCMD($strSQL='') {
+		$conn = $this->newConn();
+		$strError = "";
+
+		if (!$conn->query($strSQL))
+			$strError = $conn->error;
+			$conn->close();
+
+			if ($strError == "") {
+				return true;
+			}
+			else {
+				return $strError;
+			}
+	}
+
+	/**
+	 * Ejecutar query en la BD y devolver el valor del primer campo
+	 *
+	 * @param string $strSQL
+	 * @return string
+	 */
+	public function buscarDato($strSQL) {
+
+		$conn = $this->newConn();
+
+		$strSalida = "";
+
+		if (!($tabla = $conn->query($strSQL))) {
+			$strSalida = "Error al realizar la consulta.";
+		}
+		else {
+			if ($tabla->num_rows > 0) {
+				$fila = $tabla->fetch_array();
+				$strSalida = $fila[0];
+				$tabla->free();
+			}
+			else {
+				$strSalida = '';
+			}
+		}
+
+		if (is_resource($conn)) {
+			$conn->close();
+		}
+
+		return $strSalida;
+	}
+
+	/**
+	 * Ejecutar query  en la BD y devolver el resultado
+	 *
+	 * @param string $strSQL
+	 * @return boolean|mysqli_result
+	 */
+	public function cargarTabla($strSQL) {
+		$conn = $this->newConn();
+
+		$tabla = $conn->query($strSQL);
+
+		$conn->close();
+
+		return $tabla;
+	}
+
+	/**
+	 * Crear menu de opciones
+	 */
+	public function crearMenu() {
+		global $config;
+
+		$strSalida = '';
+		$strSeparador = '<div class="separator"></div>';
+		$strItem = '<div class="item" data-url="#url#" title="#titulo#">';
+		$strItem.= '#titulo#';
+		$strItem.= '<div class="flRight"><i class="fa #icono# fa-fw"></i></div>';
+		$strItem.= '</div>';
+
+		$strSalida.= '<div id="sidebar" class="menuVector">';
+		$strSalida.= '<div class="absolute top5 right3">';
+		$strSalida.= '<button class="btnMenu btn btn-default btn-xs noMobile" title="Men&uacute;"><i class="fa fa-bars"></i></button>';
+		$strSalida.= '</div>';
+
+		$strSalida.= str_replace("#titulo#", "Inicio", str_replace("#icono#", "fa-home", str_replace("#url#", $this->raiz."admin/", $strItem)));
+		$strSalida.= $strSeparador;
+
+		foreach ($this->tablas as $tabla) {
+			if ($tabla->showMenu) {
+				if ($tabla->numeCarg != '') {
+					$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
+
+					if (intval($tabla->numeCarg) < $NumeCarg) {
+						continue;
+					}
+				}
+
+				$strSalida.= str_replace("#titulo#", $tabla->titulo, str_replace("#icono#", $tabla->icono, str_replace("#url#", $tabla->url, $strItem)));
+				$strSalida.= $strSeparador;
+			}
+		}
+
+		foreach ($this->menuItems as $item) {
+			if ($item["NumeCarg"] != '') {
+				$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
+
+				if (intval($item["NumeCarg"]) < $NumeCarg) {
+					continue;
+				}
+			}
+
+			$strSalida.= str_replace("#titulo#", $item["Titulo"], str_replace("#icono#", $item["Icono"], str_replace("#url#", $item["Url"], $strItem)));
+			$strSalida.= $strSeparador;
+
+		}
+
+		$strSalida.= '</div>';
+
+		$strSalida.= '<button class="btnMenu btn btn-default btn-xs fixed top5 left5 noDesktop" title="Men&uacute;"><i class="fa fa-bars"></i></button>';
+
+		echo $strSalida;
+	}
+
+
+	public function getTabla($name) {
+
+		return $this->tablas[$name];
+	}
+
+	public function get_random_string($valid_chars, $length)
+	{
+		// start with an empty random string
+		$random_string = "";
+
+		// count the number of chars in the valid chars string so we know how many choices we have
+		$num_valid_chars = strlen($valid_chars);
+
+		// repeat the steps until we've created a string of the right length
+		for ($i = 0; $i < $length; $i++)
+		{
+			// pick a random number from 1 up to the number of valid chars
+			$random_pick = mt_rand(1, $num_valid_chars);
+
+			// take the random character out of the string of valid chars
+			// subtract 1 from $random_pick because strings are indexed starting at 0, and we started picking at 1
+			$random_char = $valid_chars[$random_pick-1];
+
+			// add the randomly-chosen char onto the end of our string so far
+			$random_string .= $random_char;
+		}
+
+		// return our finished random string
+		return $random_string;
+	}
+}
+?>
