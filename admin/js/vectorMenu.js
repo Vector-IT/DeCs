@@ -9,7 +9,7 @@ $(document).ready(function() {
 	});
 	
 	$('.btnMenu').click(function() {
-		if ($(".vectorMenu").vectorMenu.isOpen())
+		if ($(".menuVector").vectorMenu.isOpen())
 			$( ".btnMenu" ).html('<i class="fa fa-times"></i>');
 		else
 			$( ".btnMenu" ).html('<i class="fa fa-bars"></i>');
@@ -84,11 +84,7 @@ function getVariable(variable){
 		//Variable del control del menu
 		var vsMenu = $(this);
 
-		//Verifico si estoy en un movil
-		var mob = false;
-		if ( /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-			mob = true;
-		}
+		var auxWidth;
 
 		//Creo la funcion que devuelve si el menu esta abierto o no
 		var isOpen = false;
@@ -96,11 +92,68 @@ function getVariable(variable){
 			return isOpen;
 		};
 		
-		
-		if (mob) {
-			settings.closeWidth = settings.closeWidthMobile;
-			settings.startVisible = settings.startVisibleMobile;
-		}
+		//Creo la funcion para re-dibujar el menu si se redimensiona la pantalla
+		$.fn.vectorMenu.reDraw = function () {
+			settings = $.extend({
+	            width: "250px",
+	            widthMobile: "200px",
+	            trigger: '#btnMenu',
+	            easing: "linear",
+	            effect: "slide",
+	            duration: 600,
+	            startVisible: false,
+	            startVisibleMobile: false,
+	            opacity: 0.6,
+	            background: "#000",
+	            closeWidth: "0",
+	            closeWidthMobile: "0",
+	            itemPadding: "10px 5px",
+	            itemColor: "#FFF",
+	            itemColorHover: "#000",
+	            itemBackground: "",
+	            itemBackgroundHover: "rgba(255, 255, 255, 0.8)",
+	            zindex: 1,
+	            setStyleItem: true,
+	            htmlBackgroundColor: "#FFF"
+	        }, options );
+			
+			//Verifico si estoy en un movil
+			var mob = false;
+			if ( /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+				mob = true;
+			}
+			
+			if (mob) {
+				settings.closeWidth = settings.closeWidthMobile;
+				settings.startVisible = settings.startVisibleMobile;
+			}
+			
+			if (!mob)
+				auxWidth = settings.width;
+			else
+				auxWidth = settings.widthMobile;
+
+			
+			//Seteo de estilos al menu
+			vsMenu.css({
+				position: "fixed", 
+				top: 0, 
+				bottom: 0, 
+				left: 0, 
+				width: auxWidth, 
+				opacity: settings.opacity, 
+				display: "none",
+				"padding-top": "50px",
+				background: settings.background,
+				"z-index": settings.zindex
+			});
+			
+			vsMenu.find("div").css("display", "block");
+			
+			//Si es necesario lo abro completa o parcialmente
+			if (settings.startVisible || settings.closeWidth != "0")
+				$(settings.trigger).click();
+		};
 		
 		if (settings.effect == "push") {
 			$("body").css({
@@ -114,30 +167,6 @@ function getVariable(variable){
 				"background-color": settings.htmlBackgroundColor
 			});
 		}
-		
-		var auxWidth;
-		
-		if (!mob)
-			auxWidth = settings.width;
-		else
-			auxWidth = settings.widthMobile;
-
-		
-		//Seteo de estilos al menu
-		vsMenu.css({
-			position: "fixed", 
-			top: 0, 
-			bottom: 0, 
-			left: 0, 
-			width: auxWidth, 
-			opacity: settings.opacity, 
-			display: "none",
-			"padding-top": "50px",
-			background: settings.background,
-			"z-index": settings.zindex
-		});
-		
-		vsMenu.find("div").css("display", "block");
 		
 		//Seteo de estilos a los items en estado normal
 		if (settings.setStyleItem) {
@@ -230,11 +259,13 @@ function getVariable(variable){
 					location.href = $(this).attr("data-url");
 			}
 		});
-		
-		//Si es necesario lo abro completa o parcailmente
-		if (settings.startVisible || settings.closeWidth != "0")
-			$(settings.trigger).click();
 
+		//Seteo los estilos del menu
+		vsMenu.vectorMenu.reDraw();
+
+		$(window).resize(function() {
+			vsMenu.vectorMenu.reDraw();
+		});
 	}
 }( jQuery ));
 

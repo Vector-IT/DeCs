@@ -56,8 +56,6 @@
 
 	.children {clear:both;}
 
-	.table td {text-transform:uppercase;}
-
 	footer { font-size:12px; text-align:center; padding: 5px 0; position:fixed; bottom: 0; width: 100%; background: rgba(248, 248, 248, 0.5);}
 
 	.border-bottom {border-bottom: 1px solid #CCC; -webkit-print-color-adjust: exact;}
