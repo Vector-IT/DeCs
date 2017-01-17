@@ -148,7 +148,7 @@ class Tabla {
 		$strCampo = '';
 
 		if (isset($this->fields)) {
-			$strSalida.= $crlf.'<button type="button" class="btn btn-sm btn-primary" onclick="editar'. $this->tabladb .'(0);"><i class="fa fa-plus-circle fa-fw" aria-hidden="true"></i> Nuevo</button>';
+			$strSalida.= $crlf.'<button id="btnNuevo" type="button" class="btn btn-sm btn-primary" onclick="editar'. $this->tabladb .'(0);"><i class="fa fa-plus-circle fa-fw" aria-hidden="true"></i> Nuevo</button>';
 			$strSalida.= $crlf.'<form id="frm'. $this->tabladb .'" class="form-horizontal marginTop20" method="post" onSubmit="return false;">';
 			$strSalida.= $crlf.'<input type="hidden" id="hdnTabla" value="'.$this->tabladb.'" />';
 			$strSalida.= $crlf.'<input type="hidden" id="hdnOperacion" value="0" />';
@@ -743,7 +743,6 @@ class Tabla {
 			$strSalida.= $crlf.'';
 			$strSalida.= $crlf.'function borrar'. $this->tabladb .'(strID){';
 			$strSalida.= $crlf.'	if (confirm("Desea borrar '.$this->tituloSingular. ($this->labelField!=''?' " + $("#'.$this->labelField.'" + strID).html()':' seleccionado"') . ' + "?" )) {';
-			$strSalida.= $crlf.'		//editar'. $this->tabladb .'(strID);';
 			$strSalida.= $crlf.'		$("#hdnOperacion").val("2");';
 			$strSalida.= $crlf.'		$("#'.$this->IDField.'").val(strID);';
 			$strSalida.= $crlf.'		aceptar'. $this->tabladb .'();';
@@ -761,6 +760,7 @@ class Tabla {
 		$strSalida.= $crlf.'		}, 1000);';
 		$strSalida.= $crlf.'		$("#hdnOperacion").val("1");';
 		$strSalida.= $crlf.'		blnEdit = true;';
+		$strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").find("input[type!=\'hidden\'][disabled!=disabled]").focus()';
 
 		if (isset($this->fields)) {
 			foreach ($this->fields as $field) {
@@ -874,7 +874,9 @@ class Tabla {
 
 		$strSalida.= $crlf.'	else {';
 		$strSalida.= $crlf.'		if (strID == 0) {';
-		$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeIn();';
+		$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeIn(function() {';
+		$strSalida.= $crlf.'				$("#frm'. $this->tabladb .'").find("input[type!=\'hidden\'][disabled!=disabled]").focus()';
+		$strSalida.= $crlf.'			});';
 		$strSalida.= $crlf.'		}';
 		$strSalida.= $crlf.'		else {';
 		$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeOut();';

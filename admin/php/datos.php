@@ -49,7 +49,6 @@
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 	
 	$config->tablas["empresas"] = $tabla;
-	$tabla = null;
 	
 	/**
 	 * VENDEDORES
@@ -64,7 +63,6 @@
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 	
 	$config->tablas["vendedores"] = $tabla;
-	$tabla = null;
 	
 	/**
 	 * BANCOS
@@ -79,7 +77,6 @@
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 	
 	$config->tablas["bancos"] = $tabla;
-	$tabla = null;
 
 	
 	/**
@@ -99,11 +96,6 @@
 	
 	$tabla->addField("MailClie", "email", 200, "E-mail", true, false, false);
 	$tabla->addField("FechIngr", "date", 0, "Fecha ingreso");
-	/*
-	$tabla->fields["FechIngr"]['formatDb'] = "DATE_FORMAT(FechIngr, '%d-%m-%Y %H:%i') FechIngr";
-	$tabla->fields["FechIngr"]['mirrorField'] = 'hdnFechIngr';
-	$tabla->fields["FechIngr"]['mirrorFormat'] = 'yyyy-mm-dd hh:ii';
-	*/
 	
 	$tabla->addField("DireClie", "text", 200, "Dirección", true, false, false);
 	$tabla->addField("NombLoca", "text", 200, "Localidad", true, false, false);
@@ -120,7 +112,18 @@
 	$tabla->addField("FechEntr", "text", 100, "Fecha de entrega", true, false, false, false);
 	
 	$config->tablas["clientes"] = $tabla;
-	$tabla = null;
+	
+	/**
+	 * ESTADOS CLIENTES
+	 */
+	$tabla = new Tabla("estadosclientes", "Estados de clientes", "el Estado", true, "objeto/estadosclientes", "fa-cogs");
+	$tabla->labelField = "NombEstaClie";
+	
+	$tabla->addField("NumeEstaClie", "number", 0, "Numero", false, true, true);
+	$tabla->addField("NombEstaClie", "text", 100, "Estado");
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
+		
+	$config->tablas["estadosclientes"] = $tabla;
 	
 	/**
 	 * USUARIOS
@@ -141,6 +144,5 @@
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 
 	$config->tablas["usuarios"] = $tabla;
-	$tabla = null;
 	
 ?>
