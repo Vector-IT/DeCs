@@ -5,7 +5,7 @@ $(document).ready(function() {
 		opacity: 0.7,
 		background: "#000",
 		closeWidth: "30px",
-		zindex: 2
+		zindex: 3
 	});
 	
 	$('.btnMenu').click(function() {

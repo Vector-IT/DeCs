@@ -161,7 +161,7 @@ class Tabla {
 			$strSalida.= $crlf.'	<div class="col-md-offset-2 col-md-4">';
 			$strSalida.= $crlf.'		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-check fa-fw" aria-hidden="true"></i> Aceptar</button>';
 			$strSalida.= $crlf.'&nbsp;';
-			$strSalida.= $crlf.'		<button type="reset" class="btn btn-sm btn-default" onclick="editar'. $this->tabladb .'(0);"><i class="fa fa-times fa-fw" aria-hidden="true"></i> Cancelar</button>';
+			$strSalida.= $crlf.'		<button type="reset" class="btn btn-sm btn-default" onclick="editar'. $this->tabladb .'(-1);"><i class="fa fa-times fa-fw" aria-hidden="true"></i> Cancelar</button>';
 			$strSalida.= $crlf.'	</div>';
 			$strSalida.= $crlf.'</div>';
 			$strSalida.= '</form>';
@@ -200,7 +200,10 @@ class Tabla {
 					elseif ($field['size'] <= 40) {
 						$strSalida.= $crlf.'<div class="col-md-3">';
 					}
-					elseif  ($field['size'] <= 60) {
+					elseif ($field['size'] <= 80) {
+						$strSalida.= $crlf.'<div class="col-md-4">';
+					}
+					elseif  ($field['size'] <= 160) {
 						$strSalida.= $crlf.'<div class="col-md-5">';
 					}
 					elseif   ($field['size'] <= 200) {
@@ -217,33 +220,33 @@ class Tabla {
 					case 'email':
 					case 'password':
 					case 'color':
-						$strSalida.= $crlf.'<input type="'.$field['type'].'" class="form-control '.$field['cssControl'].'" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['value']!=''?'value="'.$field['value'].'"':'') .'/>';
+						$strSalida.= $crlf.'<input type="'.$field['type'].'" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['value']!=''?'value="'.$field['value'].'"':'') .'/>';
 						break;
 
 					case 'file':
-						$strSalida.= $crlf.'<input type="'.$field['type'].'" class="form-control" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['value']!=''?'value="'.$field['value'].'"':'') .'/>';
+						$strSalida.= $crlf.'<input type="'.$field['type'].'" class="form-control input-sm" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['value']!=''?'value="'.$field['value'].'"':'') .'/>';
 						break;
 
 					case 'image':
 						$strSalida.= $crlf.'<div id="divPreview'.$fname.'" class="divPreview"></div>';
-						$strSalida.= $crlf.'<input onchange="preview(event, $(\'#divPreview'.$fname.'\'));" type="file" class="form-control" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['value']!=''?'value="'.$field['value'].'"':'') .'/>';
+						$strSalida.= $crlf.'<input onchange="preview(event, $(\'#divPreview'.$fname.'\'));" type="file" class="form-control input-sm" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['value']!=''?'value="'.$field['value'].'"':'') .'/>';
 						break;
 
 					case 'textarea':
-						$strSalida.= $crlf.'<textarea class="form-control autogrow '.$field['cssControl'].'" id="'.$fname.'" '. ($field['required']?'required':'') .' '. ($field['readOnly']?'readonly':'') .'></textarea>';
+						$strSalida.= $crlf.'<textarea class="form-control input-sm autogrow '.$field['cssControl'].'" id="'.$fname.'" '. ($field['required']?'required':'') .' '. ($field['readOnly']?'readonly':'') .'></textarea>';
 						$strSalida.= $crlf.'<script type="text/javascript">';
 						$strSalida.= $crlf.'$("#'.$fname.'").autogrow({vertical: true, horizontal: false});';
 						$strSalida.= $crlf.'</script>';
 						break;
 
 					case 'select':
-						$strSalida.= $crlf.'<select class="form-control ucase '.$field['cssControl'].'" id="'.$fname.'" '. ($field['required']?'required':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['onChange'] !=''?'onchange="'.$field['onChange'].'"':'') .'>';
+						$strSalida.= $crlf.'<select class="form-control input-sm ucase '.$field['cssControl'].'" id="'.$fname.'" '. ($field['required']?'required':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['onChange'] !=''?'onchange="'.$field['onChange'].'"':'') .'>';
 						$strSalida.= $crlf. $this->cargarCombo($field['lookupTable'], $field['lookupFieldID'], $field['lookupFieldLabel'], $field['lookupConditions'], $field['lookupOrder'], $field['value'], $field['itBlank']);
 						$strSalida.= $crlf.'</select>';
 						break;
 
 					case 'selectmultiple':
-						$strSalida.= $crlf.'<select class="form-control ucase selectpicker '.$field['cssControl'].'" multiple id="'.$fname.'" '. ($field['required']?'required':'') .' title="SELECCIONE" '. ($field['readOnly']?'readonly':'') .' '. ($field['onChange'] !=''?'onchange="'.$field['onChange'].'"':'') .'>';
+						$strSalida.= $crlf.'<select class="form-control input-sm ucase selectpicker '.$field['cssControl'].'" multiple id="'.$fname.'" '. ($field['required']?'required':'') .' title="SELECCIONE" '. ($field['readOnly']?'readonly':'') .' '. ($field['onChange'] !=''?'onchange="'.$field['onChange'].'"':'') .'>';
 						$strSalida.= $crlf. $this->cargarCombo($field['lookupTable'], $field['lookupFieldID'], $field['lookupFieldLabel'], $field['lookupConditions'], $field['lookupOrder'], $field['value'], $field['itBlank']);
 						$strSalida.= $crlf.'</select>';
 						$strSalida.= $crlf.'<script type="text/javascript">';
@@ -256,7 +259,7 @@ class Tabla {
 						break;
 
 					case 'datalist':
-						$strSalida.= $crlf.'<input class="form-control '.$field['cssControl'].'" list="lst-'.$fname.'" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['onChange'] !=''?'onchange="'.$field['onChange'].'"':'') .'/>';
+						$strSalida.= $crlf.'<input class="form-control input-sm '.$field['cssControl'].'" list="lst-'.$fname.'" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['onChange'] !=''?'onchange="'.$field['onChange'].'"':'') .'/>';
 						$strSalida.= $crlf.'<datalist id="lst-'.$fname.'">';
 						$strSalida.= $crlf. $this->cargarCombo($field['lookupTable'], $field['lookupFieldLabel'], '', $field['lookupConditions'], $field['lookupOrder'], $field['value'], $field['itBlank']);
 						$strSalida.= $crlf.'</datalist>';
@@ -271,7 +274,7 @@ class Tabla {
 
 					case 'datetime':
 						$strSalida.= $crlf.'<div class="input-group date margin-bottom-sm inp'.$fname.'">';
-						$strSalida.= $crlf.'<input type="text" class="form-control '.$field['cssControl'].'" id="'.$fname.'"size="16" value="" readonly />';
+						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'"size="16" value="" readonly />';
 						$strSalida.= $crlf.'<span class="input-group-addon add-on clickable"><i class="fa fa-calendar fa-fw"></i></span>';
 						$strSalida.= $crlf.'</div>';
 						if ($field['mirrorField'] != '') {
@@ -312,7 +315,7 @@ class Tabla {
 
 					case 'date':
 						$strSalida.= $crlf.'<div class="input-group date margin-bottom-sm inp'.$fname.'">';
-						$strSalida.= $crlf.'<input type="text" class="form-control '.$field['cssControl'].'" id="'.$fname.'"size="16" value="" readonly />';
+						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'"size="16" value="" readonly />';
 						$strSalida.= $crlf.'<span class="input-group-addon add-on clickable"><i class="fa fa-calendar fa-fw"></i></span>';
 						$strSalida.= $crlf.'</div>';
 						$strSalida.= $crlf.'<script type="text/javascript">';
@@ -350,7 +353,7 @@ class Tabla {
 
 					case 'time':
 						$strSalida.= $crlf.'<div class="input-group date margin-bottom-sm inp'.$fname.'">';
-						$strSalida.= $crlf.'<input type="text" class="form-control '.$field['cssControl'].'" id="'.$fname.'" size="16" value="" readonly />';
+						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'" size="16" value="" readonly />';
 						$strSalida.= $crlf.'<span class="input-group-addon clickable"><i class="fa fa-calendar fa-fw"></i></span>';
 						$strSalida.= $crlf.'</div>';
 						$strSalida.= $crlf.'<script type="text/javascript">';
@@ -392,7 +395,7 @@ class Tabla {
 						break;
 
 					case "ckeditor":
-						$strSalida.= $crlf.'<textarea class="form-control" id="'.$fname.'" '. ($field['required']?'required':'') .' '. ($field['readOnly']?'readonly':'') .'></textarea>';
+						$strSalida.= $crlf.'<textarea class="form-control input-sm" id="'.$fname.'" '. ($field['required']?'required':'') .' '. ($field['readOnly']?'readonly':'') .'></textarea>';
 						$strSalida.= $crlf.'<script type="text/javascript">';
 						$strSalida.= $crlf.'CKEDITOR.replace( "'.$fname.'" );';
 						$strSalida.= $crlf.'</script>';
@@ -400,7 +403,7 @@ class Tabla {
 
 					case "gmaps":
 						$strSalida.= $crlf.'<input type="hidden" id="'.$fname.'" />';
-						$strSalida.= $crlf.'<input type="text" class="form-control '.$field['cssControl'].'" id="'.$fname.'-buscar" placeholder="Ingrese localidad" /> ';
+						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'-buscar" placeholder="Ingrese localidad" /> ';
 						$strSalida.= $crlf.'</div>';
 						$strSalida.= $crlf.'<div class="col-md-2">';
 						$strSalida.= $crlf.'<button type="button" class="btn btn-default" id="'.$fname.'-btnBuscar" onclick="buscarLoc($(\'#'.$fname.'-buscar\').val(), \'#'.$fname.'\')">Buscar</button>';
@@ -417,7 +420,7 @@ class Tabla {
 						break;
 
 					default:
-						$strSalida.= $crlf.'<input type="text" class="form-control '.$field['cssControl'].'" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .'/>';
+						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .'/>';
 						break;
 				}
 
@@ -440,8 +443,9 @@ class Tabla {
 			$strFields = '';
 			foreach ($this->fields as $field) {
 				if ($field['type'] != "calcfield") {
-					if ($strFields != '')
+					if ($strFields != '') {
 						$strFields.= ', ';
+					}
 
 					if ($field['formatDb'] == '') {
 						$strFields.= $field['name'];
@@ -459,7 +463,7 @@ class Tabla {
 				if (isset($_GET[$this->masterField])) {
 					$strSQL.= " WHERE ". $this->masterField ." = '" . $_GET[$this->masterField] ."'";
 				}
-				else {
+				elseif (isset($_POST[$this->masterField])) {
 					$strSQL.= " WHERE ". $this->masterField ." = '" . $_POST[$this->masterField] ."'";
 				}
 
@@ -751,6 +755,7 @@ class Tabla {
 		$strSalida.= $crlf.'';
 		$strSalida.= $crlf.'function editar'. $this->tabladb .'(strID){';
 		$strSalida.= $crlf.'	if (strID > 0) {';
+		$strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").fadeIn();';
 		$strSalida.= $crlf.'		$("html, body").animate({';
 		$strSalida.= $crlf.'			scrollTop: $("#frm'. $this->tabladb .'").offset().top';
 		$strSalida.= $crlf.'		}, 1000);';
@@ -868,6 +873,13 @@ class Tabla {
 		$strSalida.= $crlf.'	}';
 
 		$strSalida.= $crlf.'	else {';
+		$strSalida.= $crlf.'		if (strID == 0) {';
+		$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeIn();';
+		$strSalida.= $crlf.'		}';
+		$strSalida.= $crlf.'		else {';
+		$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeOut();';
+		$strSalida.= $crlf.'		}';
+		$strSalida.= $crlf.'';
 		$strSalida.= $crlf.'		$("#hdnOperacion").val("0");';
 		$strSalida.= $crlf.'		blnEdit = false;';
 		$strSalida.= $crlf.'		$(".divPreview").html("");';
@@ -1029,7 +1041,7 @@ class Tabla {
 		$strSalida.= $crlf.'				$("#divMsj").removeClass("alert-danger");';
 		$strSalida.= $crlf.'				$("#divMsj").addClass("alert-success");';
 		$strSalida.= $crlf.'				$(".selectpicker").selectpicker("deselectAll");';
-		$strSalida.= $crlf.'				editar'. $this->tabladb .'(0);';
+		$strSalida.= $crlf.'				editar'. $this->tabladb .'(-1);';
 		$strSalida.= $crlf.'				listar'. $this->tabladb .'();';
 		$strSalida.= $crlf.'			}';
 		$strSalida.= $crlf.'			else {';

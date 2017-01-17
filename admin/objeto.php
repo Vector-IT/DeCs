@@ -80,7 +80,7 @@
 			<span id="txtHint">Info</span>
 		</div>
 		
-		<div id="divDatos" class="table-responsive marginTop40 paddingBottom15">
+		<div id="divDatos" class="table-responsive marginTop40 paddingBottom25">
 			<?php $tabla->listar(); ?>
 		</div>
 	</div>

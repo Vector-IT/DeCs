@@ -20,6 +20,7 @@
 	.marginTop40 {margin-top:40px;}
 
 	.paddingBottom15 { padding-bottom: 15px; }
+	.paddingBottom25 { padding-bottom: 25px; }
 
 	.clearer {clear:both;}
 
@@ -45,6 +46,8 @@
 		height:50px;
 		margin:0 15px;
 	}
+	
+	form { display: none; }
 
 	.form-group2 {width:50%; float:left;}
 	.form-group2 label {width:34%;}
@@ -55,6 +58,8 @@
 	.form-group3 > div {width:66%; z-index:1;}
 
 	.children {clear:both;}
+	
+	.alert {margin-top: 10px;}
 
 	footer { font-size:12px; text-align:center; padding: 5px 0; position:fixed; bottom: 0; width: 100%; background: rgba(248, 248, 248, 0.5);}
 
