@@ -16,7 +16,7 @@
 	
 	<div class="container">
 		<div class="page-header">
-			<h2>Acceda al sistema</h2>
+			<h2>Acceso al sistema</h2>
 		</div>
 			
 		<form action="php/loginProcesar.php" method="post" class="form-horizontal">

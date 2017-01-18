@@ -53,9 +53,11 @@
 	/**
 	 * VENDEDORES
 	 */
-	$tabla = new Tabla("vendedores", "Vendedores", "el Vendedor", true, "objeto/vendedores", "fa-male");
+	$tabla = new Tabla("vendedores", "Vendedores", "el Vendedor", false, "objeto/vendedores", "fa-male");
 	$tabla->labelField = "NombVend";
-	$tabla->masterField = "NumeEmpr";
+	$tabla->masterTable = "empresas";
+	$tabla->masterFieldId = "NumeEmpr";
+	$tabla->masterFieldName = "NombEmpr";
 	
 	$tabla->addField("NumeVend", "number", 0, "Número", false, true, true);
 	$tabla->addField("NombVend", "text", 200, "Nombre");

@@ -58,7 +58,22 @@
 	
 	<div class="container">
 		<div class="page-header">
-			<h2><?php echo $tabla->titulo?></h2>
+			<h2>
+			<?php 
+				if ($tabla->masterTable == '') {
+					echo $tabla->titulo;
+				}
+				else {
+					if (isset($_GET[$tabla->masterFieldId])) {
+						$strAux = $config->buscarDato("SELECT {$tabla->masterFieldName} FROM {$tabla->masterTable} WHERE {$tabla->masterFieldId} = '{$_GET[$tabla->masterFieldId]}'");
+						echo $tabla->titulo. ' de ' .$strAux;
+					}
+					else {
+						echo $tabla->titulo;
+					}
+				}
+			?>
+			</h2>
 		</div>
 		
 		<?php

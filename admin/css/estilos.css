@@ -47,7 +47,7 @@
 		margin:0 15px;
 	}
 	
-	form { display: none; }
+	form.frmObjeto { display: none; }
 
 	.form-group2 {width:50%; float:left;}
 	.form-group2 label {width:34%;}

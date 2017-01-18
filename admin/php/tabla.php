@@ -24,7 +24,8 @@ class Tabla {
   	public $allowDelete;
 
   	public $masterTable;
-  	public $masterField;
+  	public $masterFieldId;
+  	public $masterFieldName;
 
   	public $numeCarg;
 
@@ -79,7 +80,8 @@ class Tabla {
         $this->footerField = '';
 
         $this->masterTable = '';
-        $this->masterField = '';
+        $this->masterFieldId = '';
+        $this->masterFieldName = '';
 
         $this->gmaps = false;
         $this->gmapsApiKey = '';
@@ -149,7 +151,7 @@ class Tabla {
 
 		if (isset($this->fields)) {
 			$strSalida.= $crlf.'<button id="btnNuevo" type="button" class="btn btn-sm btn-primary" onclick="editar'. $this->tabladb .'(0);"><i class="fa fa-plus-circle fa-fw" aria-hidden="true"></i> Nuevo</button>';
-			$strSalida.= $crlf.'<form id="frm'. $this->tabladb .'" class="form-horizontal marginTop20" method="post" onSubmit="return false;">';
+			$strSalida.= $crlf.'<form id="frm'. $this->tabladb .'" class="form-horizontal marginTop20 frmObjeto" method="post" onSubmit="return false;">';
 			$strSalida.= $crlf.'<input type="hidden" id="hdnTabla" value="'.$this->tabladb.'" />';
 			$strSalida.= $crlf.'<input type="hidden" id="hdnOperacion" value="0" />';
 
@@ -459,12 +461,12 @@ class Tabla {
 
 			$strSQL.= " FROM ". $this->tabladb;
 
-			if ($this->masterField != '') {
-				if (isset($_GET[$this->masterField])) {
-					$strSQL.= " WHERE ". $this->masterField ." = '" . $_GET[$this->masterField] ."'";
+			if ($this->masterFieldId != '') {
+				if (isset($_GET[$this->masterFieldId])) {
+					$strSQL.= " WHERE ". $this->masterFieldId ." = '" . $_GET[$this->masterFieldId] ."'";
 				}
-				elseif (isset($_POST[$this->masterField])) {
-					$strSQL.= " WHERE ". $this->masterField ." = '" . $_POST[$this->masterField] ."'";
+				elseif (isset($_POST[$this->masterFieldId])) {
+					$strSQL.= " WHERE ". $this->masterFieldId ." = '" . $_POST[$this->masterFieldId] ."'";
 				}
 
 				if ($strFiltro != "") {
@@ -675,8 +677,8 @@ class Tabla {
 		$strSalida.= $crlf.'		$("textarea.autogrow").removeAttr("style");';
 		$strSalida.= $crlf.'		$(".divPreview").html("");';
 
-		if ($this->masterField != '' && isset($_GET[$this->masterField])) {
-			$strSalida.= $crlf.'		$("#'. $this->masterField .'").val('. $_GET[$this->masterField] .');';
+		if ($this->masterFieldId != '' && isset($_GET[$this->masterFieldId])) {
+			$strSalida.= $crlf.'		$("#'. $this->masterFieldId .'").val('. $_GET[$this->masterFieldId] .');';
 		}
 
 		$strSalida.= $crlf.'	});';
@@ -727,8 +729,8 @@ class Tabla {
 		$strSalida.= $crlf.'		{ operacion: "10"';
 		$strSalida.= $crlf.'			, tabla: "'.$this->tabladb.'"';
 
-		if ($this->masterField != '' && isset($_GET[$this->masterField])) {
-			$strSalida.= $crlf.'			, '. $this->masterField .': "'. $_GET[$this->masterField] .'"';
+		if ($this->masterFieldId != '' && isset($_GET[$this->masterFieldId])) {
+			$strSalida.= $crlf.'			, '. $this->masterFieldId .': "'. $_GET[$this->masterFieldId] .'"';
 		}
 		$strSalida.= $crlf.'		},';
 		$strSalida.= $crlf.'		function(data) {';
@@ -760,7 +762,7 @@ class Tabla {
 		$strSalida.= $crlf.'		}, 1000);';
 		$strSalida.= $crlf.'		$("#hdnOperacion").val("1");';
 		$strSalida.= $crlf.'		blnEdit = true;';
-		$strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").find("input[type!=\'hidden\'][disabled!=disabled]").focus()';
+		$strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").find("input[type!=\'hidden\'][disabled!=disabled]:first").focus()';
 
 		if (isset($this->fields)) {
 			foreach ($this->fields as $field) {
@@ -785,19 +787,6 @@ class Tabla {
 									$strSalida.= $crlf.'		$("#'.$field['name'].'").val($("#'.$field['name'].'" + strID).val());';
 									break;
 							}
-
-							/*
-							if ($field['type'] == "ckeditor") {
-								$strSalida.= $crlf.'		CKEDITOR.instances.'.$field['name'].'.setData($("#'.$field['name'].'" + strID).val());';
-							}
-							elseif ($field['type'] != "selectmultiple") {
-								if ($field['type'] != 'file')
-									$strSalida.= $crlf.'		$("#'.$field['name'].'").val($("#'.$field['name'].'" + strID).val());';
-							}
-							else  {
-								$strSalida.= $crlf.'		$("#'.$field['name'].'").selectpicker("val", $("#'.$field['name'].'" + strID).val().split(","));';
-							}
-							*/
 						}
 						else {
 							switch ($field["type"]) {
@@ -875,7 +864,7 @@ class Tabla {
 		$strSalida.= $crlf.'	else {';
 		$strSalida.= $crlf.'		if (strID == 0) {';
 		$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeIn(function() {';
-		$strSalida.= $crlf.'				$("#frm'. $this->tabladb .'").find("input[type!=\'hidden\'][disabled!=disabled]").focus()';
+		$strSalida.= $crlf.'				$("#frm'. $this->tabladb .'").find("input[type!=\'hidden\'][disabled!=disabled]:first").focus()';
 		$strSalida.= $crlf.'			});';
 		$strSalida.= $crlf.'		}';
 		$strSalida.= $crlf.'		else {';
@@ -925,8 +914,8 @@ class Tabla {
 				}
 			}
 
-			if ($this->masterField != '' && isset($_GET[$this->masterField])) {
-				$strSalida.= $crlf.'		$("#'. $this->masterField .'").val('. $_GET[$this->masterField] .');';
+			if ($this->masterFieldId != '' && isset($_GET[$this->masterFieldId])) {
+				$strSalida.= $crlf.'		$("#'. $this->masterFieldId .'").val('. $_GET[$this->masterFieldId] .');';
 			}
 		}
 
@@ -1334,14 +1323,14 @@ class Tabla {
 			if ($CampoTexto != "") {
 				if (strcmp($fila[$CampoNumero], $seleccion) != "0")
 					$strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'">'.htmlentities($fila[$CampoTexto]).'</option>';
-					else
-						$strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" selected>'.htmlentities($fila[$CampoTexto]).'</option>';
+				else
+					$strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" selected>'.htmlentities($fila[$CampoTexto]).'</option>';
 			}
 			else {
 				if (strcmp($fila[$CampoNumero], $seleccion) != "0")
 					$strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" />';
-					else
-						$strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" selected />';
+				else
+					$strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" selected />';
 			}
 		}
 
