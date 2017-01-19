@@ -128,6 +128,20 @@
 	$config->tablas["estadosclientes"] = $tabla;
 	
 	/**
+	 * TIPOS DE PAGOS
+	 */
+	$tabla = new Tabla("tipospagos", "Formas de Pago", "la Forma de Pago", true, "objeto/tipospagos", "fa-credit-card");
+	$tabla->labelField = "NombTipoPago";
+	
+	$tabla->addField("NumeTipoPago", "number", 0, "Número", false, true, true);
+	$tabla->addField("NombTipoPago", "text", 100, "Nombre");
+	$tabla->fields["NombTipoPago"]["cssControl"] = "ucase";
+	
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
+	
+	$config->tablas["tipospagos"] = $tabla;
+	
+	/**
 	 * USUARIOS
 	 */
 	$tabla = new Tabla("usuarios", "Usuarios", "el Usuario", true, "objeto/usuarios", "fa-users");

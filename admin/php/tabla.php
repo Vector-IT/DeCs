@@ -237,7 +237,7 @@ class Tabla {
 					case 'textarea':
 						$strSalida.= $crlf.'<textarea class="form-control input-sm autogrow '.$field['cssControl'].'" id="'.$fname.'" '. ($field['required']?'required':'') .' '. ($field['readOnly']?'readonly':'') .'></textarea>';
 						$strSalida.= $crlf.'<script type="text/javascript">';
-						$strSalida.= $crlf.'$("#'.$fname.'").autogrow({vertical: true, horizontal: false});';
+						$strSalida.= $crlf.'$("#'.$fname.'").autogrow({vertical: true, horizontal: false, minHeight: 36});';
 						$strSalida.= $crlf.'</script>';
 						break;
 
@@ -815,7 +815,7 @@ class Tabla {
 							break;
 
 						case 'textarea':
-							$strSalida.= $crlf.'		$("#'.$field['name'].'").autogrow({vertical: true, horizontal: false});';
+							$strSalida.= $crlf.'		$("#'.$field['name'].'").autogrow({vertical: true, horizontal: false, minHeight: 36});';
 							break;
 
 						case 'calcfield':
@@ -898,7 +898,7 @@ class Tabla {
 							break;
 
 						case 'textarea':
-							$strSalida.= $crlf.'		$("#'.$field['name'].'").autogrow({vertical: true, horizontal: false});';
+							$strSalida.= $crlf.'		$("#'.$field['name'].'").autogrow({vertical: true, horizontal: false, minHeight: 36});';
 							break;
 
 						case 'selectmultiple':

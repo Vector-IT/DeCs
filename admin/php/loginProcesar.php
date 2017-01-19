@@ -36,7 +36,7 @@ if ($_POST["returnUrl"] == "-1") {
 	echo "Ok";
 }
 else if ($_POST["returnUrl"] == "")
-	header("Location:../index.php");
+	header("Location:../");
 else
 	header("Location:".$_POST["returnUrl"]);
 //die();

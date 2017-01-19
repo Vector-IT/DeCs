@@ -33,8 +33,6 @@
 				
 				if (isset($_REQUEST["returnUrl"])) 
 					echo '<input type="hidden" name="returnUrl" value="'.$_REQUEST["returnUrl"].'" />';
-				else
-					echo '<input type="hidden" name="returnUrl" value="../index.php" />';
 			?>
 			
 			<div class="form-group">
