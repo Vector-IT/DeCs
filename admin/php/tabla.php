@@ -762,7 +762,7 @@ class Tabla {
 		$strSalida.= $crlf.'		}, 1000);';
 		$strSalida.= $crlf.'		$("#hdnOperacion").val("1");';
 		$strSalida.= $crlf.'		blnEdit = true;';
-		$strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").find("input[type!=\'hidden\'][disabled!=disabled]:first").focus()';
+		$strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").find(".form-control[type!=\'hidden\'][disabled!=disabled]:first").focus()';
 
 		if (isset($this->fields)) {
 			foreach ($this->fields as $field) {
@@ -783,6 +783,10 @@ class Tabla {
 									$strSalida.= $crlf.'		$("#divPreview'.$field['name'].'").html(\'<img id="img0" class="thumbnail" src="\' + $("#'.$field['name'].'" + strID).val() + \'" />\');';
 									break;
 
+								case "checkbox":
+									$strSalida.= $crlf.'		$("#'.$field['name'].'").prop("checked", Boolean(parseInt($("#'.$field['name'].'" + strID).val())));';
+									break;
+
 								default:
 									$strSalida.= $crlf.'		$("#'.$field['name'].'").val($("#'.$field['name'].'" + strID).val());';
 									break;
@@ -792,6 +796,10 @@ class Tabla {
 							switch ($field["type"]) {
 								case "image":
 									$strSalida.= $crlf.'		$("#divPreview'.$field['name'].'").html(\'<img id="img0" class="thumbnail" src="\' + $("#'.$field['name'].'" + strID).val() + \'" />\');';
+									break;
+
+								case "checkbox":
+									$strSalida.= $crlf.'		$("#'.$field['name'].'").prop("checked", Boolean(parseInt($("#'.$field['name'].'" + strID).val())));';
 									break;
 
 								default:
@@ -864,7 +872,7 @@ class Tabla {
 		$strSalida.= $crlf.'	else {';
 		$strSalida.= $crlf.'		if (strID == 0) {';
 		$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeIn(function() {';
-		$strSalida.= $crlf.'				$("#frm'. $this->tabladb .'").find("input[type!=\'hidden\'][disabled!=disabled]:first").focus()';
+		$strSalida.= $crlf.'				$("#frm'. $this->tabladb .'").find(".form-control[type!=\'hidden\'][disabled!=disabled]:first").focus()';
 		$strSalida.= $crlf.'			});';
 		$strSalida.= $crlf.'		}';
 		$strSalida.= $crlf.'		else {';
@@ -1174,7 +1182,7 @@ class Tabla {
 
 				$strCampos.= $name;
 				if ($this->fields[$name]['isMD5']) {
-					$strValores.= "'".md5($value)."'";	
+					$strValores.= "'".md5($value)."'";
 				}
 				else {
 					$strValores.= "'$value'";
