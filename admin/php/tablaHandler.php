@@ -38,19 +38,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				else {
 					$strRnd = $config->get_random_string("abcdefghijklmnopqrstuvwxyz1234567890", 5);
 				}
+
+				$archivo_viejo = $config->buscarDato("SELECT {$name} FROM {$tabla->tabladb} WHERE {$tabla->IDField} = '{$_POST[$tabla->IDField]}'");
+				if ($archivo_viejo != '') {
+					$archivo_viejo = "../". $archivo_viejo;
+				}
 				
 				$archivo = $name ."-". $strRnd .".". $extension;
 				$val =  $tabla->fields[$name]['ruta'] ."/". $archivo;
 					
-				subir_archivo($_FILES[$name], "../". $tabla->fields[$name]['ruta'], $archivo);
+				subir_archivo($_FILES[$name], "../". $tabla->fields[$name]['ruta'], $archivo, $archivo_viejo);
 				
 				$datos[$name] = $val;
 			}
 			
 			//Campos
 			foreach ($_POST as $name => $val) {
-				if (($name != 'operacion') && ($name != 'tabla')) {
-					$datos[$name] = $val;
+				//Me fijo si hay que borrar algun archivo
+				if (substr($name, 0, 12) == 'vectorClear-') {
+					$nameAux = substr($name, 12);
+					
+					if ($val == "1") {
+						$archivo_viejo = $config->buscarDato("SELECT {$nameAux} FROM {$tabla->tabladb} WHERE {$tabla->IDField} = '{$_POST[$tabla->IDField]}'");
+						if ($archivo_viejo != '') {
+							$archivo_viejo = "../". $archivo_viejo;
+						}
+						
+						if (file_exists($archivo_viejo)) {
+							unlink($archivo_viejo);
+						}
+						
+						$datos[$nameAux] = '';
+					}
+				}
+				else {
+					if (($name != 'operacion') && ($name != 'tabla')) {
+							$datos[$name] = $val;
+					}
 				}
 			}
 			

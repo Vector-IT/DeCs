@@ -46,7 +46,9 @@
 
 	$tabla->addField("ComiDecs", "number", 0, "Comisión (solo números)");
 	$tabla->fields["ComiDecs"]['isHiddenInList'] = true;
-
+	
+	$tabla->addFieldFileImage("ImagEmpr", "image", 100, "Logo", 'imgEmpresas', false);	
+	
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 
 	$config->tablas["empresas"] = $tabla;

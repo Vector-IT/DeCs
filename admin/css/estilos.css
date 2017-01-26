@@ -70,6 +70,9 @@
 	.invColor {background-color:black; color:white; -webkit-print-color-adjust: exact;}
 
 	.prnHeaderImg {width:150px; height:auto;}
+	
+	.divPreview { float: left; }
+	.divPreview > .thumbnail { margin: 0 0 5px 0; }
 }
 
 @media screen and (max-width:767px) {

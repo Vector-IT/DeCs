@@ -1,6 +1,6 @@
 <?php
-    function subir_archivo($archivo, $ruta, $nombre) {
-        $allowedExts = array("gif", "jpeg", "jpg", "png", "pdf");
+    function subir_archivo($archivo, $ruta, $nombre, $nombre_anterior = '') {
+        $allowedExts = array("bmp", "gif", "jpeg", "jpg", "png", "pdf");
         
         $temp = explode(".", $archivo["name"]);
         
@@ -21,8 +21,15 @@
 //                echo "Size: " . ($archivo["size"] / 1024) . " kB<br/>";
 //                echo "Temp file: " . $archivo["tmp_name"] . "<br/>";
                 
-                if (file_exists($ruta . "/" . $nombre))
+                if (file_exists($ruta . "/" . $nombre)) {
                     unlink($ruta . "/" . $nombre);
+                }
+                
+                if ($nombre_anterior != '') {
+                	if (file_exists($nombre_anterior)) {
+                		unlink($nombre_anterior);
+                	}
+                }
 
                 move_uploaded_file($archivo["tmp_name"], $ruta . "/" . $nombre);
                 

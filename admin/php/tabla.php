@@ -95,7 +95,7 @@ class Tabla {
      * @param string $type: tipo de control al crear en un form
      * @param number $size: tamaño del campo
      * @param string $label: etiqueta del control al crear en un form
-     * @param boolean $requ: requerido
+     * @param boolean $required: requerido
      * @param string $value: valor por defecto
      * @param string $cssGrp: clases css del control al crear en un form
      */
@@ -142,7 +142,54 @@ class Tabla {
 			$this->IDField = $name;
 		}
 	}
-
+	
+	/**
+	 * Agrega un campo a la tabla de tipo archivo o imagen
+     * @param string $name: nombre del campo
+     * @param number $type: 'file' o 'image'
+     * @param number $size: tamaño del campo
+     * @param string $label: etiqueta del control al crear en un form
+     * @param boolean $required: requerido
+	 * @param string $ruta: ruta de guardado
+	 */
+	public function addFieldFileImage($name, $type, $size=0, $label='', $ruta='', $required=true, $isHiddenInList=false) {
+	
+				$this->fields[$name] = array (
+						'name' => $name,
+						'type' => $type,
+						'size' => $size,
+						'label' => $label,
+						'required' => $required,
+						'readOnly' => false,
+						'isID' => false,
+						'showOnList' => true,
+						'value' => '',
+						'cssControl' => '',
+						'cssGroup' => '',
+						'isID' => false,
+						'lookupTable' => '',
+						'lookupFieldID' => '',
+						'lookupFieldLabel' => '',
+						'lookupConditions' => '',
+						'lookupOrder' => '',
+						'isHiddenInForm' => false,
+						'isHiddenInList' => $isHiddenInList,
+						'isMasterID' => false,
+						'onChange' => '',
+						'showOnForm' => true,
+						'itBlank' => false,
+						'hoursDisabled' => '',
+						'dtpOnRender' => '',
+						'txtAlign' => 'left',
+						'ruta' => $ruta,
+						'nomFileField' => '',
+						'mirrorField' => '',
+						'mirrorFormat' => '',
+						'formatDb' => '',
+						'isMD5' => false
+				);
+	}
+	
 	public function createForm() {
 		global $crlf;
 
@@ -226,11 +273,17 @@ class Tabla {
 						break;
 
 					case 'file':
+						$strSalida.= $crlf.'<button id="btnBorrar'.$fname.'" type="button" class="btn btn-default" title="Borrar" onclick="borrar(\''.$fname.'\');"><i class="fa fa-times" aria-hidden="true"></i> Borrar archivo</button>';
 						$strSalida.= $crlf.'<input type="'.$field['type'].'" class="form-control input-sm" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['value']!=''?'value="'.$field['value'].'"':'') .'/>';
+						$strSalida.= $crlf.'<input id="hdn'.$fname.'Clear" type="hidden" value="0" />';
 						break;
 
 					case 'image':
 						$strSalida.= $crlf.'<div id="divPreview'.$fname.'" class="divPreview"></div>';
+						if ($field["required"] == false) {
+							$strSalida.= $crlf.'<button id="btnBorrar'.$fname.'" type="button" class="btn btn-default" title="Borrar" onclick="borrar(\''.$fname.'\');"><i class="fa fa-times" aria-hidden="true"></i></button>';
+							$strSalida.= $crlf.'<input id="hdn'.$fname.'Clear" type="hidden" value="0" />';
+						}
 						$strSalida.= $crlf.'<input onchange="preview(event, $(\'#divPreview'.$fname.'\'));" type="file" class="form-control input-sm" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['value']!=''?'value="'.$field['value'].'"':'') .'/>';
 						break;
 
@@ -548,7 +601,16 @@ class Tabla {
 										case 'image':
 											$strSalida.= $crlf.'<td>';
 											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field['name']].'" />';
-											$strSalida.= $crlf.'<img src="'. $fila[$field['name']].'" class="thumbnailChico">';
+											if ($fila[$field['name']] != '') {
+												$strSalida.= $crlf.'<img src="'. $fila[$field['name']].'" class="thumbnailChico">';
+											}
+											$strSalida.= $crlf.'</td>';
+											break;
+											
+										case 'file':
+											$strSalida.= $crlf.'<td>';
+											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field['name']].'" />';
+											$strSalida.= $crlf.$fila[$field['name']];
 											$strSalida.= $crlf.'</td>';
 											break;
 
@@ -696,6 +758,7 @@ class Tabla {
 		$strSalida.= $crlf.'';
 		$strSalida.= $crlf.'function preview(event, divPreview) {';
 		$strSalida.= $crlf.'	divPreview.html("");';
+		$strSalida.= $crlf.'	var id = divPreview.attr("id").substr(10);';
 		$strSalida.= $crlf.'';
 		$strSalida.= $crlf.'	var files = event.target.files; //FileList object';
 		$strSalida.= $crlf.'';
@@ -714,6 +777,9 @@ class Tabla {
 		$strSalida.= $crlf.'			var picFile = event.target;';
 		$strSalida.= $crlf.'';
 		$strSalida.= $crlf.'			divPreview.append(\'<img id="img\' + divPreview.children().length + \'" class="thumbnail" src="\' + picFile.result + \'" />\');';
+		$strSalida.= $crlf.'';
+		$strSalida.= $crlf.'			$("#btnBorrar" + id).show();';
+		$strSalida.= $crlf.'			$("#hdn" + id + "Clear").val("0");';
 		$strSalida.= $crlf.'		});';
 		$strSalida.= $crlf.'';
 		$strSalida.= $crlf.'		//Leer la imagen';
@@ -780,7 +846,26 @@ class Tabla {
 									break;
 
 								case "image":
-									$strSalida.= $crlf.'		$("#divPreview'.$field['name'].'").html(\'<img id="img0" class="thumbnail" src="\' + $("#'.$field['name'].'" + strID).val() + \'" />\');';
+								case "file":
+									$strSalida.= $crlf.'		if ($("#'.$field['name'].'" + strID).val() != "") {';
+									if ($field["type"] == "image") {
+										$strSalida.= $crlf.'			$("#divPreview'.$field['name'].'").html(\'<img id="img0" class="thumbnail" src="\' + $("#'.$field['name'].'" + strID).val() + \'" />\');';
+									}
+									if ($field["required"] == false) {
+										$strSalida.= $crlf.'			$("#btnBorrar'.$field['name'].'").show();';
+										$strSalida.= $crlf.'			$("#hdn'.$field['name'].'Clear").val("0");';
+									}
+									
+									$strSalida.= $crlf.'		}';
+									$strSalida.= $crlf.'		else {';
+									if ($field["type"] == "image") {
+										$strSalida.= $crlf.'			$("#divPreview'.$field['name'].'").html("");';
+									}
+									if ($field["required"] == false) {
+										$strSalida.= $crlf.'			$("#btnBorrar'.$field['name'].'").hide();';
+										$strSalida.= $crlf.'			$("#hdn'.$field['name'].'Clear").val("0");';
+									}
+									$strSalida.= $crlf.'		}';
 									break;
 
 								case "checkbox":
@@ -795,7 +880,26 @@ class Tabla {
 						else {
 							switch ($field["type"]) {
 								case "image":
-									$strSalida.= $crlf.'		$("#divPreview'.$field['name'].'").html(\'<img id="img0" class="thumbnail" src="\' + $("#'.$field['name'].'" + strID).val() + \'" />\');';
+								case "file":
+									$strSalida.= $crlf.'		if ($("#'.$field['name'].'" + strID).val() != "") {';
+									if ($field["type"] == "image") {
+										$strSalida.= $crlf.'			$("#divPreview'.$field['name'].'").html(\'<img id="img0" class="thumbnail" src="\' + $("#'.$field['name'].'" + strID).val() + \'" />\');';
+									}
+									if ($field["required"] == false) {
+										$strSalida.= $crlf.'			$("#btnBorrar'.$field['name'].'").show();';
+										$strSalida.= $crlf.'			$("#hdn'.$field['name'].'Clear").val("0");';
+									}
+										
+									$strSalida.= $crlf.'		}';
+									$strSalida.= $crlf.'		else {';
+									if ($field["type"] == "image") {
+										$strSalida.= $crlf.'			$("#divPreview'.$field['name'].'").html("");';
+									}
+									if ($field["required"] == false) {
+										$strSalida.= $crlf.'			$("#btnBorrar'.$field['name'].'").hide();';
+										$strSalida.= $crlf.'			$("#hdn'.$field['name'].'Clear").val("0");';
+									}
+									$strSalida.= $crlf.'		}';
 									break;
 
 								case "checkbox":
@@ -900,8 +1004,14 @@ class Tabla {
 
 					switch ($field['type']) {
 						case 'image':
+						case 'file':
 							if ($field['required']) {
 								$strSalida.= $crlf.'		$("#'.$field['name'].'").attr("required", true);';
+							}
+							else {
+								$strSalida.= $crlf.'		$("#btnBorrar'.$field["name"].'").hide();';
+								$strSalida.= $crlf.'		$("#hdn'.$field["name"].'Clear").val("0");';
+								
 							}
 							break;
 
@@ -971,6 +1081,10 @@ class Tabla {
 						case "image":
 							$strSalida.= $crlf.'	if ($("#'.$field['name'].'").get(0).files[0] != null)';
 							$strSalida.= $crlf.'		frmData.append("'.$field['name'].'", $("#'.$field['name'].'").get(0).files[0]);';
+							
+							if ($field["required"] == false) {
+								$strSalida.= $crlf.'	frmData.append("vectorClear-'.$field['name'].'", $("#hdn'.$field['name'].'Clear").val());';
+							}
 							break;
 
 						case "ckeditor":

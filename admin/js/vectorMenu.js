@@ -54,6 +54,16 @@ function getVariable(variable){
     }
 } 
 
+function borrar(campo) {
+	$("#hdn" + campo + "Clear").val("1");
+	
+	$("#divPreview" + campo).html("");
+
+	$("#" + campo).replaceWith($("#" + campo).clone());
+	
+	$("#btnBorrar" + campo).hide();
+}
+
 (function ( $ ) {
 	$.fn.vectorMenu = function( options ) {
 
