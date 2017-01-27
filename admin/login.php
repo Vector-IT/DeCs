@@ -1,5 +1,5 @@
-<?php 
-	require_once 'php/datos.php';
+<?php
+require_once 'php/datos.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -10,6 +10,21 @@
 		$(document).ready(function() {
 			$("#usuario").focus();
 		});
+
+
+		function cambiarTema() {
+			var styleSheets = $("link");
+			var href = 'css/bootstrap-dark.css';
+			for (var i = 0; i < styleSheets.length; i++) {
+				if (styleSheets[i].href != null) {
+				    if (styleSheets[i].href.indexOf(href) >= 0) {
+				        styleSheets[i].disabled = !$("#theme").prop("checked");
+				        break;
+				    }
+				}
+			}
+		}
+				
 	</script>
 <body>
 	<?php require_once 'php/header.php'; ?>	
@@ -35,23 +50,36 @@
 					echo '<input type="hidden" name="returnUrl" value="'.$_REQUEST["returnUrl"].'" />';
 			?>
 			
-			<div class="form-group">
-				<label for="usuario" class="control-label col-md-2">Usuario:</label>
-				<div class="col-md-4">
-					<input type="text" class="form-control" id="usuario" name="usuario" placeholder="Usuario" required />
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Ingrese su usuario y contraseña</h3>
+				</div>
+				<div class="panel-body">
+					<div class="form-group marginTop20">
+						<label for="usuario" class="control-label col-md-2 col-md-offset-2">Usuario:</label>
+						<div class="col-md-4">
+							<input type="text" class="form-control" id="usuario" name="usuario" placeholder="Usuario" required />
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="password" class="control-label col-md-2 col-md-offset-2">Contrase&ntilde;a:</label>
+						<div class="col-md-4">
+							<input type="password" class="form-control" name="password" placeholder="Contrase&ntilde;a" required />
+						</div>
+					</div>
+					
+					<label class="labelCheck col-md-4 col-md-offset-4">
+						<input type="checkbox" name="theme" id="theme" onchange="cambiarTema()" /> Tema oscuro
+					</label>
+					
+					<div class="form-group">
+						<div class="col-md-offset-4 col-md-4 text-right">
+							<button type="submit" class="btn btn-primary">Login</button>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="form-group">
-				<label for="password" class="control-label col-md-2">Contrase&ntilde;a:</label>
-				<div class="col-md-4">
-					<input type="password" class="form-control" name="password" placeholder="Contrase&ntilde;a" required />
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-md-offset-2 col-md-4">
-					<button type="submit" class="btn btn-primary">Login</button>
-				</div>
-			</div>
+			
 		</form>
 		<!-- 
 		<div class="row">
@@ -61,5 +89,9 @@
 		</div>
 		-->
 	</div>
+	
+	<?php
+		require_once 'php/footer.php';
+	?>	
 </body>
 </html>

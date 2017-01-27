@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$_SESSION['is_logged_in'] = 1;
 		$_SESSION['NumeUser'] = $fila['NumeUser'];
 		$_SESSION['NombUsua'] = $fila['NombPers'];
+		$_SESSION['DarkTheme'] = $_POST['theme'];
 	
 		$tabla->free();
 	}

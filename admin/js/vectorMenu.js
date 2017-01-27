@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$(".menuVector").vectorMenu({
 		trigger: ".btnMenu",
-		duration: 300,
+		duration: 100,
 		opacity: 0.7,
 		background: "#000",
 		closeWidth: "30px",
@@ -20,13 +20,17 @@ $(document).ready(function() {
 		
 		var js = $(this).data("js");
 		
-		if (url != undefined) {
-			location.href = url;
-		}
+		var result;
+		//Ejecuto primero el js
 		
 		if (js != undefined) {
-			eval(js);
+			result = eval(js);
 		}
+
+		if ((url != undefined) && ((result == undefined) || (result == true))) {
+			location.href = url;
+		}
+
 	});
 });
 
@@ -252,12 +256,15 @@ function borrar(campo) {
 				var item = $(this);
 				
 				setTimeout(function(){ 
-					if (item.attr("data-js") != null)
-						eval(item.attr("data-js"));
+					var result;
+					if (item.attr("data-js") != null) {
+						result = eval(item.attr("data-js"));
+					}
 					
-					if (item.attr("data-url") != null)
+					if ((item.attr("data-url") != null) && ((result == undefined) || (result == true))) {
 						location.href = item.attr("data-url"); 
-					}, 
+					}
+				}, 
 					settings.duration
 				);
 			}

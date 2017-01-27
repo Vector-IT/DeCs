@@ -15,6 +15,7 @@
 	.flLeft {float:left;}
 	.flRight {float:right;}
 
+	.sinMargin {margin:0;}
 	.marginTop10 {margin-top:10px;}
 	.marginTop20 {margin-top:20px;}
 	.marginTop40 {margin-top:40px;}
@@ -61,7 +62,7 @@
 	
 	.alert {margin-top: 10px;}
 
-	footer { font-size:12px; text-align:center; padding: 5px 0; position:fixed; bottom: 0; width: 100%; background: rgba(248, 248, 248, 0.5);}
+	footer { font-size:12px; text-align:center; padding: 5px 0; position:fixed; bottom: 0; width: 100%;}
 
 	.border-bottom {border-bottom: 1px solid #CCC; -webkit-print-color-adjust: exact;}
 	.border-bottom2 {border-bottom: 1px dotted #CCC; -webkit-print-color-adjust: exact;}
@@ -80,7 +81,7 @@
 	.noMobile {display:none;}
 
 	.jumbotron .row {text-align: center;}
-	.jumbotron .titulo {margin: 0;}
+	.jumbotron .titulo {margin: 0; font-size: 20px; height: inherit;}
 
 	.form-group2 {width:auto; display:block; float:none;}
 	.form-group2 label {width:auto;}
