@@ -89,6 +89,9 @@
 	 */
 	$tabla = new Tabla("clientes", "Clientes", "el Cliente", true, "objeto/clientes", "fa-address-card");
 	$tabla->labelField = "NombClie";
+	
+	$tabla->btnForm = [
+			['<i class="fa fa-fw fa-share-square-o" aria-hidden="true"></i> Generar cuotas', "generarCuotas", "btn-success"]	];
 
 	$tabla->addField("NumeClie", "number", 0, "Numero", false, true, true);
 	$tabla->addField("NombClie", "text", 200, "Nombre");

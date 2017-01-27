@@ -34,6 +34,7 @@ class Tabla {
   	public $jsOnEdit;
 
   	public $btnList;
+  	public $btnForm;
 
   	public $footerFunc;
   	public $footerField;
@@ -75,6 +76,7 @@ class Tabla {
         $this->jsOnEdit = '';
 
         $this->btnList = [];
+        $this->btnForm = [];
 
         $this->footerFunc = '';
         $this->footerField = '';
@@ -198,6 +200,14 @@ class Tabla {
 
 		if (isset($this->fields)) {
 			$strSalida.= $crlf.'<button id="btnNuevo" type="button" class="btn btn-sm btn-primary" onclick="editar'. $this->tabladb .'(0);"><i class="fa fa-plus-circle fa-fw" aria-hidden="true"></i> Nuevo</button>';
+			
+			//Botones opcionales
+			if (count($this->btnForm) > 0) {
+				for ($I = 0; $I < count($this->btnForm); $I++) {
+					$strSalida.= $crlf.'<button class="btn btn-sm '. $this->btnForm[$I][2] .'" onclick="'. $this->btnForm[$I][1] .'">'. $this->btnForm[$I][0] .'</button>';
+				}
+			}
+			
 			$strSalida.= $crlf.'<form id="frm'. $this->tabladb .'" class="form-horizontal marginTop20 frmObjeto" method="post" onSubmit="return false;">';
 			$strSalida.= $crlf.'<input type="hidden" id="hdnTabla" value="'.$this->tabladb.'" />';
 			$strSalida.= $crlf.'<input type="hidden" id="hdnOperacion" value="0" />';
