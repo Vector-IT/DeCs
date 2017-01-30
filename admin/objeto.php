@@ -84,6 +84,14 @@
 			
 			if ($tabla->allowNew) {
 				$tabla->createForm();
+			} 
+			else {
+				//Botones opcionales
+				if (count($tabla->btnForm) > 0) {
+					for ($I = 0; $I < count($tabla->btnForm); $I++) {
+						echo $crlf.'<button class="btn btn-sm '. $tabla->btnForm[$I][2] .'" onclick="'. $tabla->btnForm[$I][1] .'">'. $tabla->btnForm[$I][0] .'</button>';
+					}
+				}
 			}
 		?>
 		

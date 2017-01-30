@@ -56,7 +56,7 @@ class Tabla {
      * @param string $icono
      * @param string $order
      */
-    public function __construct($tabladb='', $titulo='', $tituloSingular = '', $showMenu=true, $url='', $icono='', $order='', $allowEdit = true, $allowDelete=true) {
+    public function __construct($tabladb='', $titulo='', $tituloSingular = '', $showMenu=true, $url='', $icono='', $order='', $allowEdit = true, $allowDelete=true, $allowNew=true) {
         $this->tabladb = $tabladb;
         $this->titulo = $titulo;
         $this->tituloSingular = $tituloSingular;
@@ -65,7 +65,7 @@ class Tabla {
         $this->icono = $icono;
         $this->order = $order;
 
-        $this->allowNew = true;
+        $this->allowNew = $allowNew;
         $this->allowEdit = $allowEdit;
         $this->allowDelete = $allowDelete;
 
@@ -200,14 +200,13 @@ class Tabla {
 
 		if (isset($this->fields)) {
 			$strSalida.= $crlf.'<button id="btnNuevo" type="button" class="btn btn-sm btn-primary" onclick="editar'. $this->tabladb .'(0);"><i class="fa fa-plus-circle fa-fw" aria-hidden="true"></i> Nuevo</button>';
-			
 			//Botones opcionales
 			if (count($this->btnForm) > 0) {
 				for ($I = 0; $I < count($this->btnForm); $I++) {
 					$strSalida.= $crlf.'<button class="btn btn-sm '. $this->btnForm[$I][2] .'" onclick="'. $this->btnForm[$I][1] .'">'. $this->btnForm[$I][0] .'</button>';
 				}
 			}
-			
+				
 			$strSalida.= $crlf.'<form id="frm'. $this->tabladb .'" class="form-horizontal marginTop20 frmObjeto" method="post" onSubmit="return false;">';
 			$strSalida.= $crlf.'<input type="hidden" id="hdnTabla" value="'.$this->tabladb.'" />';
 			$strSalida.= $crlf.'<input type="hidden" id="hdnOperacion" value="0" />';
@@ -217,7 +216,7 @@ class Tabla {
 			}
 
 			$strSalida.= $crlf.'<div class="form-group">';
-			$strSalida.= $crlf.'	<div class="col-md-offset-2 col-md-4">';
+			$strSalida.= $crlf.'	<div class="col-md-offset-2 col-lg-offset-2 col-md-4 col-lg-4">';
 			$strSalida.= $crlf.'		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-check fa-fw" aria-hidden="true"></i> Aceptar</button>';
 			$strSalida.= $crlf.'&nbsp;';
 			$strSalida.= $crlf.'		<button type="reset" class="btn btn-sm btn-default" onclick="editar'. $this->tabladb .'(-1);"><i class="fa fa-times fa-fw" aria-hidden="true"></i> Cancelar</button>';
@@ -251,25 +250,25 @@ class Tabla {
 				$strSalida.= $crlf.'<div class="form-group form-group-sm '.$field['cssGroup'].'">';
 
 				if ($field['type'] != 'checkbox') {
-					$strSalida.= $crlf.'<label for="'.$fname.'" class="control-label col-md-2">'.$field['label'].':</label>';
+					$strSalida.= $crlf.'<label for="'.$fname.'" class="control-label col-md-2 col-lg-2">'.$field['label'].':</label>';
 
 					if ($field['size'] <= 20) {
-						$strSalida.= $crlf.'<div class="col-md-2">';
+						$strSalida.= $crlf.'<div class="col-md-2 col-lg-2">';
 					}
 					elseif ($field['size'] <= 40) {
-						$strSalida.= $crlf.'<div class="col-md-3">';
+						$strSalida.= $crlf.'<div class="col-md-3 col-lg-3">';
 					}
 					elseif ($field['size'] <= 80) {
-						$strSalida.= $crlf.'<div class="col-md-4">';
+						$strSalida.= $crlf.'<div class="col-md-4 col-lg-4">';
 					}
 					elseif  ($field['size'] <= 160) {
-						$strSalida.= $crlf.'<div class="col-md-5">';
+						$strSalida.= $crlf.'<div class="col-md-5 col-lg-5">';
 					}
 					elseif   ($field['size'] <= 200) {
-						$strSalida.= $crlf.'<div class="col-md-6">';
+						$strSalida.= $crlf.'<div class="col-md-6 col-lg-6">';
 					}
 					else {
-						$strSalida.= $crlf.'<div class="col-md-10">';
+						$strSalida.= $crlf.'<div class="col-md-10 col-lg-10">';
 					}
 				}
 
@@ -331,7 +330,7 @@ class Tabla {
 						break;
 
 					case 'checkbox':
-						$strSalida.= $crlf.'<div class="col-md-4 col-md-offset-2">';
+						$strSalida.= $crlf.'<div class="col-md-4 col-lg-4 col-md-offset-2 col-lg-offset-2">';
 						$strSalida.= $crlf.'<label class="labelCheck ucase">';
 						$strSalida.= $crlf.'<input type="checkbox" id="'.$fname.'" '. ($field['readOnly']?'readonly':'') .'> '. $field['label'];
 						$strSalida.= $crlf.'</label>';
@@ -470,12 +469,12 @@ class Tabla {
 						$strSalida.= $crlf.'<input type="hidden" id="'.$fname.'" />';
 						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'-buscar" placeholder="Ingrese localidad" /> ';
 						$strSalida.= $crlf.'</div>';
-						$strSalida.= $crlf.'<div class="col-md-2">';
+						$strSalida.= $crlf.'<div class="col-md-2 col-lg-2">';
 						$strSalida.= $crlf.'<button type="button" class="btn btn-default" id="'.$fname.'-btnBuscar" onclick="buscarLoc($(\'#'.$fname.'-buscar\').val(), \'#'.$fname.'\')">Buscar</button>';
 						$strSalida.= $crlf.'</div>';
 						$strSalida.= $crlf.'</div>';
 						$strSalida.= $crlf.'<div class="form-group">';
-						$strSalida.= $crlf.'<div class="col-md-10 col-md-offset-2">';
+						$strSalida.= $crlf.'<div class="col-md-10 col-lg-10 col-md-offset-2 col-lg-offset-2">';
 						$strSalida.= $crlf.'<div id="map" style="height: 500px;" data-campo="#'.$fname.'"></div>';
 						$strSalida.= $crlf.'<script type="text/javascript">';
 						$strSalida.= $crlf.'$(document).ready(function() {';

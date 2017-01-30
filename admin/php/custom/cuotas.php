@@ -1,0 +1,1 @@
+<?php class Cuota extends Tabla {	}?>
