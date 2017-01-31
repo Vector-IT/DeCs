@@ -1,0 +1,1 @@
+function generarCuotas() {	location.href = "cuotas.php";}

@@ -66,7 +66,7 @@ class VectorForms {
 	 * @param string $strSQL
 	 * @return boolean|string
 	 */
-	public function ejecutarCMD($strSQL='') {
+	public function ejecutarCMD($strSQL) {
 		$conn = $this->newConn();
 		$strError = "";
 
@@ -152,35 +152,54 @@ class VectorForms {
 		$strSalida.= str_replace("#titulo#", "Inicio", str_replace("#icono#", "fa-home", str_replace("#url#", $this->raiz."admin/", $strItem)));
 		$strSalida.= $strSeparador;
 
+		$I = 1;
 		foreach ($this->tablas as $tabla) {
+			foreach ($this->menuItems as $item) {
+				if ($item["NumeCarg"] != '') {
+					$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
+						
+					if (intval($item["NumeCarg"]) < $NumeCarg) {
+						continue;
+					}
+				}
+					
+				if ($item["Index"] === $I) {
+					$strSalida.= str_replace("#titulo#", $item["Titulo"], str_replace("#icono#", $item["Icono"], str_replace("#url#", $item["Url"], $strItem)));
+					$strSalida.= $strSeparador;
+				}
+			}
+				
 			if ($tabla->showMenu) {
 				if ($tabla->numeCarg != '') {
 					$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
-
+		
 					if (intval($tabla->numeCarg) < $NumeCarg) {
 						continue;
 					}
 				}
-
+		
 				$strSalida.= str_replace("#titulo#", $tabla->titulo, str_replace("#icono#", $tabla->icono, str_replace("#url#", $tabla->url, $strItem)));
 				$strSalida.= $strSeparador;
 			}
+				
+			$I++;
 		}
-
+		
 		foreach ($this->menuItems as $item) {
-			if ($item["NumeCarg"] != '') {
-				$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
-
-				if (intval($item["NumeCarg"]) < $NumeCarg) {
-					continue;
+			if ($item["Index"] == '') {
+				if ($item["NumeCarg"] != '') {
+					$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
+		
+					if (intval($item["NumeCarg"]) < $NumeCarg) {
+						continue;
+					}
 				}
+		
+				$strSalida.= str_replace("#titulo#", $item["Titulo"], str_replace("#icono#", $item["Icono"], str_replace("#url#", $item["Url"], $strItem)));
+				$strSalida.= $strSeparador;
 			}
-
-			$strSalida.= str_replace("#titulo#", $item["Titulo"], str_replace("#icono#", $item["Icono"], str_replace("#url#", $item["Url"], $strItem)));
-			$strSalida.= $strSeparador;
-
 		}
-
+		
 		$strSalida.= '</div>';
 
 		$strSalida.= '<button class="btnMenu btn btn-default btn-xs fixed top5 left5 noDesktop" title="Men&uacute;"><i class="fa fa-bars"></i></button>';

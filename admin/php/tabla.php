@@ -7,6 +7,7 @@
  *
  */
 class Tabla {
+	public $name;
     public $tabladb;
     public $titulo;
     public $tituloSingular;
@@ -56,8 +57,9 @@ class Tabla {
      * @param string $icono
      * @param string $order
      */
-    public function __construct($tabladb='', $titulo='', $tituloSingular = '', $showMenu=true, $url='', $icono='', $order='', $allowEdit = true, $allowDelete=true, $allowNew=true) {
-        $this->tabladb = $tabladb;
+    public function __construct($name, $tabladb, $titulo, $tituloSingular = '', $showMenu=true, $url='', $icono='', $order='', $allowEdit = true, $allowDelete=true, $allowNew=true) {
+        $this->name = $name;
+    	$this->tabladb = $tabladb;
         $this->titulo = $titulo;
         $this->tituloSingular = $tituloSingular;
         $this->showMenu = $showMenu;
@@ -763,46 +765,13 @@ class Tabla {
 		}
 		$strSalida.= $crlf.'});';
 
-		//Preview IMG
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'function preview(event, divPreview) {';
-		$strSalida.= $crlf.'	divPreview.html("");';
-		$strSalida.= $crlf.'	var id = divPreview.attr("id").substr(10);';
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'	var files = event.target.files; //FileList object';
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'	for(var i = 0; i< files.length; i++)';
-		$strSalida.= $crlf.'	{';
-		$strSalida.= $crlf.'		var file = files[i];';
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'		//Solo imagenes';
-		$strSalida.= $crlf.'		if(!file.type.match("image"))';
-		$strSalida.= $crlf.'			continue;';
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'		var picReader = new FileReader();';
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'		picReader.addEventListener("load",function(event){';
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'			var picFile = event.target;';
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'			divPreview.append(\'<img id="img\' + divPreview.children().length + \'" class="thumbnail" src="\' + picFile.result + \'" />\');';
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'			$("#btnBorrar" + id).show();';
-		$strSalida.= $crlf.'			$("#hdn" + id + "Clear").val("0");';
-		$strSalida.= $crlf.'		});';
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'		//Leer la imagen';
-		$strSalida.= $crlf.'		picReader.readAsDataURL(file);';
-		$strSalida.= $crlf.'	}';
-		$strSalida.= $crlf.'}';
-
 		//Listar
 		$strSalida.= $crlf.'';
 		$strSalida.= $crlf.'function listar'. $this->tabladb .'() {';
 		$strSalida.= $crlf.'	$("#divDatos").html("");';
 		$strSalida.= $crlf.'	$.post("php/tablaHandler.php",';
 		$strSalida.= $crlf.'		{ operacion: "10"';
-		$strSalida.= $crlf.'			, tabla: "'.$this->tabladb.'"';
+		$strSalida.= $crlf.'			, tabla: "'.$this->name.'"';
 
 		if ($this->masterFieldId != '' && isset($_GET[$this->masterFieldId])) {
 			$strSalida.= $crlf.'			, '. $this->masterFieldId .': "'. $_GET[$this->masterFieldId] .'"';
@@ -815,6 +784,41 @@ class Tabla {
 		$strSalida.= $crlf.'	);';
 		$strSalida.= $crlf.'}';
 
+		//Preview IMG
+		if ($this->allowNew || $this->allowEdit) {
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'function preview(event, divPreview) {';
+			$strSalida.= $crlf.'	divPreview.html("");';
+			$strSalida.= $crlf.'	var id = divPreview.attr("id").substr(10);';
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'	var files = event.target.files; //FileList object';
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'	for(var i = 0; i< files.length; i++)';
+			$strSalida.= $crlf.'	{';
+			$strSalida.= $crlf.'		var file = files[i];';
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'		//Solo imagenes';
+			$strSalida.= $crlf.'		if(!file.type.match("image"))';
+			$strSalida.= $crlf.'			continue;';
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'		var picReader = new FileReader();';
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'		picReader.addEventListener("load",function(event){';
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'			var picFile = event.target;';
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'			divPreview.append(\'<img id="img\' + divPreview.children().length + \'" class="thumbnail" src="\' + picFile.result + \'" />\');';
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'			$("#btnBorrar" + id).show();';
+			$strSalida.= $crlf.'			$("#hdn" + id + "Clear").val("0");';
+			$strSalida.= $crlf.'		});';
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'		//Leer la imagen';
+			$strSalida.= $crlf.'		picReader.readAsDataURL(file);';
+			$strSalida.= $crlf.'	}';
+			$strSalida.= $crlf.'}';
+		}
+		
 		//Borrar
 		if ($this->allowDelete) {
 			$strSalida.= $crlf.'';
@@ -828,401 +832,315 @@ class Tabla {
 		}
 
 		//Editar
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'function editar'. $this->tabladb .'(strID){';
-		$strSalida.= $crlf.'	if (strID > 0) {';
-		$strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").fadeIn();';
-		$strSalida.= $crlf.'		$("html, body").animate({';
-		$strSalida.= $crlf.'			scrollTop: $("#frm'. $this->tabladb .'").offset().top';
-		$strSalida.= $crlf.'		}, 1000);';
-		$strSalida.= $crlf.'		$("#hdnOperacion").val("1");';
-		$strSalida.= $crlf.'		blnEdit = true;';
-		$strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").find(".form-control[type!=\'hidden\'][disabled!=disabled]:first").focus()';
-
-		if (isset($this->fields)) {
-			foreach ($this->fields as $field) {
-				if ($field['showOnForm']) {
-					if ($field['showOnList']) {
-						if (($field['isHiddenInList']) || ($field['type'] == "select") || ($field['type'] == "selectmultiple")) {
-
-							switch ($field["type"]) {
-								case "ckeditor":
-									$strSalida.= $crlf.'		CKEDITOR.instances.'.$field['name'].'.setData($("#'.$field['name'].'" + strID).val());';
-									break;
-
-								case "selectmultiple":
-									$strSalida.= $crlf.'		$("#'.$field['name'].'").selectpicker("val", $("#'.$field['name'].'" + strID).val().split(","));';
-									break;
-
-								case "image":
-								case "file":
-									$strSalida.= $crlf.'		if ($("#'.$field['name'].'" + strID).val() != "") {';
-									if ($field["type"] == "image") {
-										$strSalida.= $crlf.'			$("#divPreview'.$field['name'].'").html(\'<img id="img0" class="thumbnail" src="\' + $("#'.$field['name'].'" + strID).val() + \'" />\');';
-									}
-									if ($field["required"] == false) {
-										$strSalida.= $crlf.'			$("#btnBorrar'.$field['name'].'").show();';
-										$strSalida.= $crlf.'			$("#hdn'.$field['name'].'Clear").val("0");';
-									}
-									
-									$strSalida.= $crlf.'		}';
-									$strSalida.= $crlf.'		else {';
-									if ($field["type"] == "image") {
-										$strSalida.= $crlf.'			$("#divPreview'.$field['name'].'").html("");';
-									}
-									if ($field["required"] == false) {
-										$strSalida.= $crlf.'			$("#btnBorrar'.$field['name'].'").hide();';
-										$strSalida.= $crlf.'			$("#hdn'.$field['name'].'Clear").val("0");';
-									}
-									$strSalida.= $crlf.'		}';
-									break;
-
-								case "checkbox":
-									$strSalida.= $crlf.'		$("#'.$field['name'].'").prop("checked", Boolean(parseInt($("#'.$field['name'].'" + strID).val())));';
-									break;
-
-								default:
-									$strSalida.= $crlf.'		$("#'.$field['name'].'").val($("#'.$field['name'].'" + strID).val());';
-									break;
+		if ($this->allowNew || $this->allowEdit) {
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'function editar'. $this->tabladb .'(strID){';
+			$strSalida.= $crlf.'	if (strID > 0) {';
+			$strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").fadeIn();';
+			$strSalida.= $crlf.'		$("html, body").animate({';
+			$strSalida.= $crlf.'			scrollTop: $("#frm'. $this->tabladb .'").offset().top';
+			$strSalida.= $crlf.'		}, 1000);';
+			$strSalida.= $crlf.'		$("#hdnOperacion").val("1");';
+			$strSalida.= $crlf.'		blnEdit = true;';
+			$strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").find(".form-control[type!=\'hidden\'][disabled!=disabled]:first").focus()';
+	
+			if (isset($this->fields)) {
+				foreach ($this->fields as $field) {
+					if ($field['showOnForm']) {
+						if ($field['showOnList']) {
+							if (($field['isHiddenInList']) || ($field['type'] == "select") || ($field['type'] == "selectmultiple")) {
+	
+								switch ($field["type"]) {
+									case "ckeditor":
+										$strSalida.= $crlf.'		CKEDITOR.instances.'.$field['name'].'.setData($("#'.$field['name'].'" + strID).val());';
+										break;
+	
+									case "selectmultiple":
+										$strSalida.= $crlf.'		$("#'.$field['name'].'").selectpicker("val", $("#'.$field['name'].'" + strID).val().split(","));';
+										break;
+	
+									case "image":
+									case "file":
+										$strSalida.= $crlf.'		if ($("#'.$field['name'].'" + strID).val() != "") {';
+										if ($field["type"] == "image") {
+											$strSalida.= $crlf.'			$("#divPreview'.$field['name'].'").html(\'<img id="img0" class="thumbnail" src="\' + $("#'.$field['name'].'" + strID).val() + \'" />\');';
+										}
+										if ($field["required"] == false) {
+											$strSalida.= $crlf.'			$("#btnBorrar'.$field['name'].'").show();';
+											$strSalida.= $crlf.'			$("#hdn'.$field['name'].'Clear").val("0");';
+										}
+										
+										$strSalida.= $crlf.'		}';
+										$strSalida.= $crlf.'		else {';
+										if ($field["type"] == "image") {
+											$strSalida.= $crlf.'			$("#divPreview'.$field['name'].'").html("");';
+										}
+										if ($field["required"] == false) {
+											$strSalida.= $crlf.'			$("#btnBorrar'.$field['name'].'").hide();';
+											$strSalida.= $crlf.'			$("#hdn'.$field['name'].'Clear").val("0");';
+										}
+										$strSalida.= $crlf.'		}';
+										break;
+	
+									case "checkbox":
+										$strSalida.= $crlf.'		$("#'.$field['name'].'").prop("checked", Boolean(parseInt($("#'.$field['name'].'" + strID).val())));';
+										break;
+	
+									default:
+										$strSalida.= $crlf.'		$("#'.$field['name'].'").val($("#'.$field['name'].'" + strID).val());';
+										break;
+								}
 							}
+							else {
+								switch ($field["type"]) {
+									case "image":
+									case "file":
+										$strSalida.= $crlf.'		if ($("#'.$field['name'].'" + strID).val() != "") {';
+										if ($field["type"] == "image") {
+											$strSalida.= $crlf.'			$("#divPreview'.$field['name'].'").html(\'<img id="img0" class="thumbnail" src="\' + $("#'.$field['name'].'" + strID).val() + \'" />\');';
+										}
+										if ($field["required"] == false) {
+											$strSalida.= $crlf.'			$("#btnBorrar'.$field['name'].'").show();';
+											$strSalida.= $crlf.'			$("#hdn'.$field['name'].'Clear").val("0");';
+										}
+											
+										$strSalida.= $crlf.'		}';
+										$strSalida.= $crlf.'		else {';
+										if ($field["type"] == "image") {
+											$strSalida.= $crlf.'			$("#divPreview'.$field['name'].'").html("");';
+										}
+										if ($field["required"] == false) {
+											$strSalida.= $crlf.'			$("#btnBorrar'.$field['name'].'").hide();';
+											$strSalida.= $crlf.'			$("#hdn'.$field['name'].'Clear").val("0");';
+										}
+										$strSalida.= $crlf.'		}';
+										break;
+	
+									case "checkbox":
+										$strSalida.= $crlf.'		$("#'.$field['name'].'").prop("checked", Boolean(parseInt($("#'.$field['name'].'" + strID).val())));';
+										break;
+	
+									default:
+										$strSalida.= $crlf.'		$("#'.$field['name'].'").val($("#'.$field['name'].'" + strID).html());';
+										break;
+								}
+							}
+						}
+						elseif ($field['type'] == "password") {
+							$strSalida.= $crlf.'		$("#'.$field['name'].'").val("****");';
+						}
+	
+						if ($field['onChange'] != '') {
+							$strSalida.= $crlf.'		$("#'.$field['name'].'").trigger("change");';
+						}
+	
+						switch ($field['type']) {
+							case 'image':
+							case 'file':
+								$strSalida.= $crlf.'		$("#'.$field['name'].'").removeAttr("required");';
+								break;
+	
+							case 'textarea':
+								$strSalida.= $crlf.'		$("#'.$field['name'].'").autogrow({vertical: true, horizontal: false, minHeight: 36});';
+								break;
+	
+							case 'calcfield':
+								$strSalida.= $crlf.'		if (typeof calcField == "function") {';
+								$strSalida.= $crlf.'			calcField("'.$field['name'].'");';
+								$strSalida.= $crlf.'		}';
+								$strSalida.= $crlf.'';
+								break;
+	
+							case 'datetime':
+							case 'date':
+							case 'time':
+								$strSalida.= $crlf.'		$(".inp'.$field['name'].'").datetimepicker("show");';
+								$strSalida.= $crlf.'		$(".inp'.$field['name'].'").datetimepicker("hide");';
+								$strSalida.= $crlf.'';
+								break;
+	
+							case 'gmaps':
+								$strSalida.= $crlf.'		if (marker != null)';
+								$strSalida.= $crlf.'				marker.setMap(null);';
+								$strSalida.= $crlf.'';
+								$strSalida.= $crlf.'		if ($("#'.$field['name'].'").val() != "") {';
+								$strSalida.= $crlf.'';
+								$strSalida.= $crlf.'			var aux = $("#'.$field['name'].'").val();';
+								$strSalida.= $crlf.'			var lat = aux.substring(0, aux.indexOf(","));';
+								$strSalida.= $crlf.'			var lng = aux.substring(aux.indexOf(",")+1);';
+								$strSalida.= $crlf.'';
+								$strSalida.= $crlf.'				var pos = new google.maps.LatLng(lat, lng);';
+								$strSalida.= $crlf.'';
+								$strSalida.= $crlf.'				marker = new google.maps.Marker({';
+								$strSalida.= $crlf.'					position: pos,';
+								$strSalida.= $crlf.'					map: map';
+								$strSalida.= $crlf.'				});';
+								$strSalida.= $crlf.'';
+								$strSalida.= $crlf.'				map.setCenter(pos);';
+								$strSalida.= $crlf.'		}';
+								break;
+						}
+					}
+				}
+			}
+			$strSalida.= $crlf.'		'. $this->jsOnEdit;
+	
+			$strSalida.= $crlf.'	}';
+	
+			$strSalida.= $crlf.'	else {';
+			$strSalida.= $crlf.'		if (strID == 0) {';
+			$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeIn(function() {';
+			$strSalida.= $crlf.'				$("#frm'. $this->tabladb .'").find(".form-control[type!=\'hidden\'][disabled!=disabled]:first").focus()';
+			$strSalida.= $crlf.'			});';
+			$strSalida.= $crlf.'		}';
+			$strSalida.= $crlf.'		else {';
+			$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeOut();';
+			$strSalida.= $crlf.'		}';
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'		$("#hdnOperacion").val("0");';
+			$strSalida.= $crlf.'		blnEdit = false;';
+			$strSalida.= $crlf.'		$(".divPreview").html("");';
+	
+			if (isset($this->fields)) {
+				foreach ($this->fields as $field) {
+					if ($field['showOnForm']) {
+	
+						if ($field['type'] == "ckeditor") {
+							$strSalida.= $crlf.'		CKEDITOR.instances.'.$field['name'].'.setData("");';
 						}
 						else {
-							switch ($field["type"]) {
-								case "image":
-								case "file":
-									$strSalida.= $crlf.'		if ($("#'.$field['name'].'" + strID).val() != "") {';
-									if ($field["type"] == "image") {
-										$strSalida.= $crlf.'			$("#divPreview'.$field['name'].'").html(\'<img id="img0" class="thumbnail" src="\' + $("#'.$field['name'].'" + strID).val() + \'" />\');';
-									}
-									if ($field["required"] == false) {
-										$strSalida.= $crlf.'			$("#btnBorrar'.$field['name'].'").show();';
-										$strSalida.= $crlf.'			$("#hdn'.$field['name'].'Clear").val("0");';
-									}
-										
-									$strSalida.= $crlf.'		}';
-									$strSalida.= $crlf.'		else {';
-									if ($field["type"] == "image") {
-										$strSalida.= $crlf.'			$("#divPreview'.$field['name'].'").html("");';
-									}
-									if ($field["required"] == false) {
-										$strSalida.= $crlf.'			$("#btnBorrar'.$field['name'].'").hide();';
-										$strSalida.= $crlf.'			$("#hdn'.$field['name'].'Clear").val("0");';
-									}
-									$strSalida.= $crlf.'		}';
-									break;
-
-								case "checkbox":
-									$strSalida.= $crlf.'		$("#'.$field['name'].'").prop("checked", Boolean(parseInt($("#'.$field['name'].'" + strID).val())));';
-									break;
-
-								default:
-									$strSalida.= $crlf.'		$("#'.$field['name'].'").val($("#'.$field['name'].'" + strID).html());';
-									break;
-							}
+							$strSalida.= $crlf.'		$("#'.$field['name'].'").val("'.$field['value'].'");';
 						}
-					}
-					elseif ($field['type'] == "password") {
-						$strSalida.= $crlf.'		$("#'.$field['name'].'").val("****");';
-					}
-
-					if ($field['onChange'] != '') {
-						$strSalida.= $crlf.'		$("#'.$field['name'].'").trigger("change");';
-					}
-
-					switch ($field['type']) {
-						case 'image':
-						case 'file':
-							$strSalida.= $crlf.'		$("#'.$field['name'].'").removeAttr("required");';
-							break;
-
-						case 'textarea':
-							$strSalida.= $crlf.'		$("#'.$field['name'].'").autogrow({vertical: true, horizontal: false, minHeight: 36});';
-							break;
-
-						case 'calcfield':
-							$strSalida.= $crlf.'		if (typeof calcField == "function") {';
-							$strSalida.= $crlf.'			calcField("'.$field['name'].'");';
-							$strSalida.= $crlf.'		}';
-							$strSalida.= $crlf.'';
-							break;
-
-						case 'datetime':
-						case 'date':
-						case 'time':
-							$strSalida.= $crlf.'		$(".inp'.$field['name'].'").datetimepicker("show");';
-							$strSalida.= $crlf.'		$(".inp'.$field['name'].'").datetimepicker("hide");';
-							$strSalida.= $crlf.'';
-							break;
-
-						case 'gmaps':
-							$strSalida.= $crlf.'		if (marker != null)';
-							$strSalida.= $crlf.'				marker.setMap(null);';
-							$strSalida.= $crlf.'';
-							$strSalida.= $crlf.'		if ($("#'.$field['name'].'").val() != "") {';
-							$strSalida.= $crlf.'';
-							$strSalida.= $crlf.'			var aux = $("#'.$field['name'].'").val();';
-							$strSalida.= $crlf.'			var lat = aux.substring(0, aux.indexOf(","));';
-							$strSalida.= $crlf.'			var lng = aux.substring(aux.indexOf(",")+1);';
-							$strSalida.= $crlf.'';
-							$strSalida.= $crlf.'				var pos = new google.maps.LatLng(lat, lng);';
-							$strSalida.= $crlf.'';
-							$strSalida.= $crlf.'				marker = new google.maps.Marker({';
-							$strSalida.= $crlf.'					position: pos,';
-							$strSalida.= $crlf.'					map: map';
-							$strSalida.= $crlf.'				});';
-							$strSalida.= $crlf.'';
-							$strSalida.= $crlf.'				map.setCenter(pos);';
-							$strSalida.= $crlf.'		}';
-							break;
-					}
-				}
-			}
-		}
-		$strSalida.= $crlf.'		'. $this->jsOnEdit;
-
-		$strSalida.= $crlf.'	}';
-
-		$strSalida.= $crlf.'	else {';
-		$strSalida.= $crlf.'		if (strID == 0) {';
-		$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeIn(function() {';
-		$strSalida.= $crlf.'				$("#frm'. $this->tabladb .'").find(".form-control[type!=\'hidden\'][disabled!=disabled]:first").focus()';
-		$strSalida.= $crlf.'			});';
-		$strSalida.= $crlf.'		}';
-		$strSalida.= $crlf.'		else {';
-		$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeOut();';
-		$strSalida.= $crlf.'		}';
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'		$("#hdnOperacion").val("0");';
-		$strSalida.= $crlf.'		blnEdit = false;';
-		$strSalida.= $crlf.'		$(".divPreview").html("");';
-
-		if (isset($this->fields)) {
-			foreach ($this->fields as $field) {
-				if ($field['showOnForm']) {
-
-					if ($field['type'] == "ckeditor") {
-						$strSalida.= $crlf.'		CKEDITOR.instances.'.$field['name'].'.setData("");';
-					}
-					else {
-						$strSalida.= $crlf.'		$("#'.$field['name'].'").val("'.$field['value'].'");';
-					}
-
-					if ($field['mirrorField'] != '') {
-						$strSalida.= $crlf.'		$("#'.$field['mirrorField'].'").val("'.$field['value'].'");';
-					}
-
-					switch ($field['type']) {
-						case 'image':
-						case 'file':
-							if ($field['required']) {
-								$strSalida.= $crlf.'		$("#'.$field['name'].'").attr("required", true);';
-							}
-							else {
-								$strSalida.= $crlf.'		$("#btnBorrar'.$field["name"].'").hide();';
-								$strSalida.= $crlf.'		$("#hdn'.$field["name"].'Clear").val("0");';
-								
-							}
-							break;
-
-						case 'textarea':
-							$strSalida.= $crlf.'		$("#'.$field['name'].'").autogrow({vertical: true, horizontal: false, minHeight: 36});';
-							break;
-
-						case 'selectmultiple':
-							$strSalida.= $crlf.'		$("#'.$field['name'].'").selectpicker("deselectAll");';
-							break;
-
-						case 'gmaps':
-							$strSalida.= $crlf.'		if (marker != null)';
-							$strSalida.= $crlf.'			marker.setMap(null);';
-							$strSalida.= $crlf.'		map.setCenter({lat: '.$this->gmapsCenterLat.', lng: '.$this->gmapsCenterLng.'});';
-							break;
-					}
-				}
-			}
-
-			if ($this->masterFieldId != '' && isset($_GET[$this->masterFieldId])) {
-				$strSalida.= $crlf.'		$("#'. $this->masterFieldId .'").val('. $_GET[$this->masterFieldId] .');';
-			}
-		}
-
-		//Detalles
-		/*
-		if (isset($this->details)) {
-			foreach ($this->details as $tabla) {
-				$strSalida.= $crlf.'';
-				$strSalida.= $crlf.'		while ($("#'. $tabla->tabladb .'").children().length > 1) {';
-				$strSalida.= $crlf.'			$($("#'. $tabla->tabladb .'").children()[1]).remove();';
-				$strSalida.= $crlf.'		}';
-				$strSalida.= $crlf.'';
-				$strSalida.= $crlf.'		$("#'. $tabla->tabladb .'").children().find("input").val("");';
-				$strSalida.= $crlf.'		$("#'. $tabla->tabladb .'").children().find("textarea").val("");';
-			}
-		}
-		*/
-
-		$strSalida.= $crlf.'	}';
-		$strSalida.= $crlf.'}';
-
-		//Aceptar
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'function aceptar'. $this->tabladb .'(){';
-		$strSalida.= $crlf.'	$("#actualizando").show();';
-		$strSalida.= $crlf.'	var frmData = new FormData();';
-		$strSalida.= $crlf.'	if ($("#hdnOperacion").val() != "2") {';
-		$strSalida.= $crlf.'		if (typeof validar == "function") {';
-		$strSalida.= $crlf.'			if (!validar())';
-		$strSalida.= $crlf.'				return;';
-		$strSalida.= $crlf.'		}';
-		$strSalida.= $crlf.'	}';
-
-		$strSalida.= $crlf.'	frmData.append("operacion", $("#hdnOperacion").val());';
-		$strSalida.= $crlf.'	frmData.append("tabla", "'.$this->tabladb.'");';
-		if (isset($this->fields)) {
-			foreach ($this->fields as $field) {
-				if (($field['showOnForm']) && ($field['type'] != 'calcfield')) {
-					switch ($field['type']) {
-						case "checkbox":
-							$strSalida.= $crlf.'	frmData.append("'.$field['name'].'", $("#'.$field['name'].'").prop("checked") ? 1 : 0);';
-							break;
-
-						case "file":
-						case "image":
-							$strSalida.= $crlf.'	if ($("#'.$field['name'].'").get(0).files[0] != null)';
-							$strSalida.= $crlf.'		frmData.append("'.$field['name'].'", $("#'.$field['name'].'").get(0).files[0]);';
-							
-							if ($field["required"] == false) {
-								$strSalida.= $crlf.'	frmData.append("vectorClear-'.$field['name'].'", $("#hdn'.$field['name'].'Clear").val());';
-							}
-							break;
-
-						case "ckeditor":
-							$strSalida.= $crlf.'	frmData.append("'.$field['name'].'", CKEDITOR.instances.'.$field['name'].'.getData());';
-							break;
-
-						default:
-							if ($field['mirrorField'] == '') {
-								$strSalida.= $crlf.'	frmData.append("'.$field['name'].'", $("#'.$field['name'].'").val());';
-							}
-							else {
-								$strSalida.= $crlf.'	frmData.append("'.$field['name'].'", $("#'.$field['mirrorField'].'").val());';
-							}
-							break;
-					}
-				}
-			}
-		}
-		$strSalida.= $crlf.'';
-
-		//Detalles
-		/*
-		if (isset($this->details)) {
-			foreach ($this->details as $tabla) {
-				$strSalida.= $crlf.'//Detalles de '. $tabla->titulo;
-				$strSalida.= $crlf.'	frmData.append("tbDetalle-'.$tabla->tabladb.'", $("#'. $tabla->tabladb .'").children().length);';
-				$strSalida.= $crlf.'';
-
-				$strSalida.= $crlf.'	var I = 1;';
-
-				$strSalida.= $crlf.'	$("#'. $tabla->tabladb .'").children().each( function() {';
-
-				if (isset($tabla->fields)) {
-					foreach ($tabla->fields as $field) {
-						if ($field['showOnForm']) {
-							if ($field['isMasterID']) {
-								$strSalida.= $crlf.'		frmData.append("'.$tabla->tabladb.'-'.$field['name'].'"+I, $("#'.$field['name'].'").val());';
-							}
-							else {
-								$strSalida.= $crlf.'		frmData.append("'.$tabla->tabladb.'-'.$field['name'].'"+I, $(this).find("[id^=\''.$tabla->tabladb.'-'.$field['name'].'\']").val());';
-							}
+	
+						if ($field['mirrorField'] != '') {
+							$strSalida.= $crlf.'		$("#'.$field['mirrorField'].'").val("'.$field['value'].'");';
+						}
+	
+						switch ($field['type']) {
+							case 'image':
+							case 'file':
+								if ($field['required']) {
+									$strSalida.= $crlf.'		$("#'.$field['name'].'").attr("required", true);';
+								}
+								else {
+									$strSalida.= $crlf.'		$("#btnBorrar'.$field["name"].'").hide();';
+									$strSalida.= $crlf.'		$("#hdn'.$field["name"].'Clear").val("0");';
+									
+								}
+								break;
+	
+							case 'textarea':
+								$strSalida.= $crlf.'		$("#'.$field['name'].'").autogrow({vertical: true, horizontal: false, minHeight: 36});';
+								break;
+	
+							case 'selectmultiple':
+								$strSalida.= $crlf.'		$("#'.$field['name'].'").selectpicker("deselectAll");';
+								break;
+	
+							case 'gmaps':
+								$strSalida.= $crlf.'		if (marker != null)';
+								$strSalida.= $crlf.'			marker.setMap(null);';
+								$strSalida.= $crlf.'		map.setCenter({lat: '.$this->gmapsCenterLat.', lng: '.$this->gmapsCenterLng.'});';
+								break;
 						}
 					}
 				}
-				$strSalida.= $crlf.'		I++;';
-				$strSalida.= $crlf.'	});';
-
+	
+				if ($this->masterFieldId != '' && isset($_GET[$this->masterFieldId])) {
+					$strSalida.= $crlf.'		$("#'. $this->masterFieldId .'").val('. $_GET[$this->masterFieldId] .');';
+				}
 			}
-		}
-		*/
-
-		$strSalida.= $crlf.'';
-		$strSalida.= $crlf.'	if (window.XMLHttpRequest)';
-		$strSalida.= $crlf.'	{// code for IE7+, Firefox, Chrome, Opera, Safari';
-		$strSalida.= $crlf.'		xmlhttp = new XMLHttpRequest();';
-		$strSalida.= $crlf.'	}';
-		$strSalida.= $crlf.'	else';
-		$strSalida.= $crlf.'	{// code for IE6, IE5';
-		$strSalida.= $crlf.'		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");';
-		$strSalida.= $crlf.'	}';
-		$strSalida.= $crlf.'	';
-		$strSalida.= $crlf.'	xmlhttp.onreadystatechange = function() {';
-		$strSalida.= $crlf.'		if (xmlhttp.readyState==4 && xmlhttp.status==200) {';
-		$strSalida.= $crlf.'			$("#txtHint").html(xmlhttp.responseText);';
-		$strSalida.= $crlf.'	';
-		$strSalida.= $crlf.'			if (xmlhttp.responseText.indexOf("Error") == -1) {';
-		$strSalida.= $crlf.'				$("#divMsj").removeClass("alert-danger");';
-		$strSalida.= $crlf.'				$("#divMsj").addClass("alert-success");';
-		$strSalida.= $crlf.'				$(".selectpicker").selectpicker("deselectAll");';
-		$strSalida.= $crlf.'				editar'. $this->tabladb .'(-1);';
-		$strSalida.= $crlf.'				listar'. $this->tabladb .'();';
-		$strSalida.= $crlf.'			}';
-		$strSalida.= $crlf.'			else {';
-		$strSalida.= $crlf.'				$("#divMsj").removeClass("alert-success");';
-		$strSalida.= $crlf.'				$("#divMsj").addClass("alert-danger");';
-		$strSalida.= $crlf.'			}';
-		$strSalida.= $crlf.'	';
-		$strSalida.= $crlf.'			$("#actualizando").hide();';
-		$strSalida.= $crlf.'			$("#divMsj").show();';
-		$strSalida.= $crlf.'		}';
-		$strSalida.= $crlf.'	};';
-		$strSalida.= $crlf.'	';
-		$strSalida.= $crlf.'	xmlhttp.open("POST","php/tablaHandler.php",true);';
-		$strSalida.= $crlf.'	xmlhttp.send(frmData);';
-		$strSalida.= $crlf.'}';
-
-
-		//Detalles
-		/*
-		if (isset($this->details)) {
-			$strSalida.= $crlf.'';
-			$strSalida.= $crlf.'function agregarChildren(child) {';
-			$strSalida.= $crlf.'	var CantChild = $("#" + child).children().length;';
-			$strSalida.= $crlf.'	var idChild = $("#" + child).children()[0].id;';
-			$strSalida.= $crlf.'';
-
-			$strSalida.= $crlf.'	var childNew = $("#" + idChild).clone();';
-			$strSalida.= $crlf.'';
-
-			$strSalida.= $crlf.'	var CantChildOld = CantChild;';
-			$strSalida.= $crlf.'	CantChild++;';
-			$strSalida.= $crlf.'';
-
-			$strSalida.= $crlf.'	childNew.attr("id", "div" + child + CantChild);';
-			$strSalida.= $crlf.'';
-
-			$strSalida.= $crlf.'	childNew.html(childNew.html().replace("quitarChildren(\'" + idChild, "quitarChildren(\'div" + child  + CantChild));';
-			$strSalida.= $crlf.'';
-
-			$strSalida.= $crlf.'	childNew.find("input").val("");';
-			$strSalida.= $crlf.'	childNew.find("textarea").val("");';
-
-			$strSalida.= $crlf.'';
-
-			$strSalida.= $crlf.'	childNew.find("input, textarea, select").each(function() {';
-			$strSalida.= $crlf.'		$(this).attr("id", $(this).attr("id") + CantChild);';
-			$strSalida.= $crlf.'	});';
-			$strSalida.= $crlf.'';
-
-			//$strSalida.= $crlf.'	childNew.css("display", "none");';
-			$strSalida.= $crlf.'';
-
-			$strSalida.= $crlf.'	childNew.appendTo($("#" + child));';
-			//$strSalida.= $crlf.'	childNew.fadeIn("slow");';
-
+			$strSalida.= $crlf.'	}';
 			$strSalida.= $crlf.'}';
 		}
-		*/
-
+	
+		//Aceptar
+		if ($this->allowNew || $this->allowEdit || $this->allowDelete) {
+			$strSalida.= $crlf.'';
+			$strSalida.= $crlf.'function aceptar'. $this->tabladb .'(){';
+			$strSalida.= $crlf.'	$("#actualizando").show();';
+			$strSalida.= $crlf.'	var frmData = new FormData();';
+			$strSalida.= $crlf.'	if ($("#hdnOperacion").val() != "2") {';
+			$strSalida.= $crlf.'		if (typeof validar == "function") {';
+			$strSalida.= $crlf.'			if (!validar())';
+			$strSalida.= $crlf.'				return;';
+			$strSalida.= $crlf.'		}';
+			$strSalida.= $crlf.'	}';
+	
+			$strSalida.= $crlf.'	frmData.append("operacion", $("#hdnOperacion").val());';
+			$strSalida.= $crlf.'	frmData.append("tabla", "'.$this->tabladb.'");';
+			if (isset($this->fields)) {
+				foreach ($this->fields as $field) {
+					if (($field['showOnForm']) && ($field['type'] != 'calcfield')) {
+						switch ($field['type']) {
+							case "checkbox":
+								$strSalida.= $crlf.'	frmData.append("'.$field['name'].'", $("#'.$field['name'].'").prop("checked") ? 1 : 0);';
+								break;
+	
+							case "file":
+							case "image":
+								$strSalida.= $crlf.'	if ($("#'.$field['name'].'").get(0).files[0] != null)';
+								$strSalida.= $crlf.'		frmData.append("'.$field['name'].'", $("#'.$field['name'].'").get(0).files[0]);';
+								
+								if ($field["required"] == false) {
+									$strSalida.= $crlf.'	frmData.append("vectorClear-'.$field['name'].'", $("#hdn'.$field['name'].'Clear").val());';
+								}
+								break;
+	
+							case "ckeditor":
+								$strSalida.= $crlf.'	frmData.append("'.$field['name'].'", CKEDITOR.instances.'.$field['name'].'.getData());';
+								break;
+	
+							default:
+								if ($field['mirrorField'] == '') {
+									$strSalida.= $crlf.'	frmData.append("'.$field['name'].'", $("#'.$field['name'].'").val());';
+								}
+								else {
+									$strSalida.= $crlf.'	frmData.append("'.$field['name'].'", $("#'.$field['mirrorField'].'").val());';
+								}
+								break;
+						}
+					}
+				}
+			}
+			$strSalida.= $crlf.'';
+	
+			$strSalida.= $crlf.'	if (window.XMLHttpRequest)';
+			$strSalida.= $crlf.'	{// code for IE7+, Firefox, Chrome, Opera, Safari';
+			$strSalida.= $crlf.'		xmlhttp = new XMLHttpRequest();';
+			$strSalida.= $crlf.'	}';
+			$strSalida.= $crlf.'	else';
+			$strSalida.= $crlf.'	{// code for IE6, IE5';
+			$strSalida.= $crlf.'		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");';
+			$strSalida.= $crlf.'	}';
+			$strSalida.= $crlf.'	';
+			$strSalida.= $crlf.'	xmlhttp.onreadystatechange = function() {';
+			$strSalida.= $crlf.'		if (xmlhttp.readyState==4 && xmlhttp.status==200) {';
+			$strSalida.= $crlf.'			$("#txtHint").html(xmlhttp.responseText);';
+			$strSalida.= $crlf.'	';
+			$strSalida.= $crlf.'			if (xmlhttp.responseText.indexOf("Error") == -1) {';
+			$strSalida.= $crlf.'				$("#divMsj").removeClass("alert-danger");';
+			$strSalida.= $crlf.'				$("#divMsj").addClass("alert-success");';
+			$strSalida.= $crlf.'				$(".selectpicker").selectpicker("deselectAll");';
+			$strSalida.= $crlf.'				editar'. $this->tabladb .'(-1);';
+			$strSalida.= $crlf.'				listar'. $this->tabladb .'();';
+			$strSalida.= $crlf.'			}';
+			$strSalida.= $crlf.'			else {';
+			$strSalida.= $crlf.'				$("#divMsj").removeClass("alert-success");';
+			$strSalida.= $crlf.'				$("#divMsj").addClass("alert-danger");';
+			$strSalida.= $crlf.'			}';
+			$strSalida.= $crlf.'	';
+			$strSalida.= $crlf.'			$("#actualizando").hide();';
+			$strSalida.= $crlf.'			$("#divMsj").show();';
+			$strSalida.= $crlf.'		}';
+			$strSalida.= $crlf.'	};';
+			$strSalida.= $crlf.'	';
+			$strSalida.= $crlf.'	xmlhttp.open("POST","php/tablaHandler.php",true);';
+			$strSalida.= $crlf.'	xmlhttp.send(frmData);';
+			$strSalida.= $crlf.'}';
+		}
+		
+		//Google maps
 		if ($this->gmaps) {
 		//InitMap
 			$strSalida.= $crlf.'';

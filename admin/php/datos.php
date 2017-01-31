@@ -20,8 +20,9 @@
 				"NumeCarg" => "",
 				"Titulo" => "Salir del sistema",
 				"Icono" => "fa-sign-out",
-				"Url" => "logout.php"
-			)
+				"Url" => "logout.php",
+				"Index" => ''
+			),
 	];
 
 
@@ -32,7 +33,7 @@
 	/**
 	 * USUARIOS
 	 */
-	$tabla = new Tabla("usuarios", "Usuarios", "el Usuario", true, "objeto/usuarios", "fa-users");
+	$tabla = new Tabla("usuarios", "usuarios", "Usuarios", "el Usuario", true, "objeto/usuarios", "fa-users");
 	$tabla->labelField = "NombPers";
 	$tabla->numeCarg = 1;
 	
@@ -52,7 +53,7 @@
 	/**
 	 * BANCOS
 	 */
-	$tabla = new Tabla("bancos", "Bancos", "el Banco", true, "objeto/bancos", "fa-bank");
+	$tabla = new Tabla("bancos", "bancos", "Bancos", "el Banco", true, "objeto/bancos", "fa-bank");
 	$tabla->labelField = "NombBanc";
 	
 	$tabla->addField("NumeBanc", "number", 0, "Número", false, true, true);
@@ -66,7 +67,7 @@
 	/**
 	 * ESTADOS CLIENTES
 	 */
-	$tabla = new Tabla("estadosclientes", "Estados de clientes", "el Estado", true, "objeto/estadosclientes", "fa-cogs");
+	$tabla = new Tabla("estadosclientes", "estadosclientes", "Estados de clientes", "el Estado", true, "objeto/estadosclientes", "fa-cogs");
 	$tabla->labelField = "NombEstaClie";
 	
 	$tabla->addField("NumeEstaClie", "number", 0, "Numero", false, true, true);
@@ -78,7 +79,7 @@
 	/**
 	 * TIPOS DE PAGOS
 	 */
-	$tabla = new Tabla("tipospagos", "Formas de Pago", "la Forma de Pago", true, "objeto/tipospagos", "fa-credit-card");
+	$tabla = new Tabla("tipospagos", "tipospagos", "Formas de Pago", "la Forma de Pago", true, "objeto/tipospagos", "fa-credit-card");
 	$tabla->labelField = "NombTipoPago";
 	
 	$tabla->addField("NumeTipoPago", "number", 0, "Número", false, true, true);
@@ -92,7 +93,7 @@
 	/**
 	 * TIPOS DE CONTACTOS
 	 */
-	$tabla = new Tabla("tiposcontactos", "Tipos de Contacto", "el Tipo de contacto", true, "objeto/tiposcontactos", "fa-headphones");
+	$tabla = new Tabla("tiposcontactos", "tiposcontactos", "Tipos de Contacto", "el Tipo de contacto", true, "objeto/tiposcontactos", "fa-headphones");
 	$tabla->labelField = "NombTipoCont";
 	
 	$tabla->addField("NumeTipoCont", "number", 0, "Número", false, true, true);
@@ -106,7 +107,7 @@
 	/**
 	 * TIPOS DE RESPUESTAS
 	 */
-	$tabla = new Tabla("tiposrespuestas", "Tipos de Repuesta", "el Tipo de respuesta", true, "objeto/tiposrespuestas", "fa-question-circle");
+	$tabla = new Tabla("tiposrespuestas", "tiposrespuestas", "Tipos de Repuesta", "el Tipo de respuesta", true, "objeto/tiposrespuestas", "fa-question-circle");
 	$tabla->labelField = "NombTipoResp";
 	
 	$tabla->addField("NumeTipoResp", "number", 0, "Número", false, true, true);
@@ -120,7 +121,7 @@
 	/**
 	 * EMPRESAS
 	 */
-	$tabla = new Tabla('empresas', 'Empresas', 'la Empresa', true, 'objeto/empresas', 'fa-building');
+	$tabla = new Tabla('empresas', 'empresas', 'Empresas', 'la Empresa', true, 'objeto/empresas', 'fa-building');
 	$tabla->allowDelete = false;
 	$tabla->labelField = 'NombEmpr';
 	$tabla->jsFiles = ["admin/js/empresas.js"];
@@ -138,7 +139,10 @@
 	$tabla->addField("ComiDecs", "number", 0, "Comisión (solo números)");
 	$tabla->fields["ComiDecs"]['isHiddenInList'] = true;
 	
-	$tabla->addFieldFileImage("ImagEmpr", "image", 100, "Logo", 'imgEmpresas', false);	
+	$tabla->addFieldFileImage("ImagEmpr", "image", 100, "Logo", 'imgEmpresas', false);
+	
+	$tabla->addField("ImpoAdmi", "number", 80, "Gastos administrativos");
+	$tabla->addField("ImpoOtro", "number", 80, "Otros gastos");
 	
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 
@@ -147,7 +151,7 @@
 	/**
 	 * VENDEDORES
 	 */
-	$tabla = new Tabla("vendedores", "Vendedores", "el Vendedor", false, "objeto/vendedores", "fa-male");
+	$tabla = new Tabla("vendedores", "vendedores", "Vendedores", "el Vendedor", false, "objeto/vendedores", "fa-male");
 	$tabla->labelField = "NombVend";
 	$tabla->masterTable = "empresas";
 	$tabla->masterFieldId = "NumeEmpr";
@@ -163,28 +167,30 @@
 	/**
 	 * CLIENTES
 	 */
-	$tabla = new Tabla("clientes", "Clientes", "el Cliente", true, "objeto/clientes", "fa-address-card");
+	$tabla = new Tabla("clientes", "clientes", "Clientes", "el Cliente", true, "objeto/clientes", "fa-address-card");
 	$tabla->labelField = "NombClie";
 	
 	$tabla->btnForm = [
-			['<i class="fa fa-fw fa-share-square-o" aria-hidden="true"></i> Generar cuotas', "generarCuotas", "btn-success"]
+			['<i class="fa fa-fw fa-share-square-o" aria-hidden="true"></i> Generar cuotas', "generarCuotas()", "btn-success"]
 	];
 	
 	$tabla->btnList = [
 			['Ver cuotas', "verCuotas", "btn-default"]	];
+	
+	$tabla->jsFiles = ['admin/js/custom/clientes.js'];
 	
 	$tabla->addField("NumeClie", "number", 0, "Numero", false, true, true);
 	$tabla->addField("NombClie", "text", 200, "Nombre");
 	$tabla->addField("NumeEmpr", "select", 200, "Empresa", true, false, false, true, '', '', 'empresas', 'NumeEmpr', 'NombEmpr', '', 'NombEmpr');
 	$tabla->fields["NumeEmpr"]["isHiddenInList"] = true;
 	
-	$tabla->addField("NumeTele", "text", 100, "Teléfono");
+	$tabla->addField("NumeTele", "text", 100, "Teléfono", false);
 	$tabla->fields["NumeTele"]["cssGroup"] = "form-group2";
 	
-	$tabla->addField("NumeCelu", "text", 100, "Celular");
+	$tabla->addField("NumeCelu", "text", 100, "Celular", false);
 	$tabla->fields["NumeCelu"]["cssGroup"] = "form-group2";
 	
-	$tabla->addField("MailClie", "email", 200, "E-mail");
+	$tabla->addField("MailClie", "email", 200, "E-mail", false);
 	$tabla->addField("FechIngr", "date", 0, "Fecha ingreso");
 	
 	$tabla->addField("DireClie", "text", 200, "Dirección");
@@ -197,13 +203,13 @@
 	$tabla->fields["NumeProv"]["cssGroup"] = "form-group2";
 	$tabla->fields["NumeProv"]["isHiddenInList"] = true;
 	
-	$tabla->addField("CodiPost", "text", 0, "Código postal");
+	$tabla->addField("CodiPost", "text", 0, "Código postal", false);
 	$tabla->fields["CodiPost"]["isHiddenInList"] = true;
 	
 	$tabla->addField("NumeVend", "select", 80, "Vendedor", true, false, false, true, '', '', 'vendedores', 'NumeVend', 'NombVend', '', 'NombVend');
 	$tabla->fields["NumeVend"]["isHiddenInList"] = true;
 	
-	$tabla->addField("ObseClie", "textarea", 200, "Observaciones");
+	$tabla->addField("ObseClie", "textarea", 200, "Observaciones", false);
 	$tabla->fields["ObseClie"]["isHiddenInList"] = true;
 	
 	$tabla->addField("NumeEstaClie", "select", 80, "Estado", true, false, false, true, '', '', 'estadosclientes', 'NumeEstaClie', 'NombEstaClie', '', 'NombEstaClie');
@@ -223,9 +229,29 @@
 	
 	$config->tablas["clientes"] = $tabla;
 	
-	$tabla = new Cuota("pagos", "Cuotas", "la Cuota", "true", "objeto/cuotas", "fa-share-square-o", "FechPago DESC, NumeClie", false, false, false);
+	$tabla = new Cuota("cuotas", "pagos", "Cuotas", "la Cuota", "true", "cuotas.php", "fa-share-square-o", "FechPago DESC, NumeClie", false, false, true);
 	$tabla->btnForm = [
-			['<i class="fa fa-fw fa-share-square-o" aria-hidden="true"></i> Generar cuotas', "generarCuotas", "btn-success"]	];
+			['<i class="fa fa-fw fa-share-square-o" aria-hidden="true"></i> Generar cuotas', "generarCuotas()", "btn-success"]	];
+	
+	$tabla->jsFiles = ['admin/js/custom/cuotas.js'];
+	$tabla->btnList = [
+			['<i class="fa fa-fw fa-share-square-o" aria-hidden="true"></i> Seguimiento', "seguimientoCuota", "btn-default"],
+			['<i class="fa fa-fw fa-eye" aria-hidden="true"></i> Ver', "verCuota", "btn-primary"],	];
+	
+	$tabla->addField("NumePago", "number", 0, "Número", false, true, true);
+	$tabla->addField("FechPago", "date", 80, "Fecha Emisión");
+	$tabla->addField("NumeClie", "select", 80, "Cliente", true, false, false, true, '', '', 'clientes', 'NumeClie', 'NombClie', '', 'NombClie');
+	
+	$tabla->addField("ObsePago", "textarea", 200, "Observaciones");
+	$tabla->fields["ObsePago"]["isHiddenInList"] = true;
+	
+	$tabla->addField("NumeTipoPago", "select", 80, "Tipo pago", true, false, false, true, '', '', 'tipospagos', 'NumeTipoPago', 'NombTipoPago', '', 'NombTipoPago');
+	$tabla->fields["NumeTipoPago"]["isHiddenInList"] = true;
+	
+	$tabla->addField("NumeEstaPago", "select", 80, "Estado", true, false, false, true, '', '', 'estadospagos', 'NumeEstaPago', 'NombEstaPago', '', 'NombEstaPago');
+	$tabla->addField("FechVenc", "date", 80, "Vencimiento");
+	$tabla->addField("ImpoTota", "calcfield", 0, "Total");
 	
 	$config->tablas["cuotas"] = $tabla;
+	$tabla->fields["ImpoTota"]["txtAlign"] = 'right';
 	?>

@@ -38,8 +38,7 @@ require_once 'php/datos.php';
 			<?php
 				if (isset($_REQUEST["error"])) {
 					$strSalida = '';
-					$strSalida.= '<div class="alert alert-danger alert-dismissible" role="alert">';
-					$strSalida.= '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+					$strSalida.= '<div class="alert alert-danger" role="alert">';
 					$strSalida.= '<strong>Error!</strong> El usuario o la contrase&ntilde;a son incorrectos.';
 					$strSalida.= '</div>';
 					
@@ -81,13 +80,12 @@ require_once 'php/datos.php';
 			</div>
 			
 		</form>
-		<!-- 
+
 		<div class="row">
 			<div class="col-md-12">
 				<button class="btn btn-default" onclick="location.href = '<?php echo $config->raiz?>';">Ir al Sitio</button>
 			</div>
 		</div>
-		-->
 	</div>
 	
 	<?php
