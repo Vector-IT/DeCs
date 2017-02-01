@@ -201,11 +201,11 @@ class Tabla {
 		$strCampo = '';
 
 		if (isset($this->fields)) {
-			$strSalida.= $crlf.'<button id="btnNuevo" type="button" class="btn btn-sm btn-primary" onclick="editar'. $this->tabladb .'(0);"><i class="fa fa-plus-circle fa-fw" aria-hidden="true"></i> Nuevo</button>';
+			$strSalida.= $crlf.'<button id="btnNuevo" type="button" class="btn btn-sm btn-primary" onclick="editar'. $this->tabladb .'(0);"><i class="fa fa-plus-square fa-fw" aria-hidden="true"></i> Nuevo</button>';
 			//Botones opcionales
 			if (count($this->btnForm) > 0) {
 				for ($I = 0; $I < count($this->btnForm); $I++) {
-					$strSalida.= $crlf.'<button class="btn btn-sm '. $this->btnForm[$I][2] .'" onclick="'. $this->btnForm[$I][1] .'">'. $this->btnForm[$I][0] .'</button>';
+					$strSalida.= $crlf.'<button class="btn btn-sm '. $this->btnForm[$I]['class'] .'" onclick="'. $this->btnForm[$I]['onclick'] .'">'. $this->btnForm[$I]['titulo'] .'</button>';
 				}
 			}
 				
@@ -346,37 +346,40 @@ class Tabla {
 						if ($field['mirrorField'] != '') {
 							$strSalida.= $crlf.'<input type="hidden" id="'. $field['mirrorField'] .'" />';
 						}
-						$strSalida.= $crlf.'<script type="text/javascript">';
-						$strSalida.= $crlf.'$(".inp'.$fname.'").datetimepicker({';
-						$strSalida.= $crlf.'	language: "es",';
-						$strSalida.= $crlf.'	format: "dd-mm-yyyy hh:ii",';
-						$strSalida.= $crlf.'	autoclose: true,';
-						$strSalida.= $crlf.'	todayBtn: true,';
-						$strSalida.= $crlf.'	todayHighlight: false,';
-						$strSalida.= $crlf.'	minuteStep: 15,';
-						$strSalida.= $crlf.'	pickerPosition: "bottom-left",';
-
-						if ($field['mirrorField'] != '') {
-							$strSalida.= $crlf.'	linkField: "'. $field['mirrorField'] .'",';
-							$strSalida.= $crlf.'	linkFormat: "'. $field['mirrorFormat'] .'",';
+						
+						if (!$field["readOnly"]) {
+							$strSalida.= $crlf.'<script type="text/javascript">';
+							$strSalida.= $crlf.'$(".inp'.$fname.'").datetimepicker({';
+							$strSalida.= $crlf.'	language: "es",';
+							$strSalida.= $crlf.'	format: "dd-mm-yyyy hh:ii",';
+							$strSalida.= $crlf.'	autoclose: true,';
+							$strSalida.= $crlf.'	todayBtn: true,';
+							$strSalida.= $crlf.'	todayHighlight: false,';
+							$strSalida.= $crlf.'	minuteStep: 15,';
+							$strSalida.= $crlf.'	pickerPosition: "bottom-left",';
+	
+							if ($field['mirrorField'] != '') {
+								$strSalida.= $crlf.'	linkField: "'. $field['mirrorField'] .'",';
+								$strSalida.= $crlf.'	linkFormat: "'. $field['mirrorFormat'] .'",';
+							}
+	
+							if ($field['dtpOnRender'] != '') {
+								$strSalida.= $crlf.'	onRender: function(date) {';
+								$strSalida.= $crlf.'			return '. $field['dtpOnRender'];
+								$strSalida.= $crlf.'		},';
+							}
+	
+							if ($field['onChange'] == '') {
+								$strSalida.= $crlf.'	});';
+							}
+							else {
+								$strSalida.= $crlf.'	}).on("changeDate", function(ev){';
+								$strSalida.= $crlf.'		'. $field['onChange'];
+								$strSalida.= $crlf.'	});';
+							}
+	
+							$strSalida.= $crlf.'</script>';
 						}
-
-						if ($field['dtpOnRender'] != '') {
-							$strSalida.= $crlf.'	onRender: function(date) {';
-							$strSalida.= $crlf.'			return '. $field['dtpOnRender'];
-							$strSalida.= $crlf.'		},';
-						}
-
-						if ($field['onChange'] == '') {
-							$strSalida.= $crlf.'	});';
-						}
-						else {
-							$strSalida.= $crlf.'	}).on("changeDate", function(ev){';
-							$strSalida.= $crlf.'		'. $field['onChange'];
-							$strSalida.= $crlf.'	});';
-						}
-
-						$strSalida.= $crlf.'</script>';
 						break;
 
 					case 'date':
@@ -384,37 +387,39 @@ class Tabla {
 						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'"size="16" value="" readonly />';
 						$strSalida.= $crlf.'<span class="input-group-addon add-on clickable"><i class="fa fa-calendar fa-fw"></i></span>';
 						$strSalida.= $crlf.'</div>';
-						$strSalida.= $crlf.'<script type="text/javascript">';
-						$strSalida.= $crlf.'$(".inp'.$fname.'").datetimepicker({';
-						$strSalida.= $crlf.'	language: "es",';
-						$strSalida.= $crlf.'	format: "yyyy-mm-dd",';
-						$strSalida.= $crlf.'	minView: 2,';
-						$strSalida.= $crlf.'	autoclose: true,';
-						$strSalida.= $crlf.'	todayBtn: true,';
-						$strSalida.= $crlf.'	todayHighlight: false,';
-						$strSalida.= $crlf.'	pickerPosition: "bottom-left"';
-
-						if ($field['mirrorField'] != '') {
-							$strSalida.= $crlf.'	linkField: "'. $field['mirrorField'] .'",';
-							$strSalida.= $crlf.'	linkFormat: "'. $field['mirrorFormat'] .'",';
+						if (!$field["readOnly"]) {
+							$strSalida.= $crlf.'<script type="text/javascript">';
+							$strSalida.= $crlf.'$(".inp'.$fname.'").datetimepicker({';
+							$strSalida.= $crlf.'	language: "es",';
+							$strSalida.= $crlf.'	format: "yyyy-mm-dd",';
+							$strSalida.= $crlf.'	minView: 2,';
+							$strSalida.= $crlf.'	autoclose: true,';
+							$strSalida.= $crlf.'	todayBtn: true,';
+							$strSalida.= $crlf.'	todayHighlight: false,';
+							$strSalida.= $crlf.'	pickerPosition: "bottom-left"';
+	
+							if ($field['mirrorField'] != '') {
+								$strSalida.= $crlf.'	linkField: "'. $field['mirrorField'] .'",';
+								$strSalida.= $crlf.'	linkFormat: "'. $field['mirrorFormat'] .'",';
+							}
+	
+							if ($field['dtpOnRender'] != '') {
+								$strSalida.= $crlf.'	onRender: function(date) {';
+								$strSalida.= $crlf.'			return '. $field['dtpOnRender'];
+								$strSalida.= $crlf.'		},';
+							}
+	
+							if ($field['onChange'] == '') {
+								$strSalida.= $crlf.'	});';
+							}
+							else {
+								$strSalida.= $crlf.'	}).on("changeDate", function(ev){';
+								$strSalida.= $crlf.'		'. $field['onChange'];
+								$strSalida.= $crlf.'	});';
+							}
+	
+							$strSalida.= $crlf.'</script>';
 						}
-
-						if ($field['dtpOnRender'] != '') {
-							$strSalida.= $crlf.'	onRender: function(date) {';
-							$strSalida.= $crlf.'			return '. $field['dtpOnRender'];
-							$strSalida.= $crlf.'		},';
-						}
-
-						if ($field['onChange'] == '') {
-							$strSalida.= $crlf.'	});';
-						}
-						else {
-							$strSalida.= $crlf.'	}).on("changeDate", function(ev){';
-							$strSalida.= $crlf.'		'. $field['onChange'];
-							$strSalida.= $crlf.'	});';
-						}
-
-						$strSalida.= $crlf.'</script>';
 						break;
 
 					case 'time':
@@ -422,42 +427,44 @@ class Tabla {
 						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'" size="16" value="" readonly />';
 						$strSalida.= $crlf.'<span class="input-group-addon clickable"><i class="fa fa-calendar fa-fw"></i></span>';
 						$strSalida.= $crlf.'</div>';
-						$strSalida.= $crlf.'<script type="text/javascript">';
-						$strSalida.= $crlf.'';
-						$strSalida.= $crlf.'$(".inp'.$fname.'").datetimepicker({';
-						$strSalida.= $crlf.'	language: "es",';
-						$strSalida.= $crlf.'	format: "hh:ii",';
-						$strSalida.= $crlf.'	startView: 1,';
-						$strSalida.= $crlf.'	maxView: 1,';
-						$strSalida.= $crlf.'	autoclose: true,';
-						$strSalida.= $crlf.'	minuteStep: 15,';
-						$strSalida.= $crlf.'	pickerPosition: "bottom-left",';
-						$strSalida.= $crlf.'	fontAwesome: true,';
-
-						if ($field['mirrorField'] != '') {
-							$strSalida.= $crlf.'	linkField: "'. $field['mirrorField'] .'",';
-							$strSalida.= $crlf.'	linkFormat: "'. $field['mirrorFormat'] .'",';
+						if (!$field["readOnly"]) {
+							$strSalida.= $crlf.'<script type="text/javascript">';
+							$strSalida.= $crlf.'';
+							$strSalida.= $crlf.'$(".inp'.$fname.'").datetimepicker({';
+							$strSalida.= $crlf.'	language: "es",';
+							$strSalida.= $crlf.'	format: "hh:ii",';
+							$strSalida.= $crlf.'	startView: 1,';
+							$strSalida.= $crlf.'	maxView: 1,';
+							$strSalida.= $crlf.'	autoclose: true,';
+							$strSalida.= $crlf.'	minuteStep: 15,';
+							$strSalida.= $crlf.'	pickerPosition: "bottom-left",';
+							$strSalida.= $crlf.'	fontAwesome: true,';
+	
+							if ($field['mirrorField'] != '') {
+								$strSalida.= $crlf.'	linkField: "'. $field['mirrorField'] .'",';
+								$strSalida.= $crlf.'	linkFormat: "'. $field['mirrorFormat'] .'",';
+							}
+	
+							if ($field['dtpOnRender'] != '') {
+								$strSalida.= $crlf.'	onRender: function(date) {';
+								$strSalida.= $crlf.'			return '. $field['dtpOnRender'];
+								$strSalida.= $crlf.'		},';
+							}
+	
+							if ($field['onChange'] == '') {
+								$strSalida.= $crlf.'	});';
+							}
+							else {
+								$strSalida.= $crlf.'	}).on("changeDate", function(ev){';
+								$strSalida.= $crlf.'		'. $field['onChange'];
+								$strSalida.= $crlf.'	});';
+							}
+	
+							if ($field['hoursDisabled'] != '') {
+								$strSalida.= $crlf.'$(".inp'.$fname.'").datetimepicker("setHoursDisabled", '. $field['hoursDisabled'] .');';
+							}
+							$strSalida.= $crlf.'</script>';
 						}
-
-						if ($field['dtpOnRender'] != '') {
-							$strSalida.= $crlf.'	onRender: function(date) {';
-							$strSalida.= $crlf.'			return '. $field['dtpOnRender'];
-							$strSalida.= $crlf.'		},';
-						}
-
-						if ($field['onChange'] == '') {
-							$strSalida.= $crlf.'	});';
-						}
-						else {
-							$strSalida.= $crlf.'	}).on("changeDate", function(ev){';
-							$strSalida.= $crlf.'		'. $field['onChange'];
-							$strSalida.= $crlf.'	});';
-						}
-
-						if ($field['hoursDisabled'] != '') {
-							$strSalida.= $crlf.'$(".inp'.$fname.'").datetimepicker("setHoursDisabled", '. $field['hoursDisabled'] .');';
-						}
-						$strSalida.= $crlf.'</script>';
 						break;
 
 					case "ckeditor":
@@ -625,6 +632,18 @@ class Tabla {
 											$strSalida.= $crlf.'</td>';
 											break;
 
+										case 'checkbox':
+											$strSalida.= $crlf.'<td>';
+											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field['name']].'" />';
+											if (boolval($fila[$field['name']])) {
+												$strSalida.= $crlf.'<i class="fa fa-check-square-o fa-fw" aria-hidden="true"></i>';
+											}
+											else {
+												$strSalida.= $crlf.'<i class="fa fa-square-o fa-fw" aria-hidden="true"></i>';
+											}
+											$strSalida.= $crlf.'</td>';
+											break;
+											
 										default:
 											$strSalida.= $crlf.'<td class="text-'. $field['txtAlign'] .' '. $field['cssControl'] .'" id="'.$field['name'] . $fila[$this->IDField].'">'.$fila[$field['name']].'</td>';
 											break;
@@ -654,7 +673,7 @@ class Tabla {
 						//Opcionales
 						if (count($this->btnList) > 0) {
 							for ($I = 0; $I < count($this->btnList); $I++) {
-								$strSalida.= $crlf.'<td class="text-center"><button class="btn btn-sm '. $this->btnList[$I][2] .'" onclick="'. $this->btnList[$I][1] .'(\''.$fila[$this->IDField].'\')">'. $this->btnList[$I][0] .'</button></td>';
+								$strSalida.= $crlf.'<td class="text-center"><button class="btn btn-sm '. $this->btnList[$I]['class'] .'" onclick="'. $this->btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')">'. $this->btnList[$I]['titulo'] .'</button></td>';
 							}
 						}
 
@@ -848,7 +867,7 @@ class Tabla {
 				foreach ($this->fields as $field) {
 					if ($field['showOnForm']) {
 						if ($field['showOnList']) {
-							if (($field['isHiddenInList']) || ($field['type'] == "select") || ($field['type'] == "selectmultiple")) {
+							if (($field['isHiddenInList']) || ($field['type'] == "checkbox") || ($field['type'] == "select") || ($field['type'] == "selectmultiple")) {
 	
 								switch ($field["type"]) {
 									case "ckeditor":
@@ -954,9 +973,11 @@ class Tabla {
 							case 'datetime':
 							case 'date':
 							case 'time':
-								$strSalida.= $crlf.'		$(".inp'.$field['name'].'").datetimepicker("show");';
-								$strSalida.= $crlf.'		$(".inp'.$field['name'].'").datetimepicker("hide");';
-								$strSalida.= $crlf.'';
+								if (!$field["readOnly"]) {
+									$strSalida.= $crlf.'		$(".inp'.$field['name'].'").datetimepicker("show");';
+									$strSalida.= $crlf.'		$(".inp'.$field['name'].'").datetimepicker("hide");';
+									$strSalida.= $crlf.'';
+								}
 								break;
 	
 							case 'gmaps':
@@ -1068,7 +1089,7 @@ class Tabla {
 			$strSalida.= $crlf.'	}';
 	
 			$strSalida.= $crlf.'	frmData.append("operacion", $("#hdnOperacion").val());';
-			$strSalida.= $crlf.'	frmData.append("tabla", "'.$this->tabladb.'");';
+			$strSalida.= $crlf.'	frmData.append("tabla", "'.$this->name.'");';
 			if (isset($this->fields)) {
 				foreach ($this->fields as $field) {
 					if (($field['showOnForm']) && ($field['type'] != 'calcfield')) {

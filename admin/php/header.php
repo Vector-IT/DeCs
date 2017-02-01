@@ -16,7 +16,7 @@
 				echo $_SESSION["NombUsua"];
 			?>
 			</small>
-			<button class="btn btn-default btn-xs" onclick="location.href='logout.php';"><i class="fa fa-sign-out fa-fw"></i></button>
+			<button class="btn btn-default btn-xs" onclick="location.href='logout.php';" data-toggle="tooltip" data-placement="bottom" title="Salir del sistema"><i class="fa fa-sign-out fa-fw"></i></button>
 		</div>
 		<?php }?>
 	</div>

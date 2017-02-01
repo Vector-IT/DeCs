@@ -45,3 +45,8 @@
 		echo '<base href="'. $config->raiz .'admin/" />';
 	?>
 
+	<script>
+		$(function () {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+	</script>

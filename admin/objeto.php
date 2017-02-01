@@ -64,8 +64,8 @@
 					echo $tabla->titulo;
 				}
 				else {
-					if (isset($_GET[$tabla->masterFieldId])) {
-						$strAux = $config->buscarDato("SELECT {$tabla->masterFieldName} FROM {$tabla->masterTable} WHERE {$tabla->masterFieldId} = '{$_GET[$tabla->masterFieldId]}'");
+					if (isset($_REQUEST[$tabla->masterFieldId])) {
+						$strAux = $config->buscarDato("SELECT {$tabla->masterFieldName} FROM {$tabla->masterTable} WHERE {$tabla->masterFieldId} = '{$_REQUEST[$tabla->masterFieldId]}'");
 						echo $tabla->titulo. ' de ' .$strAux;
 					}
 					else {

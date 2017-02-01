@@ -121,12 +121,12 @@
 	/**
 	 * EMPRESAS
 	 */
-	$tabla = new Tabla('empresas', 'empresas', 'Empresas', 'la Empresa', true, 'objeto/empresas', 'fa-building');
+	$tabla = new Tabla('empresas', 'empresas', 'Empresas', 'la Empresa', true, 'objeto/empresas', 'fa-industry');
 	$tabla->allowDelete = false;
 	$tabla->labelField = 'NombEmpr';
 	$tabla->jsFiles = ["admin/js/empresas.js"];
 	$tabla->btnList = [
-			["Vendedores", "verVendedores", "btn-default"]
+			array('titulo'=>"Vendedores", 'onclick'=>"verVendedores", 'class'=>"btn-default")
 	];
 
 	$tabla->addField("NumeEmpr", "number", 0, "Número", false, true, true);
@@ -167,15 +167,21 @@
 	/**
 	 * CLIENTES
 	 */
-	$tabla = new Tabla("clientes", "clientes", "Clientes", "el Cliente", true, "objeto/clientes", "fa-address-card");
+	$tabla = new Tabla("clientes", "clientes", "Clientes", "el Cliente", true, "objeto/clientes", "fa-id-card-o");
 	$tabla->labelField = "NombClie";
 	
 	$tabla->btnForm = [
-			['<i class="fa fa-fw fa-share-square-o" aria-hidden="true"></i> Generar cuotas', "generarCuotas()", "btn-success"]
+			array("titulo"=>'<i class="fa fa-fw fa-money" aria-hidden="true"></i> Generar cuotas', 'onclick'=>"generarCuotas()", 'class'=>"btn-success")
 	];
 	
 	$tabla->btnList = [
-			['Ver cuotas', "verCuotas", "btn-default"]	];
+			array("titulo"=> 'Ver cuotas',
+					"onclick"=> "verCuotas",
+					"class"=> "btn-default"),
+			array("titulo"=> "Crear Seguimiento", 
+					"onclick"=>"crearSeguimiento",
+					"class"=>"btn-default")
+	];
 	
 	$tabla->jsFiles = ['admin/js/custom/clientes.js'];
 	
@@ -214,44 +220,69 @@
 	
 	$tabla->addField("NumeEstaClie", "select", 80, "Estado", true, false, false, true, '', '', 'estadosclientes', 'NumeEstaClie', 'NombEstaClie', '', 'NombEstaClie');
 	
-	$tabla->addField("ValoMovi", "number", 0, "Valor móvil");
-	$tabla->fields["ValoMovi"]["cssGroup"] = "form-group2";
-	
 	$tabla->addField("FechEntr", "text", 0, "Fecha de entrega");
 	$tabla->fields["FechEntr"]["cssGroup"] = "form-group2";
 	$tabla->fields["FechEntr"]["isHiddenInList"] = true;
 	
+	$tabla->addField("ValoMovi", "number", 0, "Valor móvil");
+	$tabla->fields["ValoMovi"]["cssGroup"] = "form-group2";
+	$tabla->fields["ValoMovi"]["isHiddenInList"] = true;
+	
 	$tabla->addField("ValoCuot", "number", 0, "Valor cuota");
 	$tabla->fields["ValoCuot"]["cssGroup"] = "form-group2";
+	$tabla->fields["ValoCuot"]["isHiddenInList"] = true;
 	
 	$tabla->addField("CantCuot", "number", 0, "Cuotas restantes");
 	$tabla->fields["CantCuot"]["cssGroup"] = "form-group2";
 	
 	$config->tablas["clientes"] = $tabla;
 	
-	$tabla = new Cuota("cuotas", "pagos", "Cuotas", "la Cuota", "true", "cuotas.php", "fa-share-square-o", "FechPago DESC, NumeClie", false, false, true);
+	/**
+	 * PAGOS
+	 */
+	$tabla = new Cuota("cuotas", "pagos", "Cuotas", "Cuota", "true", "cuotas.php", "fa-money", "FechPago DESC, NumeClie", false, false, true);
 	$tabla->btnForm = [
-			['<i class="fa fa-fw fa-share-square-o" aria-hidden="true"></i> Generar cuotas', "generarCuotas()", "btn-success"]	];
+			array('titulo'=>'<i class="fa fa-fw fa-money" aria-hidden="true"></i> Generar cuotas', 'onclick'=>"generarCuotas()", 'class'=>"btn-success")	];
 	
 	$tabla->jsFiles = ['admin/js/custom/cuotas.js'];
 	$tabla->btnList = [
-			['<i class="fa fa-fw fa-share-square-o" aria-hidden="true"></i> Seguimiento', "seguimientoCuota", "btn-default"],
-			['<i class="fa fa-fw fa-eye" aria-hidden="true"></i> Ver', "verCuota", "btn-primary"],	];
+			array('titulo'=>'<i class="fa fa-fw fa-eye" aria-hidden="true"></i> Ver', 'onclick'=>"verCuota", 'class'=>"btn-primary"),	];
 	
 	$tabla->addField("NumePago", "number", 0, "Número", false, true, true);
-	$tabla->addField("FechPago", "date", 80, "Fecha Emisión");
+	$tabla->addField("FechPago", "datetime", 80, "Fecha Emisión", true, true);
 	$tabla->addField("NumeClie", "select", 80, "Cliente", true, false, false, true, '', '', 'clientes', 'NumeClie', 'NombClie', '', 'NombClie');
 	
-	$tabla->addField("ObsePago", "textarea", 200, "Observaciones");
+	$tabla->addField("ObsePago", "textarea", 200, "Observaciones", false);
 	$tabla->fields["ObsePago"]["isHiddenInList"] = true;
 	
 	$tabla->addField("NumeTipoPago", "select", 80, "Tipo pago", true, false, false, true, '', '', 'tipospagos', 'NumeTipoPago', 'NombTipoPago', '', 'NombTipoPago');
-	$tabla->fields["NumeTipoPago"]["isHiddenInList"] = true;
 	
 	$tabla->addField("NumeEstaPago", "select", 80, "Estado", true, false, false, true, '', '', 'estadospagos', 'NumeEstaPago', 'NombEstaPago', '', 'NombEstaPago');
 	$tabla->addField("FechVenc", "date", 80, "Vencimiento");
-	$tabla->addField("ImpoTota", "calcfield", 0, "Total");
+	$tabla->addField("ImpoTota", "number", 0, "Total");
+	$tabla->fields["ImpoTota"]["formatDb"] = "CONCAT('$ ', (ImpoPura + ImpoAdmi + ImpoOtro)) ImpoTota";
+	$tabla->fields["ImpoTota"]["showOnForm"] = false;
+	$tabla->fields["ImpoTota"]["txtAlign"] = 'right';
 	
 	$config->tablas["cuotas"] = $tabla;
-	$tabla->fields["ImpoTota"]["txtAlign"] = 'right';
+	
+	/**
+	 * SEGUIMIENTOS
+	 */
+	$tabla = new Tabla("seguimientos", "seguimientos", "Seguimientos", "Seguimiento", true, "objeto/seguimientos", "fa-bookmark-o", "FechSegu DESC", true, false);
+	
+	$tabla->addField("NumeSegu", "number", 0, "Número", false, true, true);
+	$tabla->addField("NumeClie", "select", 80, "Cliente", true, false, false, true, '', '', 'clientes', 'NumeClie', 'NombClie', '', 'NombClie');
+	$tabla->addField("FechSegu", "datetime", 80, "Fecha");
+	$tabla->fields["FechSegu"]["showOnForm"] = false;
+	
+	$tabla->addField("FlagCont", "checkbox", 0, "Estableció contacto?");
+	$tabla->addField("NumeTipoCont", "select", 80, "Tipo de contacto", true, false, false, true, '', '', 'tiposcontactos', 'NumeTipoCont', 'NombTipoCont', '', 'NombTipoCont');
+	$tabla->addField("NumeTipoResp", "select", 80, "Tipo de respuesta", true, false, false, true, '', '', 'tiposrespuestas', 'NumeTipoResp', 'NombTipoResp', '', 'NombTipoResp');
+	$tabla->addField("ObseSegu", "textarea", 1000, "Observaciones", false);
+	$tabla->fields["ObseSegu"]["isHiddenInList"] = true;
+	
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
+	
+	$config->tablas["seguimientos"] = $tabla;
 	?>

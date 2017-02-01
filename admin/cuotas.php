@@ -20,23 +20,26 @@
 	}
 
 	(isset($_REQUEST["id"]))? $item = $_REQUEST["id"]: $item = "";
+	(isset($_REQUEST["NumeClie"]))? $NumeClie = $_REQUEST["NumeClie"]: $NumeClie= "";
+	
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<?php
 		require_once 'php/linksHeader.php';
-/*
-		$strSalida = '';
-		if (count($cuotas->jsFiles) > 0) {
-			for ($I = 0; $I < count($cuotas->jsFiles); $I++) {
-				$strSalida.= $crlf.'	<script src="'. $config->raiz . $cuotas->jsFiles[$I] .'"></script>';
-			}
-		}
 
-		echo $strSalida;
-*/
 		$cuotas->script();
+		
+		if ($NumeClie != '') {
+			$strSalida = $crlf."<script>";
+			$strSalida.= $crlf. "$(function () {";
+			$strSalida.= $crlf. "	$('#btnFiltrar').click();";
+			$strSalida.= $crlf. "});";
+			$strSalida.= $crlf. "</script>";
+			
+			echo $strSalida;
+		}
 	?>
 
 </head>
@@ -151,7 +154,7 @@
 					<div class="col-md-9">
 						<select class="form-control ucase" id="filNumeClie">
 							<option value="">TODOS LOS CLIENTES</option>
-							<?php echo $cuotas->cargarCombo('clientes', 'NumeClie', 'NombClie', '', 'NombClie')?>
+							<?php echo $cuotas->cargarCombo('clientes', 'NumeClie', 'NombClie', '', 'NombClie', $NumeClie)?>
 						</select>
 					</div>
 				</div>
