@@ -21,6 +21,8 @@ class VectorForms {
 	public $showTitulo;
 	public $menuItems = [];
 	
+	public $cssFiles = [];
+	
 	public $imgCKEditor = '';
 
 	/**

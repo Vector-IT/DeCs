@@ -334,13 +334,13 @@ class Tabla {
 					case 'checkbox':
 						$strSalida.= $crlf.'<div class="col-md-4 col-lg-4 col-md-offset-2 col-lg-offset-2">';
 						$strSalida.= $crlf.'<label class="labelCheck ucase">';
-						$strSalida.= $crlf.'<input type="checkbox" id="'.$fname.'" '. ($field['readOnly']?'readonly':'') .'> '. $field['label'];
+						$strSalida.= $crlf.'<input type="checkbox" id="'.$fname.'" '. ($field['readOnly']?'readonly':'') .' '. (boolval($field["value"])? 'checked': '') .'> '. $field['label'];
 						$strSalida.= $crlf.'</label>';
 						break;
 
 					case 'datetime':
 						$strSalida.= $crlf.'<div class="input-group date margin-bottom-sm inp'.$fname.'">';
-						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'"size="16" value="" readonly />';
+						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'"size="16" value="'.$field["value"].'" readonly />';
 						$strSalida.= $crlf.'<span class="input-group-addon add-on clickable"><i class="fa fa-calendar fa-fw"></i></span>';
 						$strSalida.= $crlf.'</div>';
 						if ($field['mirrorField'] != '') {
@@ -384,7 +384,7 @@ class Tabla {
 
 					case 'date':
 						$strSalida.= $crlf.'<div class="input-group date margin-bottom-sm inp'.$fname.'">';
-						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'"size="16" value="" readonly />';
+						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'"size="16" value="'.$field["value"].'" readonly />';
 						$strSalida.= $crlf.'<span class="input-group-addon add-on clickable"><i class="fa fa-calendar fa-fw"></i></span>';
 						$strSalida.= $crlf.'</div>';
 						if (!$field["readOnly"]) {
@@ -424,7 +424,7 @@ class Tabla {
 
 					case 'time':
 						$strSalida.= $crlf.'<div class="input-group date margin-bottom-sm inp'.$fname.'">';
-						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'" size="16" value="" readonly />';
+						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'" size="16" value="'.$field["value"].'" readonly />';
 						$strSalida.= $crlf.'<span class="input-group-addon clickable"><i class="fa fa-calendar fa-fw"></i></span>';
 						$strSalida.= $crlf.'</div>';
 						if (!$field["readOnly"]) {
@@ -493,7 +493,7 @@ class Tabla {
 						break;
 
 					default:
-						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .'/>';
+						$strSalida.= $crlf.'<input type="text" class="form-control input-sm '.$field['cssControl'].'" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' value="'.$field["value"].'"/>';
 						break;
 				}
 

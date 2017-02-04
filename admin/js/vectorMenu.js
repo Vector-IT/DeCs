@@ -68,6 +68,22 @@ function borrar(campo) {
 	$("#btnBorrar" + campo).hide();
 }
 
+//Capturar teclas
+function callkeydownhandler(evnt) {
+   var ev = (evnt) ? evnt : event;
+   var code=(ev.which) ? ev.which : event.keyCode;
+
+   if (code == 45) {
+	   $("#btnNuevo").click();
+   }
+}
+
+if (window.document.addEventListener) {
+   window.document.addEventListener("keydown", callkeydownhandler, false);
+} else {
+   window.document.attachEvent("onkeydown", callkeydownhandler);
+}
+
 (function ( $ ) {
 	$.fn.vectorMenu = function( options ) {
 
@@ -182,13 +198,66 @@ function borrar(campo) {
 			});
 		}
 		
+		//Seteo estilos de submenu
+		vsMenu.find(".item > ul").css({
+			"list-style-type": "none",
+			margin: "-10px 0 0 0",
+			padding: "0",
+			float: "right"
+		});
+		
+		vsMenu.find(".item > ul > li").css({
+			display: "none",
+			padding: "10px 5px",
+			"background-color": "black",
+			color: "white",
+			position: "absolute",
+			left: "250px",
+			width: "200px"
+		});
+		
+		vsMenu.find(".item").hover(
+			//hover
+			function() {
+				$(this).find("ul > li").css({
+					display: "block"
+				});
+			},
+			//normal
+			function() {
+				$(this).find("ul > li").css({
+					display: "none"
+				});
+			}
+		);
+		
+		vsMenu.find(".item > ul > li").hover(
+			//hover
+			function() {
+				$(this).css({
+					"background-color": "#DBDBDB",
+					color: "black"
+				});
+			},
+			//normal
+			function() {
+				$(this).css({
+					"background-color": "black",
+					color: "white"
+				});
+			}
+		);
+			
+
+		
 		//Seteo de estilos a los items en estado normal
 		if (settings.setStyleItem) {
 			vsMenu.find(".item").css({
 				background: settings.itemBackground,
 				color: settings.itemColor,
 				padding: settings.itemPadding,
-				cursor: "pointer"
+				cursor: "pointer",
+				margin: 0,
 			});
 			//Seteo de estilos a los items en estado hover
 			vsMenu.find(".item").hover(
@@ -249,7 +318,7 @@ function borrar(campo) {
 		});
 
 		//Click en el item
-		vsMenu.find(".item").click(function() {
+		vsMenu.find(".item, .item > ul > li").click(function() {
 			if ((settings.closeWidth == "0") || (vsMenu.css("margin-left") == "0px")){
 				$(settings.trigger).click();
 				
@@ -285,22 +354,6 @@ function borrar(campo) {
 		});
 	}
 }( jQuery ));
-
-//Capturar teclas
-function callkeydownhandler(evnt) {
-   var ev = (evnt) ? evnt : event;
-   var code=(ev.which) ? ev.which : event.keyCode;
-
-   if (code == 45) {
-	   $("#btnNuevo").click();
-   }
-}
-
-if (window.document.addEventListener) {
-   window.document.addEventListener("keydown", callkeydownhandler, false);
-} else {
-   window.document.attachEvent("onkeydown", callkeydownhandler);
-}
 
 
 //jQuery UI easing

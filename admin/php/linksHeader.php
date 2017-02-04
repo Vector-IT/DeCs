@@ -43,6 +43,10 @@
 
 	<?php
 		echo '<base href="'. $config->raiz .'admin/" />';
+		
+		foreach ($config->cssFiles as $css) {
+			echo $crlf.'	<link rel="stylesheet" type="text/css" href="'.$config->raiz.$css.'">';
+		}
 	?>
 
 	<script>

@@ -10,6 +10,7 @@
 
 	//Datos de configuracion iniciales
 	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "Departamento de Cobranzas y Servicios", "img/logo.png", true);
+	$config->cssFiles = ["admin/css/custom.css"];
 
 	$_SESSION['imgCKEditor'] = '/VectorForms/admin/ckeditor/imgup';
 
@@ -134,17 +135,34 @@
 	$tabla->addField("NombEmpr", "text", 200, "Nombre");
 	$tabla->addField("NumeBanc", "select", 200, "Banco", true, false, false, true, '', '', 'bancos', 'NumeBanc', 'NombBanc', '', 'NombBanc');
 	$tabla->addField("NumeCuen", "text", 200, "Nro Cuenta");
-	$tabla->addField("PorcComi", "checkbox", 100, "Comision a porcentaje?");
-	$tabla->fields["PorcComi"]['isHiddenInList'] = true;
-
-	$tabla->addField("ComiDecs", "number", 0, "Comisión (solo números)");
-	$tabla->fields["ComiDecs"]['isHiddenInList'] = true;
 
 	$tabla->addFieldFileImage("ImagEmpr", "image", 100, "Logo", 'imgEmpresas', false);
 
 	$tabla->addField("ImpoAdmi", "number", 80, "Gastos administrativos");
+	$tabla->fields["ImpoAdmi"]["cssGroup"] = "form-group2";
+	
+	$tabla->addField("PorcAdmi", "checkbox", 100, "Es porcentaje?", true, false, false, true, '1');
+	$tabla->fields["PorcAdmi"]['isHiddenInList'] = true;
+	$tabla->fields["PorcAdmi"]["cssGroup"] = "form-group2";
+	
 	$tabla->addField("ImpoOtro", "number", 80, "Otros gastos");
+	$tabla->fields["ImpoOtro"]["cssGroup"] = "form-group2";
+	
+	$tabla->addField("PorcOtro", "checkbox", 100, "Es porcentaje?", true, false, false, true, '1');
+	$tabla->fields["PorcOtro"]['isHiddenInList'] = true;
+	$tabla->fields["PorcOtro"]["cssGroup"] = "form-group2";
 
+	$tabla->addField("FechVenc1", "number", 0, "1er Vencimiento");
+	$tabla->fields["FechVenc1"]['isHiddenInList'] = true;
+	
+	$tabla->addField("FechVenc2", "number", 0, "2do Vencimiento");
+	$tabla->fields["FechVenc2"]["cssGroup"] = "form-group2";
+	$tabla->fields["FechVenc2"]['isHiddenInList'] = true;
+	
+	$tabla->addField("FechVenc3", "number", 0, "3er Vencimiento");
+	$tabla->fields["FechVenc3"]["cssGroup"] = "form-group2";
+	$tabla->fields["FechVenc3"]['isHiddenInList'] = true;
+	
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 
 	$config->tablas["empresas"] = $tabla;
@@ -221,11 +239,15 @@
 
 	$tabla->addField("NumeEstaClie", "select", 80, "Estado", true, false, false, true, '', '', 'estadosclientes', 'NumeEstaClie', 'NombEstaClie', '', 'NombEstaClie');
 
-	$tabla->addField("FechEntr", "text", 0, "Fecha de entrega");
-	$tabla->fields["FechEntr"]["cssGroup"] = "form-group2";
-	$tabla->fields["FechEntr"]["isHiddenInList"] = true;
+	$tabla->addField("FechPagoDesd", "number", 0, "Fecha de pago desde el");
+	$tabla->fields["FechPagoDesd"]["cssGroup"] = "form-group2";
+	$tabla->fields["FechPagoDesd"]["isHiddenInList"] = true;
 
-	$tabla->addField("ValoMovi", "number", 0, "Valor móvil");
+	$tabla->addField("FechPagoHast", "number", 0, "hasta el");
+	$tabla->fields["FechPagoHast"]["cssGroup"] = "form-group2";
+	$tabla->fields["FechPagoHast"]["isHiddenInList"] = true;
+
+	$tabla->addField("ValoMovi", "number", 0, "Producto");
 	$tabla->fields["ValoMovi"]["cssGroup"] = "form-group2";
 	$tabla->fields["ValoMovi"]["isHiddenInList"] = true;
 
