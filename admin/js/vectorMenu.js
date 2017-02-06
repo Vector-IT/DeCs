@@ -1,28 +1,28 @@
 $(document).ready(function() {
 	$(".menuVector").vectorMenu({
 		trigger: ".btnMenu",
-		duration: 100,
+		duration: 200,
 		opacity: 0.7,
 		background: "#000",
 		closeWidth: "30px",
 		zindex: 3
 	});
-	
+
 	$('.btnMenu').click(function() {
 		if ($(".menuVector").vectorMenu.isOpen())
 			$( ".btnMenu" ).html('<i class="fa fa-times"></i>');
 		else
 			$( ".btnMenu" ).html('<i class="fa fa-bars"></i>');
 	});
-	
+
 	$(".clickable").click(function () {
 		var url = $(this).data("url");
-		
+
 		var js = $(this).data("js");
-		
+
 		var result;
 		//Ejecuto primero el js
-		
+
 		if (js != undefined) {
 			result = eval(js);
 		}
@@ -56,15 +56,15 @@ function getVariable(variable){
         if (final1 == -1){final1=direccion.length;};
         return direccion.substring(posicion + 1,final1);
     }
-} 
+}
 
 function borrar(campo) {
 	$("#hdn" + campo + "Clear").val("1");
-	
+
 	$("#divPreview" + campo).html("");
 
 	$("#" + campo).replaceWith($("#" + campo).clone());
-	
+
 	$("#btnBorrar" + campo).hide();
 }
 
@@ -121,7 +121,7 @@ if (window.document.addEventListener) {
 		$.fn.vectorMenu.isOpen = function () {
 			return isOpen;
 		};
-		
+
 		//Creo la funcion para re-dibujar el menu si se redimensiona la pantalla
 		$.fn.vectorMenu.reDraw = function () {
 			settings = $.extend({
@@ -146,32 +146,32 @@ if (window.document.addEventListener) {
 	            setStyleItem: true,
 	            htmlBackgroundColor: "#FFF"
 	        }, options );
-			
+
 			//Verifico si estoy en un movil
 			var mob = false;
 			if ( /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
 				mob = true;
 			}
-			
+
 			if (mob) {
 				settings.closeWidth = settings.closeWidthMobile;
 				settings.startVisible = settings.startVisibleMobile;
 			}
-			
+
 			if (!mob)
 				auxWidth = settings.width;
 			else
 				auxWidth = settings.widthMobile;
 
-			
+
 			//Seteo de estilos al menu
 			vsMenu.css({
-				position: "fixed", 
-				top: 0, 
-				bottom: 0, 
-				left: 0, 
-				width: auxWidth, 
-				opacity: settings.opacity, 
+				position: "fixed",
+				top: 0,
+				bottom: 0,
+				left: 0,
+				width: auxWidth,
+				opacity: settings.opacity,
 				display: "none",
 				"padding-top": "50px",
 				background: settings.background,
@@ -179,64 +179,47 @@ if (window.document.addEventListener) {
 			});
 
 			//Seteo estilos de submenu
-			vsMenu.find(".item > ul").css({
-				background:"black", 
-				color:"white",
+			vsMenu.find(".submenu > ul").css({
+				background: settings.background,
 				border:"none",
+				color:"white",
 				"border-radius":"0",
 				top:"inherit",
 				left:"100%",
 				margin:"-30px 0 0",
 				padding:"0",
-				"min-width":auxWidth
-			});		
-			
-			vsMenu.find(".item > ul > li").css({
-				padding: "10px 5px",
-				"border-bottom": "1px solid"
+				"min-width":auxWidth,
+				"border-left": "1px solid #707070",
 			});
 			
+			vsMenu.find(".item > ul > li").css({
+				padding: "10px 5px"
+			});
+
 
 			vsMenu.find("div").css("display", "block");
-			
+
 			//Si es necesario lo abro completa o parcialmente
 			if (settings.startVisible || settings.closeWidth != "0")
 				$(settings.trigger).click();
 		};
-		
+
 		if (settings.effect == "push") {
 			$("body").css({
-				"transition": "left " + settings.duration + "ms ease-in", 
+				"transition": "left " + settings.duration + "ms ease-in",
 				"overflow-x": "hidden",
 				"position": "relative",
-				"left": "0" 
+				"left": "0"
 			});
 
 			$("html").css({
 				"background-color": settings.htmlBackgroundColor
 			});
 		}
-		
+
 		vsMenu.find(".submenu").hover(
 			function() {
 				$(this).children('ul').stop().fadeToggle();
-			}
-		);
-		
-		vsMenu.find(".item > ul > li").hover(
-			//hover
-			function() {
-				$(this).css({
-					"background-color": "#DBDBDB",
-					color: "black"
-				});
-			},
-			//normal
-			function() {
-				$(this).css({
-					"background-color": "black",
-					color: "white"
-				});
 			}
 		);
 		
@@ -250,7 +233,7 @@ if (window.document.addEventListener) {
 				margin: 0,
 			});
 			//Seteo de estilos a los items en estado hover
-			vsMenu.find(".item").hover(
+			vsMenu.find(".item, .submenu > ul > li").hover(
 				//hover
 				function() {
 					$(this).css({
@@ -267,42 +250,42 @@ if (window.document.addEventListener) {
 				}
 			);
 		}
-		
+
 		//Seteo estilos a los separadores
 		vsMenu.find(".separator").css({
 			height: "5px",
 			"margin-bottom": "5px",
 			"border-bottom": "1px solid"
 		});
-		
+
 		//Click en el boton disparador
 		$(settings.trigger).click(function() {
 			//Al cerrar el menu queda un poco abierto
 			var mLeft = parseInt(settings.closeWidth.replace("px", "")) - parseInt(auxWidth.replace("px", "")) + "px";
-			
+
 			if (vsMenu.css("display") == "none") {
 				vsMenu.css({
 					"margin-left": "-" + auxWidth,
 					display: "block"
 				});
 			}
-			
+
 			if (vsMenu.css("margin-left") == mLeft) {
 				//LO ABRO
 				isOpen = true;
-				
+
 				if (settings.effect == "push")
 					$("body").css({"left" : auxWidth });
-					
+
 				vsMenu.animate({"margin-left": 0}, settings.duration, settings.easing);
 			}
 			else {
 				//LO CIERRO
 				isOpen = false;
-				
+
 				if (settings.effect == "push")
 					$("body").css({"left" : 0 });
-				
+
 				vsMenu.animate({"margin-left": mLeft}, settings.duration, settings.easing);
 			}
 		});
@@ -311,21 +294,21 @@ if (window.document.addEventListener) {
 		vsMenu.find(".item, .submenu > ul > li").click(function() {
 			if ((settings.closeWidth == "0") || (vsMenu.css("margin-left") == "0px")){
 				$(settings.trigger).click();
-				
+
 				var item = $(this);
-				
-				setTimeout(function(){ 
+
+				setTimeout(function(){
 					var result;
 					if (item.attr("data-js") != null) {
 						result = eval(item.attr("data-js"));
 					}
-					
+
 					if ((item.attr("data-url") != null) && ((result == undefined) || (result == true))) {
 						if (item.attr("data-url") != "") {
 							location.href = item.attr("data-url");
 						}
 					}
-				}, 
+				},
 					settings.duration
 				);
 			}
@@ -335,13 +318,13 @@ if (window.document.addEventListener) {
 				if (item.attr("data-js") != null) {
 					result = eval(item.attr("data-js"));
 				}
-				
+
 				if ((item.attr("data-url") != null) && ((result == undefined) || (result == true))) {
 					if (item.attr("data-url") != "") {
 						location.href = item.attr("data-url");
 					}
 				}
-				
+
 			}
 		});
 

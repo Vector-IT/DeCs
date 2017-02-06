@@ -194,6 +194,7 @@ class VectorForms {
 							$strSalida.= str_replace("#titulo#", $item->Titulo,
 											str_replace("#icono#", $item->Icono,
 											str_replace("#url#", $item->Url, $strSubItem)));
+							$strSalida.= $strSeparador;
 						}
 						else {
 							if ($submenu) {
@@ -226,6 +227,7 @@ class VectorForms {
 					$strSalida.= str_replace("#titulo#", $tabla->titulo,
 									str_replace("#icono#", $tabla->icono,
 									str_replace("#url#", $tabla->url, $strSubItem)));
+					$strSalida.= $strSeparador;
 				}
 				else {
 					if ($submenu) {

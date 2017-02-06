@@ -69,7 +69,7 @@
 	$tabla = new Tabla("estadosclientes", "estadosclientes", "Estados de clientes", "el Estado", true, "objeto/estadosclientes", "fa-cogs");
 	$tabla->labelField = "NombEstaClie";
 	$tabla->isSubItem = true;
-	
+
 	$tabla->addField("NumeEstaClie", "number", 0, "Numero", false, true, true);
 	$tabla->addField("NombEstaClie", "text", 100, "Estado");
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
@@ -82,7 +82,7 @@
 	$tabla = new Tabla("tipospagos", "tipospagos", "Formas de Pago", "la Forma de Pago", true, "objeto/tipospagos", "fa-credit-card");
 	$tabla->labelField = "NombTipoPago";
 	$tabla->isSubItem = true;
-	
+
 	$tabla->addField("NumeTipoPago", "number", 0, "Número", false, true, true);
 	$tabla->addField("NombTipoPago", "text", 100, "Nombre");
 	$tabla->fields["NombTipoPago"]["cssControl"] = "ucase";
@@ -97,7 +97,7 @@
 	$tabla = new Tabla("tiposcontactos", "tiposcontactos", "Tipos de Contacto", "el Tipo de contacto", true, "objeto/tiposcontactos", "fa-headphones");
 	$tabla->labelField = "NombTipoCont";
 	$tabla->isSubItem = true;
-	
+
 	$tabla->addField("NumeTipoCont", "number", 0, "Número", false, true, true);
 	$tabla->addField("NombTipoCont", "text", 200, "Nombre");
 	$tabla->fields["NombTipoCont"]["cssControl"] = "ucase";
@@ -112,7 +112,7 @@
 	$tabla = new Tabla("tiposrespuestas", "tiposrespuestas", "Tipos de Repuesta", "el Tipo de respuesta", true, "objeto/tiposrespuestas", "fa-question-circle");
 	$tabla->labelField = "NombTipoResp";
 	$tabla->isSubItem = true;
-	
+
 	$tabla->addField("NumeTipoResp", "number", 0, "Número", false, true, true);
 	$tabla->addField("NombTipoResp", "text", 200, "Nombre");
 	$tabla->fields["NombTipoResp"]["cssControl"] = "ucase";
@@ -141,29 +141,29 @@
 
 	$tabla->addField("ImpoAdmi", "number", 80, "Gastos administrativos");
 	$tabla->fields["ImpoAdmi"]["cssGroup"] = "form-group2";
-	
+
 	$tabla->addField("PorcAdmi", "checkbox", 100, "Es porcentaje?", true, false, false, true, '1');
 	$tabla->fields["PorcAdmi"]['isHiddenInList'] = true;
 	$tabla->fields["PorcAdmi"]["cssGroup"] = "form-group2";
-	
+
 	$tabla->addField("ImpoOtro", "number", 80, "Otros gastos");
 	$tabla->fields["ImpoOtro"]["cssGroup"] = "form-group2";
-	
+
 	$tabla->addField("PorcOtro", "checkbox", 100, "Es porcentaje?", true, false, false, true, '1');
 	$tabla->fields["PorcOtro"]['isHiddenInList'] = true;
 	$tabla->fields["PorcOtro"]["cssGroup"] = "form-group2";
 
 	$tabla->addField("FechVenc1", "number", 0, "1er Vencimiento");
 	$tabla->fields["FechVenc1"]['isHiddenInList'] = true;
-	
+
 	$tabla->addField("FechVenc2", "number", 0, "2do Vencimiento");
 	$tabla->fields["FechVenc2"]["cssGroup"] = "form-group2";
 	$tabla->fields["FechVenc2"]['isHiddenInList'] = true;
-	
+
 	$tabla->addField("FechVenc3", "number", 0, "3er Vencimiento");
 	$tabla->fields["FechVenc3"]["cssGroup"] = "form-group2";
 	$tabla->fields["FechVenc3"]['isHiddenInList'] = true;
-	
+
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 
 	$config->tablas["empresas"] = $tabla;
@@ -235,7 +235,7 @@
 	$tabla->addField("NumeVend", "select", 80, "Vendedor", true, false, false, true, '', '', 'vendedores', 'NumeVend', 'NombVend', '', 'NombVend');
 	$tabla->fields["NumeVend"]["isHiddenInList"] = true;
 
-	$tabla->addField("ObseClie", "textarea", 200, "Observaciones", false);
+	$tabla->addField("ObseClie", "textarea", 201, "Observaciones", false);
 	$tabla->fields["ObseClie"]["isHiddenInList"] = true;
 
 	$tabla->addField("NumeEstaClie", "select", 80, "Estado", true, false, false, true, '', '', 'estadosclientes', 'NumeEstaClie', 'NombEstaClie', '', 'NombEstaClie');
