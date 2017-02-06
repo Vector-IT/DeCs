@@ -177,7 +177,26 @@ if (window.document.addEventListener) {
 				background: settings.background,
 				"z-index": settings.zindex
 			});
+
+			//Seteo estilos de submenu
+			vsMenu.find(".item > ul").css({
+				background:"black", 
+				color:"white",
+				border:"none",
+				"border-radius":"0",
+				top:"inherit",
+				left:"100%",
+				margin:"-30px 0 0",
+				padding:"0",
+				"min-width":auxWidth
+			});		
 			
+			vsMenu.find(".item > ul > li").css({
+				padding: "10px 5px",
+				"border-bottom": "1px solid"
+			});
+			
+
 			vsMenu.find("div").css("display", "block");
 			
 			//Si es necesario lo abro completa o parcialmente
@@ -198,36 +217,9 @@ if (window.document.addEventListener) {
 			});
 		}
 		
-		//Seteo estilos de submenu
-		vsMenu.find(".item > ul").css({
-			"list-style-type": "none",
-			margin: "-10px 0 0 0",
-			padding: "0",
-			float: "right"
-		});
-		
-		vsMenu.find(".item > ul > li").css({
-			display: "none",
-			padding: "10px 5px",
-			"background-color": "black",
-			color: "white",
-			position: "absolute",
-			left: "250px",
-			width: "200px"
-		});
-		
-		vsMenu.find(".item").hover(
-			//hover
+		vsMenu.find(".submenu").hover(
 			function() {
-				$(this).find("ul > li").css({
-					display: "block"
-				});
-			},
-			//normal
-			function() {
-				$(this).find("ul > li").css({
-					display: "none"
-				});
+				$(this).children('ul').stop().fadeToggle();
 			}
 		);
 		
@@ -247,8 +239,6 @@ if (window.document.addEventListener) {
 				});
 			}
 		);
-			
-
 		
 		//Seteo de estilos a los items en estado normal
 		if (settings.setStyleItem) {
@@ -318,7 +308,7 @@ if (window.document.addEventListener) {
 		});
 
 		//Click en el item
-		vsMenu.find(".item, .item > ul > li").click(function() {
+		vsMenu.find(".item, .submenu > ul > li").click(function() {
 			if ((settings.closeWidth == "0") || (vsMenu.css("margin-left") == "0px")){
 				$(settings.trigger).click();
 				
@@ -331,18 +321,27 @@ if (window.document.addEventListener) {
 					}
 					
 					if ((item.attr("data-url") != null) && ((result == undefined) || (result == true))) {
-						location.href = item.attr("data-url"); 
+						if (item.attr("data-url") != "") {
+							location.href = item.attr("data-url");
+						}
 					}
 				}, 
 					settings.duration
 				);
 			}
 			else {
-				if ($(this).attr("data-js") != null)
-					eval($(this).attr("data-js"));
+				var item = $(this);
+				var result;
+				if (item.attr("data-js") != null) {
+					result = eval(item.attr("data-js"));
+				}
 				
-				if ($(this).attr("data-url") != null)
-					location.href = $(this).attr("data-url");
+				if ((item.attr("data-url") != null) && ((result == undefined) || (result == true))) {
+					if (item.attr("data-url") != "") {
+						location.href = item.attr("data-url");
+					}
+				}
+				
 			}
 		});
 

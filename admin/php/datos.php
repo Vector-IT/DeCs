@@ -18,13 +18,8 @@
 	 * Items de menu adicionales
 	 */
 	$config->menuItems = [
-			"Salir" => array(
-				"NumeCarg" => "",
-				"Titulo" => "Salir del sistema",
-				"Icono" => "fa-sign-out",
-				"Url" => "logout.php",
-				"Index" => ''
-			),
+			new MenuItem("Configuraciones", '', '', 'fa-cogs', 1, true, false),
+			new MenuItem("Salir del Sistema", 'logout.php', '', 'fa-sign-out', '', false, true)
 	];
 
 
@@ -38,6 +33,7 @@
 	$tabla = new Tabla("usuarios", "usuarios", "Usuarios", "el Usuario", true, "objeto/usuarios", "fa-users");
 	$tabla->labelField = "NombPers";
 	$tabla->numeCarg = 1;
+	$tabla->isSubItem = true;
 
 	//Campos
 	$tabla->addField("NumeUser", "number", 0, "Número", false, true, true);
@@ -57,7 +53,8 @@
 	 */
 	$tabla = new Tabla("bancos", "bancos", "Bancos", "el Banco", true, "objeto/bancos", "fa-bank");
 	$tabla->labelField = "NombBanc";
-
+	$tabla->isSubItem = true;
+	
 	$tabla->addField("NumeBanc", "number", 0, "Número", false, true, true);
 	$tabla->addField("NombBanc", "text", 200, "Nombre");
 	$tabla->fields["NombBanc"]["cssControl"] = "ucase";
@@ -71,7 +68,8 @@
 	 */
 	$tabla = new Tabla("estadosclientes", "estadosclientes", "Estados de clientes", "el Estado", true, "objeto/estadosclientes", "fa-cogs");
 	$tabla->labelField = "NombEstaClie";
-
+	$tabla->isSubItem = true;
+	
 	$tabla->addField("NumeEstaClie", "number", 0, "Numero", false, true, true);
 	$tabla->addField("NombEstaClie", "text", 100, "Estado");
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
@@ -83,7 +81,8 @@
 	 */
 	$tabla = new Tabla("tipospagos", "tipospagos", "Formas de Pago", "la Forma de Pago", true, "objeto/tipospagos", "fa-credit-card");
 	$tabla->labelField = "NombTipoPago";
-
+	$tabla->isSubItem = true;
+	
 	$tabla->addField("NumeTipoPago", "number", 0, "Número", false, true, true);
 	$tabla->addField("NombTipoPago", "text", 100, "Nombre");
 	$tabla->fields["NombTipoPago"]["cssControl"] = "ucase";
@@ -97,7 +96,8 @@
 	 */
 	$tabla = new Tabla("tiposcontactos", "tiposcontactos", "Tipos de Contacto", "el Tipo de contacto", true, "objeto/tiposcontactos", "fa-headphones");
 	$tabla->labelField = "NombTipoCont";
-
+	$tabla->isSubItem = true;
+	
 	$tabla->addField("NumeTipoCont", "number", 0, "Número", false, true, true);
 	$tabla->addField("NombTipoCont", "text", 200, "Nombre");
 	$tabla->fields["NombTipoCont"]["cssControl"] = "ucase";
@@ -111,7 +111,8 @@
 	 */
 	$tabla = new Tabla("tiposrespuestas", "tiposrespuestas", "Tipos de Repuesta", "el Tipo de respuesta", true, "objeto/tiposrespuestas", "fa-question-circle");
 	$tabla->labelField = "NombTipoResp";
-
+	$tabla->isSubItem = true;
+	
 	$tabla->addField("NumeTipoResp", "number", 0, "Número", false, true, true);
 	$tabla->addField("NombTipoResp", "text", 200, "Nombre");
 	$tabla->fields["NombTipoResp"]["cssControl"] = "ucase";

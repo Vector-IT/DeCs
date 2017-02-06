@@ -11,7 +11,10 @@ class Tabla {
     public $tabladb;
     public $titulo;
     public $tituloSingular;
+    
   	public $showMenu;
+  	public $isSubItem;
+  	
   	public $url;
   	public $icono;
   	public $fields;
@@ -62,7 +65,10 @@ class Tabla {
     	$this->tabladb = $tabladb;
         $this->titulo = $titulo;
         $this->tituloSingular = $tituloSingular;
+        
         $this->showMenu = $showMenu;
+        $this->isSubItem = false;
+        
         $this->url = $url;
         $this->icono = $icono;
         $this->order = $order;

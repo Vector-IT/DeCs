@@ -118,7 +118,7 @@ class VectorForms {
 	}
 
 	/**
-	 * Ejecutar query  en la BD y devolver el resultado
+	 * Ejecutar query en la BD y devolver el resultado
 	 *
 	 * @param string $strSQL
 	 * @return boolean|mysqli_result
@@ -137,37 +137,79 @@ class VectorForms {
 	 * Crear menu de opciones
 	 */
 	public function crearMenu() {
-		global $config;
+		global $config, $crlf;
 
 		$strSalida = '';
-		$strSeparador = '<div class="separator"></div>';
-		$strItem = '<div class="item" data-url="#url#" title="#titulo#">';
-		$strItem.= '#titulo#';
-		$strItem.= '<div class="flRight"><i class="fa #icono# fa-fw"></i></div>';
-		$strItem.= '</div>';
+		$strSeparador = $crlf.'<div class="separator"></div>';
+		
+		$strItem = $crlf.'<div class="item" data-url="#url#" title="#titulo#">';
+		$strItem.= $crlf.'#titulo#';
+		$strItem.= $crlf.'<div class="flRight"><i class="fa #icono# fa-fw"></i></div>';
+		$strItem.= $crlf.'</div>';
 
-		$strSalida.= '<div id="sidebar" class="menuVector">';
-		$strSalida.= '<div class="absolute top5 right3">';
-		$strSalida.= '<button class="btnMenu btn btn-default btn-xs noMobile" title="Men&uacute;"><i class="fa fa-bars"></i></button>';
-		$strSalida.= '</div>';
+		$strSubMenuInicio = $crlf.'<div class="item submenu" data-url="#url#" title="#titulo#">';
+		$strSubMenuInicio.= $crlf.'#titulo#';
+		$strSubMenuInicio.= $crlf.'<div class="flRight"><i class="fa #icono# fa-fw"></i></div>';
+		$strSubMenuInicio.= $crlf.'<ul class="dropdown-menu">';
+		
+		$strSubMenuFin = $crlf.'</ul>';
+		$strSubMenuFin.= $crlf.'</div>';
+		
+		$strSubItem = $crlf.'<li data-url="#url#">';;
+		$strSubItem.= $crlf.'#titulo#';
+		$strSubItem.= $crlf.'<div class="flRight"><i class="fa #icono# fa-fw"></i></div>';
+		$strSubItem.= $crlf.'</li>';
+		
+		$strSalida.= $crlf.'<div id="sidebar" class="menuVector">';
+		$strSalida.= $crlf.'<div class="absolute top5 right3">';
+		$strSalida.= $crlf.'<button class="btnMenu btn btn-default btn-xs noMobile" title="Men&uacute;"><i class="fa fa-bars"></i></button>';
+		$strSalida.= $crlf.'</div>';
 
 		$strSalida.= str_replace("#titulo#", "Inicio", str_replace("#icono#", "fa-home", str_replace("#url#", $this->raiz."admin/", $strItem)));
 		$strSalida.= $strSeparador;
 
 		$I = 1;
+		$submenu = false;
 		foreach ($this->tablas as $tabla) {
+			
 			foreach ($this->menuItems as $item) {
-				if ($item["NumeCarg"] != '') {
+				if ($item->NumeCarg != '') {
 					$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
 						
-					if (intval($item["NumeCarg"]) < $NumeCarg) {
+					if (intval($item->NumeCarg) < $NumeCarg) {
 						continue;
 					}
 				}
 					
-				if ($item["Index"] === $I) {
-					$strSalida.= str_replace("#titulo#", $item["Titulo"], str_replace("#icono#", $item["Icono"], str_replace("#url#", $item["Url"], $strItem)));
-					$strSalida.= $strSeparador;
+				if (intval($item->Index) == $I) {
+					if ($item->Submenu) {
+						$submenu = true;
+						
+						$strSalida.= str_replace("#titulo#", $item->Titulo,
+										str_replace("#icono#", $item->Icono,
+										str_replace("#url#", $item->Url, $strSubMenuInicio)));
+					}
+					else {
+						if ($item->Subitem) {
+							$strSalida.= str_replace("#titulo#", $item->Titulo,
+											str_replace("#icono#", $item->Icono,
+											str_replace("#url#", $item->Url, $strSubItem)));
+						}
+						else {
+							if ($submenu) {
+								$strSalida.= $strSubMenuFin;
+								$strSalida.= $strSeparador;
+								$submenu = false;
+							}
+							$strSalida.= str_replace("#titulo#", $item->Titulo, 
+											str_replace("#icono#", $item->Icono, 
+											str_replace("#url#", $item->Url, $strItem)));
+
+							$strSalida.= $strSeparador;
+						}
+
+						$I++;
+					}
 				}
 			}
 				
@@ -180,24 +222,42 @@ class VectorForms {
 					}
 				}
 		
-				$strSalida.= str_replace("#titulo#", $tabla->titulo, str_replace("#icono#", $tabla->icono, str_replace("#url#", $tabla->url, $strItem)));
-				$strSalida.= $strSeparador;
+				if ($tabla->isSubItem) {
+					$strSalida.= str_replace("#titulo#", $tabla->titulo,
+									str_replace("#icono#", $tabla->icono,
+									str_replace("#url#", $tabla->url, $strSubItem)));
+				}
+				else {
+					if ($submenu) {
+						$strSalida.= $strSubMenuFin;
+						$strSalida.= $strSeparador;
+						$submenu = false;
+					}
+						
+					$strSalida.= str_replace("#titulo#", $tabla->titulo,
+									str_replace("#icono#", $tabla->icono,
+									str_replace("#url#", $tabla->url, $strItem)));
+
+					$strSalida.= $strSeparador;
+				}
+				
+				//$strSalida.= str_replace("#titulo#", $tabla->titulo, str_replace("#icono#", $tabla->icono, str_replace("#url#", $tabla->url, $strItem)));
 			}
 				
 			$I++;
 		}
 		
 		foreach ($this->menuItems as $item) {
-			if ($item["Index"] == '') {
-				if ($item["NumeCarg"] != '') {
+			if ($item->Index == '') {
+				if ($item->NumeCarg != '') {
 					$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
 		
-					if (intval($item["NumeCarg"]) < $NumeCarg) {
+					if (intval($item->NumeCarg) < $NumeCarg) {
 						continue;
 					}
 				}
 		
-				$strSalida.= str_replace("#titulo#", $item["Titulo"], str_replace("#icono#", $item["Icono"], str_replace("#url#", $item["Url"], $strItem)));
+				$strSalida.= str_replace("#titulo#", $item->Titulo, str_replace("#icono#", $item->Icono, str_replace("#url#", $item->Url, $strItem)));
 				$strSalida.= $strSeparador;
 			}
 		}
@@ -211,7 +271,6 @@ class VectorForms {
 
 
 	public function getTabla($name) {
-
 		return $this->tablas[$name];
 	}
 
@@ -239,6 +298,36 @@ class VectorForms {
 
 		// return our finished random string
 		return $random_string;
+	}
+}
+
+class MenuItem {
+	public $Titulo;
+	public $Url;
+	public $NumeCarg;
+	public $Icono;
+	public $Index;
+	public $Submenu;
+	public $Subitem;
+
+	/**
+	 * Constructor de items
+	 *
+	 * @param string $titulo
+	 * @param string $url
+	 * @param string $NumeCarg
+	 * @param string $Icono
+	 * @param string $Index
+	 * @param string $Submenu
+	 */
+	public function __construct($titulo, $url, $numeCarg='', $icono='', $index='', $submenu=false, $subitem=false) {
+		$this->Titulo = $titulo;
+		$this->Url = $url;
+		$this->NumeCarg = $numeCarg;
+		$this->Icono = $icono;
+		$this->Index = $index;
+		$this->Submenu = $submenu;
+		$this->Subitem = $subitem;
 	}
 }
 ?>
