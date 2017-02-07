@@ -142,12 +142,12 @@ class VectorForms {
 		$strSalida = '';
 		$strSeparador = $crlf.'<div class="separator"></div>';
 		
-		$strItem = $crlf.'<div class="item" data-url="#url#" title="#titulo#">';
+		$strItem = $crlf.'<div class="item" data-url="#url#" data-toggle="tooltip" data-placement="right" title="#titulo#">';
 		$strItem.= $crlf.'#titulo#';
 		$strItem.= $crlf.'<div class="flRight"><i class="fa #icono# fa-fw"></i></div>';
 		$strItem.= $crlf.'</div>';
 
-		$strSubMenuInicio = $crlf.'<div class="item submenu" data-url="#url#" title="#titulo#">';
+		$strSubMenuInicio = $crlf.'<div class="item submenu" data-url="#url#" data-toggle="tooltip" data-placement="top" title="#titulo#">';
 		$strSubMenuInicio.= $crlf.'#titulo#';
 		$strSubMenuInicio.= $crlf.'<div class="flRight"><i class="fa #icono# fa-fw"></i></div>';
 		$strSubMenuInicio.= $crlf.'<ul class="dropdown-menu">';
@@ -155,14 +155,14 @@ class VectorForms {
 		$strSubMenuFin = $crlf.'</ul>';
 		$strSubMenuFin.= $crlf.'</div>';
 		
-		$strSubItem = $crlf.'<li data-url="#url#">';;
+		$strSubItem = $crlf.'<li data-url="#url#" data-toggle="tooltip" data-placement="right" title="#titulo#">';;
 		$strSubItem.= $crlf.'#titulo#';
 		$strSubItem.= $crlf.'<div class="flRight"><i class="fa #icono# fa-fw"></i></div>';
 		$strSubItem.= $crlf.'</li>';
 		
 		$strSalida.= $crlf.'<div id="sidebar" class="menuVector">';
 		$strSalida.= $crlf.'<div class="absolute top5 right3">';
-		$strSalida.= $crlf.'<button class="btnMenu btn btn-default btn-xs noMobile" title="Men&uacute;"><i class="fa fa-bars"></i></button>';
+		$strSalida.= $crlf.'<button class="btnMenu btn btn-default btn-xs noMobile" data-toggle="tooltip" data-placement="right" title="Men&uacute;"><i class="fa fa-bars"></i></button>';
 		$strSalida.= $crlf.'</div>';
 
 		$strSalida.= str_replace("#titulo#", "Inicio", str_replace("#icono#", "fa-home", str_replace("#url#", $this->raiz."admin/", $strItem)));
@@ -170,46 +170,61 @@ class VectorForms {
 
 		$I = 1;
 		$submenu = false;
+		foreach ($this->menuItems as $item) {
+			$item->Used = false;
+		}
+
 		foreach ($this->tablas as $tabla) {
 			
 			foreach ($this->menuItems as $item) {
-				if ($item->NumeCarg != '') {
-					$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
-						
-					if (intval($item->NumeCarg) < $NumeCarg) {
-						continue;
-					}
-				}
-					
-				if (intval($item->Index) == $I) {
-					if ($item->Submenu) {
-						$submenu = true;
-						
-						$strSalida.= str_replace("#titulo#", $item->Titulo,
-										str_replace("#icono#", $item->Icono,
-										str_replace("#url#", $item->Url, $strSubMenuInicio)));
-					}
-					else {
-						if ($item->Subitem) {
-							$strSalida.= str_replace("#titulo#", $item->Titulo,
-											str_replace("#icono#", $item->Icono,
-											str_replace("#url#", $item->Url, $strSubItem)));
-							$strSalida.= $strSeparador;
+				if (!$item->Used) {
+					if ($item->NumeCarg != '') {
+						$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
+							
+						if (intval($item->NumeCarg) < $NumeCarg) {
+							continue;
 						}
-						else {
+					}
+						
+					if (intval($item->Index) == $I) {
+						if ($item->Submenu) {
 							if ($submenu) {
 								$strSalida.= $strSubMenuFin;
 								$strSalida.= $strSeparador;
-								$submenu = false;
 							}
-							$strSalida.= str_replace("#titulo#", $item->Titulo, 
-											str_replace("#icono#", $item->Icono, 
-											str_replace("#url#", $item->Url, $strItem)));
 
-							$strSalida.= $strSeparador;
+							$submenu = true;
+							
+							$strSalida.= str_replace("#titulo#", $item->Titulo,
+											str_replace("#icono#", $item->Icono,
+											str_replace("#url#", $item->Url, $strSubMenuInicio)));
+
+							$item->Used = true;
 						}
+						else {
+							if ($item->Subitem) {
+								$strSalida.= str_replace("#titulo#", $item->Titulo,
+												str_replace("#icono#", $item->Icono,
+												str_replace("#url#", $item->Url, $strSubItem)));
+								$strSalida.= $strSeparador;
 
-						$I++;
+								$item->Used = true;
+							}
+							else {
+								if ($submenu) {
+									$strSalida.= $strSubMenuFin;
+									$strSalida.= $strSeparador;
+									$submenu = false;
+								}
+								$strSalida.= str_replace("#titulo#", $item->Titulo, 
+												str_replace("#icono#", $item->Icono, 
+												str_replace("#url#", $item->Url, $strItem)));
+
+								$strSalida.= $strSeparador;
+								$item->Used = true;
+								$I++;
+							}
+						}
 					}
 				}
 			}
@@ -241,12 +256,11 @@ class VectorForms {
 									str_replace("#url#", $tabla->url, $strItem)));
 
 					$strSalida.= $strSeparador;
+					$I++;
 				}
 				
 				//$strSalida.= str_replace("#titulo#", $tabla->titulo, str_replace("#icono#", $tabla->icono, str_replace("#url#", $tabla->url, $strItem)));
 			}
-				
-			$I++;
 		}
 		
 		foreach ($this->menuItems as $item) {
@@ -311,6 +325,7 @@ class MenuItem {
 	public $Index;
 	public $Submenu;
 	public $Subitem;
+	public $Used;
 
 	/**
 	 * Constructor de items
@@ -330,6 +345,7 @@ class MenuItem {
 		$this->Index = $index;
 		$this->Submenu = $submenu;
 		$this->Subitem = $subitem;
+		$this->Used = false;
 	}
 }
 ?>
