@@ -20,7 +20,8 @@
 	<link rel="stylesheet" href="<?php echo $config->raiz ?>admin/css/bootstrap-dark.css" <?php echo (!isset($_SESSION['DarkTheme'])? 'disabled': '')?>>
 
 	<!-- FONT AWESOME -->
-	<script src="https://use.fontawesome.com/5765698947.js"></script>
+	<!--<script src="https://use.fontawesome.com/5765698947.js"></script>-->
+	<link rel="stylesheet" href="<?php echo $config->raiz ?>admin/css/font-awesome.css">
 	
 
 	<!-- DATETIME PICKER -->
