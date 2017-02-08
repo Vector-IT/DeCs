@@ -306,6 +306,7 @@ if (window.document.addEventListener) {
 					if ((item.attr("data-url") != null) && ((result == undefined) || (result == true))) {
 						if (item.attr("data-url") != "") {
 							location.href = item.attr("data-url");
+							return false;
 						}
 					}
 				},
@@ -322,6 +323,7 @@ if (window.document.addEventListener) {
 				if ((item.attr("data-url") != null) && ((result == undefined) || (result == true))) {
 					if (item.attr("data-url") != "") {
 						location.href = item.attr("data-url");
+						return false;
 					}
 				}
 

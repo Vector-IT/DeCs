@@ -155,7 +155,7 @@ class VectorForms {
 		$strSubMenuFin = $crlf.'</ul>';
 		$strSubMenuFin.= $crlf.'</div>';
 		
-		$strSubItem = $crlf.'<li data-url="#url#" data-toggle="tooltip" data-placement="right" title="#titulo#">';;
+		$strSubItem = $crlf.'<li data-url="#url#">';;
 		$strSubItem.= $crlf.'#titulo#';
 		$strSubItem.= $crlf.'<div class="flRight"><i class="fa #icono# fa-fw"></i></div>';
 		$strSubItem.= $crlf.'</li>';
@@ -175,7 +175,7 @@ class VectorForms {
 		}
 
 		foreach ($this->tablas as $tabla) {
-			
+			//Items de menu adicionales
 			foreach ($this->menuItems as $item) {
 				if (!$item->Used) {
 					if ($item->NumeCarg != '') {
@@ -216,6 +216,7 @@ class VectorForms {
 									$strSalida.= $strSeparador;
 									$submenu = false;
 								}
+								
 								$strSalida.= str_replace("#titulo#", $item->Titulo, 
 												str_replace("#icono#", $item->Icono, 
 												str_replace("#url#", $item->Url, $strItem)));
@@ -229,6 +230,7 @@ class VectorForms {
 				}
 			}
 				
+			//Tablas
 			if ($tabla->showMenu) {
 				if ($tabla->numeCarg != '') {
 					$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
@@ -258,8 +260,6 @@ class VectorForms {
 					$strSalida.= $strSeparador;
 					$I++;
 				}
-				
-				//$strSalida.= str_replace("#titulo#", $tabla->titulo, str_replace("#icono#", $tabla->icono, str_replace("#url#", $tabla->url, $strItem)));
 			}
 		}
 		
@@ -272,15 +272,59 @@ class VectorForms {
 						continue;
 					}
 				}
-		
-				$strSalida.= str_replace("#titulo#", $item->Titulo, str_replace("#icono#", $item->Icono, str_replace("#url#", $item->Url, $strItem)));
-				$strSalida.= $strSeparador;
+				
+				if ($item->Submenu) {
+					if ($submenu) {
+						$strSalida.= $strSubMenuFin;
+						$strSalida.= $strSeparador;
+					}
+
+					$submenu = true;
+					
+					$strSalida.= str_replace("#titulo#", $item->Titulo,
+									str_replace("#icono#", $item->Icono,
+									str_replace("#url#", $item->Url, $strSubMenuInicio)));
+
+					$item->Used = true;
+				}
+				else {
+					if ($item->Subitem) {
+						$strSalida.= str_replace("#titulo#", $item->Titulo,
+										str_replace("#icono#", $item->Icono,
+										str_replace("#url#", $item->Url, $strSubItem)));
+						$strSalida.= $strSeparador;
+
+						$item->Used = true;
+					}
+					else {
+						if ($submenu) {
+							$strSalida.= $strSubMenuFin;
+							$strSalida.= $strSeparador;
+							$submenu = false;
+						}
+						
+						$strSalida.= str_replace("#titulo#", $item->Titulo, 
+										str_replace("#icono#", $item->Icono, 
+										str_replace("#url#", $item->Url, $strItem)));
+
+						$strSalida.= $strSeparador;
+						$item->Used = true;
+					}
+				}
+
+				// $strSalida.= str_replace("#titulo#", $item->Titulo, str_replace("#icono#", $item->Icono, str_replace("#url#", $item->Url, $strItem)));
+				// $strSalida.= $strSeparador;
 			}
 		}
 		
-		$strSalida.= '</div>';
+		if ($submenu) {
+			$strSalida.= $strSubMenuFin;
+			$strSalida.= $strSeparador;
+		}
 
-		$strSalida.= '<button class="btnMenu btn btn-default btn-xs fixed top5 left5 noDesktop" title="Men&uacute;"><i class="fa fa-bars"></i></button>';
+		$strSalida.= $crlf.'</div>';
+
+		$strSalida.= $crlf.'<button class="btnMenu btn btn-default btn-xs fixed top5 left5 noDesktop" title="Men&uacute;"><i class="fa fa-bars"></i></button>';
 
 		echo $strSalida;
 	}
