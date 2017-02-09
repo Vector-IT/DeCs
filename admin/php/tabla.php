@@ -491,11 +491,6 @@ class Tabla {
 						$strSalida.= $crlf.'<div class="form-group">';
 						$strSalida.= $crlf.'<div class="col-md-10 col-lg-10 col-md-offset-2 col-lg-offset-2">';
 						$strSalida.= $crlf.'<div id="map" style="height: 500px;" data-campo="#'.$fname.'"></div>';
-						$strSalida.= $crlf.'<script type="text/javascript">';
-						$strSalida.= $crlf.'$(document).ready(function() {';
-						$strSalida.= $crlf.'	initMap();';
-						$strSalida.= $crlf.'});';
-						$strSalida.= $crlf.'</script>';
 						break;
 
 					default:
@@ -860,6 +855,11 @@ class Tabla {
 		if ($this->allowNew || $this->allowEdit) {
 			$strSalida.= $crlf.'';
 			$strSalida.= $crlf.'function editar'. $this->tabladb .'(strID){';
+			
+			if ($this->gmaps) {
+				$strSalida.= $crlf.'	initMap();';
+			}
+			
 			$strSalida.= $crlf.'	if (strID > 0) {';
 			$strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").fadeIn();';
 			$strSalida.= $crlf.'		$("html, body").animate({';
@@ -1176,6 +1176,10 @@ class Tabla {
 			$strSalida.= $crlf.'var geocoder;';
 			$strSalida.= $crlf.'';
 			$strSalida.= $crlf.'function initMap() {';
+			$strSalida.= $crlf.'	if (map != null) {';
+			$strSalida.= $crlf.'		return;';
+			$strSalida.= $crlf.'	}';
+			$strSalida.= $crlf.'';
 			$strSalida.= $crlf.'	map = new google.maps.Map(document.getElementById("map"), {';
 			$strSalida.= $crlf.'		center: {lat: '.$this->gmapsCenterLat.', lng: '.$this->gmapsCenterLng.'},';
 			$strSalida.= $crlf.'		zoom: 8';
