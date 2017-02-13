@@ -19,7 +19,7 @@
 	 */
 	$config->menuItems = [
 			new MenuItem("Configuraciones", '', '', 'fa-cogs', 1, true, false),
-			new MenuItem("Salir del Sistema", 'logout.php', '', 'fa-sign-out', '', false, true)
+			new MenuItem("Salir del Sistema", 'logout.php', '', 'fa-sign-out', '', false, false)
 	];
 
 
@@ -220,7 +220,12 @@
 	$tabla->addField("FechIngr", "date", 0, "Fecha ingreso");
 
 	$tabla->addField("DireClie", "text", 200, "Dirección");
+	$tabla->fields["DireClie"]["cssGroup"] = "form-group2";
 	$tabla->fields["DireClie"]["isHiddenInList"] = true;
+
+	$tabla->addField("NombBarr", "text", 200, "Barrio");
+	$tabla->fields["NombBarr"]["cssGroup"] = "form-group2";
+	$tabla->fields["NombBarr"]["isHiddenInList"] = true;
 
 	$tabla->addField("NombLoca", "text", 200, "Localidad");
 	$tabla->fields["NombLoca"]["cssGroup"] = "form-group2";
@@ -256,8 +261,8 @@
 	$tabla->fields["ValoCuot"]["cssGroup"] = "form-group2";
 	$tabla->fields["ValoCuot"]["isHiddenInList"] = true;
 
-	$tabla->addField("CantCuot", "number", 0, "Cuotas restantes");
-	$tabla->fields["CantCuot"]["cssGroup"] = "form-group2";
+	// $tabla->addField("CantCuot", "number", 0, "Cuotas restantes");
+	// $tabla->fields["CantCuot"]["cssGroup"] = "form-group2";
 
 	$config->tablas["clientes"] = $tabla;
 
