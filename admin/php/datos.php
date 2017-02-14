@@ -2,6 +2,7 @@
 	require_once 'datosdb.php';
 	require_once 'vectorForms.php';
 
+	require_once 'custom/clientes.php';
 	require_once 'custom/cuotas.php';
 	require_once 'custom/seguimientos.php';
 
@@ -146,6 +147,13 @@
 	$tabla->fields["PorcAdmi"]['isHiddenInList'] = true;
 	$tabla->fields["PorcAdmi"]["cssGroup"] = "form-group2";
 
+	$tabla->addField("ImpoGest", "number", 80, "Gestión de cobranza");
+	$tabla->fields["ImpoGest"]["cssGroup"] = "form-group2";
+
+	$tabla->addField("PorcGest", "checkbox", 100, "Es porcentaje?", true, false, false, true, '1');
+	$tabla->fields["PorcGest"]['isHiddenInList'] = true;
+	$tabla->fields["PorcGest"]["cssGroup"] = "form-group2";
+
 	$tabla->addField("ImpoOtro", "number", 80, "Otros gastos");
 	$tabla->fields["ImpoOtro"]["cssGroup"] = "form-group2";
 
@@ -187,7 +195,7 @@
 	/**
 	 * CLIENTES
 	 */
-	$tabla = new Tabla("clientes", "clientes", "Clientes", "el Cliente", true, "objeto/clientes", "fa-id-card-o");
+	$tabla = new Clientes("clientes", "clientes", "Clientes", "el Cliente", true, "objeto/clientes", "fa-id-card-o");
 	$tabla->labelField = "NombClie";
 
 	$tabla->btnForm = [
@@ -253,7 +261,7 @@
 	$tabla->fields["FechPagoHast"]["cssGroup"] = "form-group2";
 	$tabla->fields["FechPagoHast"]["isHiddenInList"] = true;
 
-	$tabla->addField("ValoMovi", "number", 0, "Producto");
+	$tabla->addField("ValoMovi", "text", 100, "Producto");
 	$tabla->fields["ValoMovi"]["cssGroup"] = "form-group2";
 	$tabla->fields["ValoMovi"]["isHiddenInList"] = true;
 
@@ -280,7 +288,10 @@
 	];
 
 	$tabla->addField("NumePago", "number", 0, "Número", false, true, true);
+	$tabla->fields["NumePago"]["isHiddenInList"] = true;
+
 	$tabla->addField("FechPago", "datetime", 80, "Fecha Emisión", true, true);
+	$tabla->addField("NumeCuot", "number", 0, "Anticipo Nº");
 	$tabla->addField("NumeClie", "select", 80, "Cliente", true, false, false, true, '', '', 'clientes', 'NumeClie', 'NombClie', '', 'NombClie');
 
 	$tabla->addField("ObsePago", "textarea", 200, "Observaciones", false);
@@ -289,9 +300,9 @@
 	$tabla->addField("NumeTipoPago", "select", 80, "Tipo pago", true, false, false, true, '', '', 'tipospagos', 'NumeTipoPago', 'NombTipoPago', '', 'NombTipoPago');
 
 	$tabla->addField("NumeEstaPago", "select", 80, "Estado", true, false, false, true, '', '', 'estadospagos', 'NumeEstaPago', 'NombEstaPago', '', 'NombEstaPago');
-	$tabla->addField("FechVenc", "date", 80, "Vencimiento");
+	$tabla->addField("FechVenc1", "date", 80, "Vencimiento");
 	$tabla->addField("ImpoTota", "number", 0, "Total");
-	$tabla->fields["ImpoTota"]["formatDb"] = "CONCAT('$ ', (ImpoPura + ImpoAdmi + ImpoOtro)) ImpoTota";
+	$tabla->fields["ImpoTota"]["formatDb"] = "CONCAT('$ ', (ImpoPura + ImpoAdmi + ImpoGest + ImpoOtro)) ImpoTota";
 	$tabla->fields["ImpoTota"]["showOnForm"] = false;
 	$tabla->fields["ImpoTota"]["txtAlign"] = 'right';
 

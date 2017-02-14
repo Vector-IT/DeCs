@@ -1378,7 +1378,7 @@ class Tabla {
 		}
 	}
 
-	public function cargarCombo($tabla, $CampoNumero, $CampoTexto, $filtro = "", $orden = "", $seleccion = "", $itBlank = false) {
+	public function cargarCombo($tabla, $CampoNumero, $CampoTexto, $filtro = "", $orden = "", $seleccion = "", $itBlank = false, $itBlankText = 'Seleccione...') {
 		global $config, $crlf;
 
 		$strSQL = "SELECT ". $CampoNumero;
@@ -1396,7 +1396,7 @@ class Tabla {
 
 		$strSalida = "";
 		if ($itBlank) {
-			$strSalida.= $crlf.'<option value="-1">Seleccione...</option>';
+			$strSalida.= $crlf.'<option value="-1">'.$itBlankText.'</option>';
 		}
 
 		while ($fila = $tabla->fetch_assoc()) {

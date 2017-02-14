@@ -141,8 +141,8 @@
 				<div class="col-md-5">
 					<label for="filNumeEmpr" class="control-label col-md-3">Empresa:</label>
 					<div class="col-md-9">
-						<select class="form-control ucase" id="filNumeEmpr">
-							<option value="">TODAS LAS EMPRESAS</option>
+						<select class="form-control ucase" id="filNumeEmpr" onchange="filtrarClientes(this.value)">
+							<option value="-1">TODAS LAS EMPRESAS</option>
 							<?php echo $cuotas->cargarCombo('empresas', 'NumeEmpr', 'NombEmpr', '', 'NombEmpr')?>
 						</select>
 					</div>
@@ -153,7 +153,7 @@
 					<label for="filNumeClie" class="control-label col-md-3">Cliente:</label>
 					<div class="col-md-9">
 						<select class="form-control ucase" id="filNumeClie">
-							<option value="">TODOS LOS CLIENTES</option>
+							<option value="-1">TODOS LOS CLIENTES</option>
 							<?php echo $cuotas->cargarCombo('clientes', 'NumeClie', 'NombClie', '', 'NombClie', $NumeClie)?>
 						</select>
 					</div>
