@@ -290,8 +290,8 @@
 	$tabla->addField("NumePago", "number", 0, "Número", false, true, true);
 	$tabla->fields["NumePago"]["isHiddenInList"] = true;
 
-	$tabla->addField("FechPago", "datetime", 80, "Fecha Emisión", true, true);
 	$tabla->addField("NumeCuot", "number", 0, "Anticipo Nº");
+	$tabla->addField("FechPago", "datetime", 80, "Fecha Emisión", true, true);
 	$tabla->addField("NumeClie", "select", 80, "Cliente", true, false, false, true, '', '', 'clientes', 'NumeClie', 'NombClie', '', 'NombClie');
 
 	$tabla->addField("ObsePago", "textarea", 200, "Observaciones", false);
@@ -327,4 +327,5 @@
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 
 	$config->tablas["seguimientos"] = $tabla;
+	
 	?>
