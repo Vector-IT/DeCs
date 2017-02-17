@@ -269,6 +269,11 @@
 	$tabla->fields["ValoCuot"]["cssGroup"] = "form-group2";
 	$tabla->fields["ValoCuot"]["isHiddenInList"] = true;
 
+	$tabla->addField("CodiBarr", "text", 0, "Codigo de barras");
+	$tabla->fields["CodiBarr"]["isHiddenInList"] = true;
+
+	$tabla->addField("CodiPagoElec", "text", 0, "Codigo de pago electrónico");
+	$tabla->fields["CodiPagoElec"]["isHiddenInList"] = true;
 	// $tabla->addField("CantCuot", "number", 0, "Cuotas restantes");
 	// $tabla->fields["CantCuot"]["cssGroup"] = "form-group2";
 

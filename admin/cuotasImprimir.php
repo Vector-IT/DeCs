@@ -14,7 +14,7 @@
 
 	$filClientes = $_REQUEST["filClientes"];
 
-	$strSQL = "SELECT c.NumeClie, c.NombClie, c.DireClie, c.NombBarr, c.NombLoca, c.CodiPost, p.NombProv, c.ValoMovi, c.CodiBarr";
+	$strSQL = "SELECT c.NumeClie, c.NombClie, c.DireClie, c.NombBarr, c.NombLoca, c.CodiPost, p.NombProv, c.ValoMovi, c.CodiBarr, c.CodiPagoElec";
 	$strSQL.= $crlf." FROM clientes c";
 	$strSQL.= $crlf." INNER JOIN provincias p ON c.NumeProv = p.NumeProv";
 	$strSQL.= $crlf." WHERE " . $filClientes;
@@ -297,7 +297,7 @@
 		$pdf->Text(50, 238, $cliente["CodiBarr"]);
 
 		//CodiPagoElec
-		$pdf->Text(27, 255, "1234567890");
+		$pdf->Text(27, 255, $cliente["CodiPagoElec"]);
 	}
 	$pdf->Output();
 	
