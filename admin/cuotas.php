@@ -87,13 +87,25 @@
 				<div class="col-md-5">
 					<label for="cmbNumeEmpr" class="control-label col-md-3">Empresa:</label>
 					<div class="col-md-9">
-						<select class="form-control ucase" id="cmbNumeEmpr">
-							<option value="">TODAS LAS EMPRESAS</option>
+						<select class="form-control ucase" id="cmbNumeEmpr" onchange="filtrarClientes(this.value)">
+							<option value="-1">TODAS LAS EMPRESAS</option>
 							<?php echo $cuotas->cargarCombo('empresas', 'NumeEmpr', 'NombEmpr', '', 'NombEmpr')?>
 						</select>
 					</div>
 				</div>
-				<div class="col-md-2 text-right">
+			</div>
+			<div class="row marginTop20">
+				<div class="col-md-5">
+					<label for="cmbNumeClie" class="control-label col-md-3">Cliente:</label>
+					<div class="col-md-9">
+						<select class="form-control ucase" id="cmbNumeClie">
+							<option value="-1">TODOS LOS CLIENTES</option>
+							<?php echo $cuotas->cargarCombo('clientes', 'NumeClie', 'NombClie', '', 'NombClie', $NumeClie)?>
+						</select>
+					</div>
+				</div>
+
+				<div class="col-md-7 text-right">
 					<button type="submit" id="btnGenerar" class="btn btn-sm btn-primary" onclick="generarcuotas();"><i class="fa fa-share-square-o fa-fw" aria-hidden="true"></i> Generar</button>
 				</div>
 			</div>
@@ -141,7 +153,7 @@
 				<div class="col-md-5">
 					<label for="filNumeEmpr" class="control-label col-md-3">Empresa:</label>
 					<div class="col-md-9">
-						<select class="form-control ucase" id="filNumeEmpr" onchange="filtrarClientes(this.value)">
+						<select class="form-control ucase" id="filNumeEmpr" onchange="filtrarClientesFiltro(this.value)">
 							<option value="-1">TODAS LAS EMPRESAS</option>
 							<?php echo $cuotas->cargarCombo('empresas', 'NumeEmpr', 'NombEmpr', '', 'NombEmpr')?>
 						</select>

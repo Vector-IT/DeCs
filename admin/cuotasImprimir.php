@@ -2,7 +2,7 @@
 	session_start();
 	require_once 'php/datos.php';
 	require_once 'fpdf/PDF_MemImage.php';
-	require_once 'barcode/barcode.php';
+	require_once 'barcode/barcodePdf.php';
 
 	$urlLogin = "Location:". "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $config->raiz ."admin/login.php?returnUrl=" . $_SERVER['REQUEST_URI'];
 	$urlIndex = "Location:". "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $config->raiz ."admin/";

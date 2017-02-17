@@ -278,20 +278,21 @@
 	 * PAGOS
 	 */
 	$tabla = new Cuota("cuotas", "pagos", "Cuotas", "Cuota", "true", "cuotas.php", "fa-money", "FechPago DESC, NumeClie", false, false, true);
-	$tabla->btnForm = [
-			array('titulo'=>'<i class="fa fa-fw fa-money" aria-hidden="true"></i> Generar cuotas', 'onclick'=>"generarCuotas()", 'class'=>"btn-success")
-	];
-
 	$tabla->jsFiles = ['admin/js/custom/cuotas.js'];
 	$tabla->btnList = [
 			array('titulo'=>'<i class="fa fa-fw fa-eye" aria-hidden="true"></i> Ver', 'onclick'=>"verCuota", 'class'=>"btn-primary"),
 	];
 
 	$tabla->addField("NumePago", "number", 0, "Número", false, true, true);
+	$tabla->fields["NumePago"]["isHiddenInForm"] = true;
 	$tabla->fields["NumePago"]["isHiddenInList"] = true;
 
 	$tabla->addField("NumeCuot", "number", 0, "Anticipo Nº");
-	$tabla->addField("FechPago", "datetime", 80, "Fecha Emisión", true, true);
+	$tabla->fields["NumeCuot"]["cssGroup"] = "form-group2";
+
+	$tabla->addField("FechPago", "datetime", 0, "Fecha Emisión", true, true);
+	$tabla->fields["FechPago"]["cssGroup"] = "form-group2";
+	
 	$tabla->addField("NumeClie", "select", 80, "Cliente", true, false, false, true, '', '', 'clientes', 'NumeClie', 'NombClie', '', 'NombClie');
 
 	$tabla->addField("ObsePago", "textarea", 200, "Observaciones", false);

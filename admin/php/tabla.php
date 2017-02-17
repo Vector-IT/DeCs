@@ -207,7 +207,9 @@ class Tabla {
 		$strCampo = '';
 
 		if (isset($this->fields)) {
-			$strSalida.= $crlf.'<button id="btnNuevo" type="button" class="btn btn-sm btn-primary" onclick="editar'. $this->tabladb .'(0);"><i class="fa fa-plus-square fa-fw" aria-hidden="true"></i> Nuevo</button>';
+			if ($this->allowNew) {
+				$strSalida.= $crlf.'<button id="btnNuevo" type="button" class="btn btn-sm btn-primary" onclick="editar'. $this->tabladb .'(0);"><i class="fa fa-plus-square fa-fw" aria-hidden="true"></i> Nuevo</button>';
+			}
 			//Botones opcionales
 			if (count($this->btnForm) > 0) {
 				for ($I = 0; $I < count($this->btnForm); $I++) {

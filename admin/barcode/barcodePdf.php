@@ -9,7 +9,7 @@
  */
 
 // For demonstration purposes, get pararameters that are passed in through $_GET or set to the default value
-
+/*
 $filepath = (isset($_GET["filepath"])?$_GET["filepath"]:"");
 $text = (isset($_GET["text"])?$_GET["text"]:"0");
 $size = (isset($_GET["size"])?$_GET["size"]:"20");
@@ -20,7 +20,7 @@ $sizefactor = (isset($_GET["sizefactor"])?$_GET["sizefactor"]:"1");
 
 // This function call can be copied into your project and can be made from anywhere in your code
 barcode( $filepath, $text, $size, $orientation, $code_type, $print, $sizefactor );
-
+*/
 function barcode( $filepath="", $text="0", $size="20", $orientation="horizontal", $code_type="code128", $print=false, $SizeFactor=1, $return="image" ) {
 	$code_string = "";
 	// Translate the $text into barcode the correct $code_type

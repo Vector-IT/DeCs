@@ -5,14 +5,27 @@ class Cuota extends Tabla {
 	
 		switch ($post['field']) {
 			case 'Generar':
+				$Filtro = "";
+
 				$strSQL = "SELECT c.NumeClie, c.ValoCuot, c.NumeEmpr,";
 				$strSQL.= $crlf." e.ImpoAdmi, e.PorcAdmi, e.ImpoGest, e.PorcGest, e.ImpoOtro, e.PorcOtro,";
 				$strSQL.= $crlf." e.FechVenc1, e.FechVenc2, e.FechVenc3";
 				$strSQL.= $crlf." FROM clientes c";
 				$strSQL.= $crlf." INNER JOIN empresas e ON c.NumeEmpr = e.NumeEmpr";
-				if ($post["dato"]["Empresa"] != '') {
-					$strSQL.= $crlf." WHERE e.NumeEmpr = ". $post["dato"]["Empresa"];
+				if ($post["dato"]["Empresa"] != '-1') {
+					$Filtro.= $crlf." WHERE e.NumeEmpr = ". $post["dato"]["Empresa"];
 				}
+				if ($post["dato"]["Cliente"] != '-1') {
+					if ($Filtro == "") {
+						$Filtro.= $crlf." WHERE ";
+					}
+					else {
+						$Filtro.= $crlf." AND ";
+					}
+					$Filtro.= " c.NumeClie = ". $post["dato"]["Cliente"];
+				}
+				$strSQL.= $Filtro;
+
 				$strSQL.= $crlf." ORDER BY c.NumeEmpr, c.NumeClie";
 				
 				$clientes = $config->cargarTabla($strSQL);
@@ -155,9 +168,30 @@ class Cuota extends Tabla {
 	}
 	
 	public function listar($strFiltro="") {
-		echo '<button type="button" class="btn btn-sm btn-info marginBottom10"><i class="fa fa-fw fa-print" aria-hidden="true"></i> Imprimir</button>';
+		//echo '<button type="button" class="btn btn-sm btn-info marginBottom10"><i class="fa fa-fw fa-print" aria-hidden="true"></i> Imprimir</button>';
 		
-		parent::listar($strFiltro);
+		$Filtro = "";
+		if ($strFiltro["FechPago"] != "") {
+			$Filtro.= "DATE_FORMAT(FechVenc1, '%Y-%m') = '{$strFiltro["FechPago"]}'";
+		}
+
+		if ($strFiltro["Empresa"] != "-1") {
+			if ($Filtro != "") {
+				$Filtro.= " AND ";
+			}
+
+			$Filtro.= "NumeClie IN (SELECT NumeClie FROM clientes WHERE NumeEmpr = {$strFiltro["Empresa"]})";
+		}
+
+		if ($strFiltro["Cliente"] != "-1") {
+			if ($Filtro != "") {
+				$Filtro.= " AND ";
+			}
+
+			$Filtro.= "NumeClie = {$strFiltro["Cliente"]}";
+		}
+
+		parent::listar($Filtro);
 	}
 }
 ?>

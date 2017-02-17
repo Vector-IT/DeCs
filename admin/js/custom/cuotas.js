@@ -1,6 +1,7 @@
 function generarcuotas() {
 	var fecha = $("#hdnFechPago").val();
 	var empresa = $("#cmbNumeEmpr").val();
+	var cliente = $("#cmbNumeClie").val();
 	
 	if (fecha == '') {
 		$("#divMsj").removeClass("alert-success");
@@ -17,7 +18,7 @@ function generarcuotas() {
 				operacion: '100', 
 				tabla: 'cuotas', 
 				field: 'Generar', 
-				dato: {"Fecha": fecha, "Empresa": empresa}
+				dato: {"Fecha": fecha, "Empresa": empresa, "Cliente": cliente}
 			}, 
 			function(data) {
 				$("#txtHint").html(data['valor']);
@@ -45,34 +46,15 @@ function generarcuotas() {
 
 function listarCuotas() {
 	$("#actualizando").show();
-	var filtro = "";
-
-	if ($("#filFechPago").val() != "") {
-		filtro+= "DATE_FORMAT(FechVenc, '%Y-%m') = '"+ $("#filFechPago").val() +"'";
-	}
-
-	
-	if ($("#filNumeEmpr").val() != "-1") {
-		if (filtro != "") {
-			filtro+= " AND ";
-		}
-
-		filtro+= "NumeClie IN (SELECT NumeClie FROM clientes WHERE NumeEmpr = " + $("#filNumeEmpr").val() + ")";
-	}
-	
-	if ($("#filNumeClie").val() != "-1") {
-		if (filtro != "") {
-			filtro+= " AND ";
-		}
-
-		filtro+= "NumeClie = " + $("#filNumeClie").val();
-	}
+	var fechpago = $("#filFechPago").val();
+	var empresa = $("#filNumeEmpr").val();
+	var cliente = $("#filNumeClie").val();
 	
 	$("#divDatos").html("");
 	$.post("php/tablaHandler.php",
 		{ operacion: "10"
 			, tabla: "cuotas"
-			, filtro: filtro
+			, filtro: {"FechPago": fechpago, "Empresa": empresa, "Cliente": cliente}
 		},
 		function(data) {
 			$("#actualizando").hide();
@@ -99,8 +81,29 @@ function filtrarClientes(strNumeEmpr) {
 		}, 
 		success: 
 			function(data) {
+				$('#cmbNumeClie').html(data['valor']);
+				$("#actualizando").hide();
+			}
+	});
+}
+
+function filtrarClientesFiltro(strNumeEmpr) {
+	$("#actualizando").show();
+	$.ajax({
+		url: 'php/tablaHandler.php',
+		type: 'post',
+		async: true,
+		data: {	
+			operacion: '100', 
+			tabla: 'cuotas', 
+			field: "NumeEmpr", 
+			dato: strNumeEmpr 
+		}, 
+		success: 
+			function(data) {
 				$('#filNumeClie').html(data['valor']);
 				$("#actualizando").hide();
 			}
 	});
 }
+
