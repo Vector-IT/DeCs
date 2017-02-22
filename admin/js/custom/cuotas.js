@@ -1,13 +1,38 @@
-function generarcuotas() {
-	var fecha = $("#hdnFechPago").val();
-	var empresa = $("#cmbNumeEmpr").val();
-	var cliente = $("#cmbNumeClie").val();
+var cmbCliente;
+var modal;
+
+function abrirModal(objeto) {
+	modal = objeto;
+
+	$("#operacion").html(modal);
+
+	$("#divMsjModal").hide();
+	$("#modalFiltros").modal();
+}
+
+function cerrarModal() {
+	switch (modal) {
+		case 'Generar':
+			return generarCuotas();
+
+		case 'Imprimir': 
+			return imprimirCuotas();
+
+		case 'Buscar':
+			return listarCuotas();
+	}
+}
+
+function generarCuotas() {
+	var fecha = $("#filFecha").val();
+	var empresa = $("#filEmpresa").val();
+	var cliente = $("#filCliente").val();
 	
 	if (fecha == '') {
-		$("#divMsj").removeClass("alert-success");
-		$("#divMsj").addClass("alert-danger");
-		$("#txtHint").html("Debe establecer una fecha!");
-		$("#divMsj").show();
+		$("#divMsjModal").addClass("alert-danger");
+		$("#txtHintModal").html("Debe establecer un mes!");
+		$("#divMsjModal").show();
+		return false;
 	}
 	else {
 		$("#divMsj").hide();
@@ -34,76 +59,74 @@ function generarcuotas() {
 					
 					$("#divMsj").removeClass("alert-success");
 					$("#divMsj").addClass("alert-danger");
+
 				}
 		
 				$("#actualizando").hide();
 				$("#divMsj").show();
 			}
 		);		
+		$("#modalFiltros").modal('hide');
 	}
-		
 }
 
 function listarCuotas() {
-	$("#actualizando").show();
-	var fechpago = $("#filFechPago").val();
-	var empresa = $("#filNumeEmpr").val();
-	var cliente = $("#filNumeClie").val();
+	var fecha = $("#filFecha").val();
+	var empresa = $("#filEmpresa").val();
+	var cliente = $("#filCliente").val();
 	
+	$("#actualizando").show();
+
 	$("#divDatos").html("");
 	$.post("php/tablaHandler.php",
 		{ operacion: "10"
 			, tabla: "cuotas"
-			, filtro: {"FechPago": fechpago, "Empresa": empresa, "Cliente": cliente}
+			, filtro: {"FechPago": fecha, "Empresa": empresa, "Cliente": cliente}
 		},
 		function(data) {
 			$("#actualizando").hide();
 			$("#divDatos").html(data);
 		}
 	);
+
+	$("#modalFiltros").modal('hide');
+}
+
+function imprimirCuotas() {
+	var fecha = $("#filFecha").val();
+	var empresa = $("#filEmpresa").val();
+	var cliente = $("#filCliente").val();
+
+	if (fecha == "") {
+		$("#divMsjModal").addClass("alert-danger");
+		$("#txtHintModal").html("Debe establecer un mes!");
+		$("#divMsjModal").show();
+		return false;
+	}
+
+	location.href = "cuotasImprimir.php?filFecha="+fecha+"&filEmpresa="+empresa+"&filCliente="+cliente;
+}
+
+function filtrarClientes(strNumeEmpr, combo) {
+	cmbCliente = combo;
+
+	$.ajax({
+		url: 'php/tablaHandler.php',
+		type: 'post',
+		async: true,
+		data: {	
+			operacion: '100', 
+			tabla: 'cuotas', 
+			field: "NumeEmpr", 
+			dato: strNumeEmpr 
+		}, 
+		success: 
+			function(data) {
+				$(cmbCliente).html(data['valor']);
+			}
+	});
 }
 
 function verCuota(strID) {
 	location.href = "verCuota.php?id=" + strID;
 }
-
-function filtrarClientes(strNumeEmpr) {
-	$("#actualizando").show();
-	$.ajax({
-		url: 'php/tablaHandler.php',
-		type: 'post',
-		async: true,
-		data: {	
-			operacion: '100', 
-			tabla: 'cuotas', 
-			field: "NumeEmpr", 
-			dato: strNumeEmpr 
-		}, 
-		success: 
-			function(data) {
-				$('#cmbNumeClie').html(data['valor']);
-				$("#actualizando").hide();
-			}
-	});
-}
-
-function filtrarClientesFiltro(strNumeEmpr) {
-	$("#actualizando").show();
-	$.ajax({
-		url: 'php/tablaHandler.php',
-		type: 'post',
-		async: true,
-		data: {	
-			operacion: '100', 
-			tabla: 'cuotas', 
-			field: "NumeEmpr", 
-			dato: strNumeEmpr 
-		}, 
-		success: 
-			function(data) {
-				$('#filNumeClie').html(data['valor']);
-				$("#actualizando").hide();
-			}
-	});
-}
-

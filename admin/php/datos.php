@@ -199,7 +199,9 @@
 	$tabla->labelField = "NombClie";
 
 	$tabla->btnForm = [
-			array("titulo"=>'<i class="fa fa-fw fa-money" aria-hidden="true"></i> Generar cuotas', 'onclick'=>"generarCuotas()", 'class'=>"btn-success")
+			array('titulo'=>'<i class="fa fa-fw fa-money" aria-hidden="true"></i> Generar cuotas', 
+					'onclick'=>"generarCuotas()", 
+					'class'=>"btn-success")
 	];
 
 	$tabla->btnList = [
@@ -231,7 +233,7 @@
 	$tabla->fields["DireClie"]["cssGroup"] = "form-group2";
 	$tabla->fields["DireClie"]["isHiddenInList"] = true;
 
-	$tabla->addField("NombBarr", "text", 200, "Barrio");
+	$tabla->addField("NombBarr", "text", 200, "Barrio", false);
 	$tabla->fields["NombBarr"]["cssGroup"] = "form-group2";
 	$tabla->fields["NombBarr"]["isHiddenInList"] = true;
 
@@ -270,9 +272,11 @@
 	$tabla->fields["ValoCuot"]["isHiddenInList"] = true;
 
 	$tabla->addField("CodiBarr", "text", 0, "Codigo de barras");
+	$tabla->fields["CodiBarr"]["isHiddenInForm"] = true;
 	$tabla->fields["CodiBarr"]["isHiddenInList"] = true;
 
 	$tabla->addField("CodiPagoElec", "text", 0, "Codigo de pago electrónico");
+	$tabla->fields["CodiPagoElec"]["isHiddenInForm"] = true;
 	$tabla->fields["CodiPagoElec"]["isHiddenInList"] = true;
 	// $tabla->addField("CantCuot", "number", 0, "Cuotas restantes");
 	// $tabla->fields["CantCuot"]["cssGroup"] = "form-group2";

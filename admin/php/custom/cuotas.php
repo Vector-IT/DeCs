@@ -167,9 +167,7 @@ class Cuota extends Tabla {
 	
 	}
 	
-	public function listar($strFiltro="") {
-		//echo '<button type="button" class="btn btn-sm btn-info marginBottom10"><i class="fa fa-fw fa-print" aria-hidden="true"></i> Imprimir</button>';
-		
+	public function listar($strFiltro="", $conBotones = true, $btnList = [], $order = '') {
 		$Filtro = "";
 		if ($strFiltro["FechPago"] != "") {
 			$Filtro.= "DATE_FORMAT(FechVenc1, '%Y-%m') = '{$strFiltro["FechPago"]}'";
@@ -191,7 +189,7 @@ class Cuota extends Tabla {
 			$Filtro.= "NumeClie = {$strFiltro["Cliente"]}";
 		}
 
-		parent::listar($Filtro);
+		parent::listar($Filtro, $conBotones, $btnList, $order);
 	}
 }
 ?>

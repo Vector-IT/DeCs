@@ -19,7 +19,6 @@
 		}
 	}
 
-	(isset($_REQUEST["id"]))? $item = $_REQUEST["id"]: $item = "";
 	(isset($_REQUEST["NumeClie"]))? $NumeClie = $_REQUEST["NumeClie"]: $NumeClie= "";
 	
 ?>
@@ -34,7 +33,8 @@
 		if ($NumeClie != '') {
 			$strSalida = $crlf."<script>";
 			$strSalida.= $crlf. "$(function () {";
-			$strSalida.= $crlf. "	$('#btnFiltrar').click();";
+			$strSalida.= $crlf. "	$('#filCliente').val({$NumeClie});";
+			$strSalida.= $crlf. "	listarCuotas();";
 			$strSalida.= $crlf. "});";
 			$strSalida.= $crlf. "</script>";
 			
@@ -50,66 +50,25 @@
 		require_once 'php/header.php';
 	?>
 
-	<div class="container">
+	<div class="container-fluid">
 		<div class="page-header">
 			<h2><?php echo $cuotas->titulo?></h2>
 		</div>
-		<h4>Generar cuotas</h4>
-		<form id="frmGenerar" class="form-horizontal marginTop20" method="post" onsubmit="return false;">
-			<div class="row">
-				<div class="col-md-5">
-					<label for="dtpFechPago" class="control-label col-md-3">Fecha:</label>
-					<div class="col-md-9">
-						<div class="input-group date margin-bottom-sm inpFechPago">
-							<input type="text" class="form-control" id="txtFechPago" size="16" value="" readonly>
-							<span class="input-group-addon add-on clickable" title="Limpiar"><i class="fa fa-times fa-fw"></i></span>
-							<span class="input-group-addon add-on clickable" title="Abrir Calendario"><i class="fa fa-calendar fa-fw"></i></span>
-						</div>
-						<input type="hidden" id="hdnFechPago">
-						<script type="text/javascript">
-							$(".inpFechPago").datetimepicker({
-								language: "es",
-								format: "MM yyyy",
-								minView: 3,
-								startView: 3,
-								autoclose: true,
-								todayBtn: true,
-								todayHighlight: false,
-								minuteStep: 15,
-								pickerPosition: "bottom-left",
-								linkField: "hdnFechPago",
-								linkFormat: "yyyy-mm",
-								fontAwesome: true
-							});
-						</script>
-					</div>
-				</div>
-				<div class="col-md-5">
-					<label for="cmbNumeEmpr" class="control-label col-md-3">Empresa:</label>
-					<div class="col-md-9">
-						<select class="form-control ucase" id="cmbNumeEmpr" onchange="filtrarClientes(this.value)">
-							<option value="-1">TODAS LAS EMPRESAS</option>
-							<?php echo $cuotas->cargarCombo('empresas', 'NumeEmpr', 'NombEmpr', '', 'NombEmpr')?>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="row marginTop20">
-				<div class="col-md-5">
-					<label for="cmbNumeClie" class="control-label col-md-3">Cliente:</label>
-					<div class="col-md-9">
-						<select class="form-control ucase" id="cmbNumeClie">
-							<option value="-1">TODOS LOS CLIENTES</option>
-							<?php echo $cuotas->cargarCombo('clientes', 'NumeClie', 'NombClie', '', 'NombClie', $NumeClie)?>
-						</select>
-					</div>
-				</div>
 
-				<div class="col-md-7 text-right">
-					<button type="submit" id="btnGenerar" class="btn btn-sm btn-primary" onclick="generarcuotas();"><i class="fa fa-share-square-o fa-fw" aria-hidden="true"></i> Generar</button>
-				</div>
+		<div class="row">
+			<div class="col-md-4 text-center">
+				<h4>Generar cuotas</h4>
+				<button type="button" class="btn btn-sm btn-info marginBottom10 clickable" data-js="abrirModal('Generar')"><i class="fa fa-fw fa-plus-square" aria-hidden="true"></i> Generar</button>
 			</div>
-		</form>
+			<div class="col-md-4 text-center">
+				<h4>Imprimir</h4>
+				<button type="button" class="btn btn-sm btn-info marginBottom10 clickable" data-js="abrirModal('Imprimir')"><i class="fa fa-fw fa-print" aria-hidden="true"></i> Imprimir</button>
+			</div>
+			<div class="col-md-4 text-center">
+				<h4>Buscar cuotas</h4>
+				<button type="button" class="btn btn-sm btn-info marginBottom10 clickable" data-js="abrirModal('Buscar')"><i class="fa fa-fw fa-search" aria-hidden="true"></i> Buscar</button>
+			</div>
+		</div>
 
 		<div id="actualizando" class="alert alert-info" role="alert">
 			<i class="fa fa-refresh fa-fw fa-spin"></i> Actualizando datos, por favor espere...
@@ -119,63 +78,6 @@
 			<span id="txtHint">Info</span>
 		</div>
 
-		<hr>
-		<h4>Buscar cuotas</h4>
-		<form id="frmFiltros" class="form-horizontal marginTop20" method="post" onsubmit="return false;">
-			<div class="row">
-				<div class="col-md-5">
-					<label for="filFech" class="control-label col-md-3">Fecha:</label>
-					<div class="col-md-9">
-						<div class="input-group date margin-bottom-sm inpFechCuot">
-							<input type="text" class="form-control" id="filFechText" size="16" value="" readonly>
-							<span class="input-group-addon add-on clickable" title="Limpiar"><i class="fa fa-times fa-fw"></i></span>
-							<span class="input-group-addon add-on clickable" title="Abrir Calendario"><i class="fa fa-calendar fa-fw"></i></span>
-						</div>
-						<input type="hidden" id="filFechPago">
-						<script type="text/javascript">
-							$(".inpFechCuot").datetimepicker({
-								language: "es",
-								format: "MM yyyy",
-								minView: 3,
-								startView: 3,
-								autoclose: true,
-								todayBtn: true,
-								todayHighlight: false,
-								minuteStep: 15,
-								pickerPosition: "bottom-left",
-								linkField: "filFechPago",
-								linkFormat: "yyyy-mm",
-								fontAwesome: true
-							});
-						</script>
-					</div>
-				</div>
-				<div class="col-md-5">
-					<label for="filNumeEmpr" class="control-label col-md-3">Empresa:</label>
-					<div class="col-md-9">
-						<select class="form-control ucase" id="filNumeEmpr" onchange="filtrarClientesFiltro(this.value)">
-							<option value="-1">TODAS LAS EMPRESAS</option>
-							<?php echo $cuotas->cargarCombo('empresas', 'NumeEmpr', 'NombEmpr', '', 'NombEmpr')?>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="row marginTop20">
-				<div class="col-md-5">
-					<label for="filNumeClie" class="control-label col-md-3">Cliente:</label>
-					<div class="col-md-9">
-						<select class="form-control ucase" id="filNumeClie">
-							<option value="-1">TODOS LOS CLIENTES</option>
-							<?php echo $cuotas->cargarCombo('clientes', 'NumeClie', 'NombClie', '', 'NombClie', $NumeClie)?>
-						</select>
-					</div>
-				</div>
-				<div class="col-md-7 text-right">
-					<button type="submit" id="btnFiltrar" class="btn btn-sm btn-success" onclick="listarCuotas();"><i class="fa fa-search fa-fw" aria-hidden="true"></i> Filtrar</button>
-				</div>
-			</div>
-		</form>
-
 		<div id="divDatos" class="table-responsive marginTop40 marginBottom60">
 		</div>
 	</div>
@@ -184,5 +86,69 @@
 		require_once 'php/footer.php';
 	?>
 
+<div id="modalFiltros" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form class="form-horizontal" method="post" onsubmit="return false;">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title"><span id="operacion"></span> cuotas</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group form-group-sm">
+						<label for="filEmpresa" class="control-label col-md-2">Empresa:</label>
+						<div class="col-md-8">
+							<select class="form-control ucase" id="filEmpresa" name="filEmpresa" onchange="filtrarClientes(this.value, '#filCliente')">
+								<?php echo $cuotas->cargarCombo('empresas', 'NumeEmpr', 'NombEmpr', '', 'NombEmpr', '-1', true, 'TODAS LAS EMPRESAS')?>
+							</select>
+						</div>
+					</div>
+					<div class="form-group form-group-sm">
+						<label for="filCliente" class="control-label col-md-2">Cliente:</label>
+						<div class="col-md-8">
+							<select class="form-control ucase" id="filCliente" name="filCliente">
+								<?php echo $cuotas->cargarCombo('clientes', 'NumeClie', 'NombClie', '', 'NombClie', '-1', true, 'TODOS LOS CLIENTES')?>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group form-group-sm ">
+						<label for="Fecha" class="control-label col-md-2">Mes:</label>
+						<div class="col-md-5">
+							<div class="input-group date margin-bottom-sm inpFecha">
+								<input type="text" class="form-control" id="Fecha" size="16" value="" readonly required>
+								<span class="input-group-addon add-on clickable" title="Abrir Calendario"><i class="fa fa-calendar fa-fw"></i></span>
+							</div>
+							<input type="hidden" id="filFecha" name="filFecha">
+							<script type="text/javascript">
+								$(".inpFecha").datetimepicker({
+									language: "es",
+									format: "MM yyyy",
+									minView: 3,
+									startView: 3,
+									autoclose: true,
+									todayBtn: true,
+									todayHighlight: false,
+									minuteStep: 15,
+									pickerPosition: "bottom-left",
+									linkField: "filFecha",
+									linkFormat: "yyyy-mm",
+									fontAwesome: true
+								});
+							</script>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div id="divMsjModal" class="alert alert-danger text-left" role="alert">
+						<span id="txtHintModal">Info</span>
+					</div>
+					<button type="submit" class="btn btn-primary clickable" data-js="cerrarModal();">Aceptar</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 </body>
 </html>

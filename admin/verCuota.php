@@ -42,6 +42,7 @@
 	$strSQL.= " p.ImpoOtro,";
 	$strSQL.= " (p.ImpoPura + p.ImpoAdmi + p.ImpoGest + p.ImpoOtro) ImpoTota,";
 	$strSQL.= " p.CodiBarr,";
+	$strSQL.= " p.NumeClie,";
 	$strSQL.= " c.NombClie";
 	$strSQL.= " FROM pagos p";
 	$strSQL.= " INNER JOIN clientes c ON p.NumeClie = c.NumeClie";
@@ -139,6 +140,16 @@
 			<h2><?php echo $cuotas->tituloSingular. ' ' .$pago["NumeCuot"]. ' de ' .$pago["NombClie"]?></h2>
 		</div>
 		<button class="btn btn-sm btn-info clickable" data-js="history.go(-1);"><i class="fa fa-chevron-circle-left fa-fw" aria-hidden="true"></i> Volver</button>
+		<?php
+			$pagoAnt = $config->buscarDato("SELECT NumePago FROM pagos WHERE NumePago < {$item} AND NumeClie = {$pago['NumeClie']} ORDER BY NumePago DESC LIMIT 1");
+			if ($pagoAnt != '') {
+				echo $crlf.'		<button class="btn btn-sm btn-info clickable" data-js="location.href = \'verCuota.php?id='.$pagoAnt.'\';"><i class="fa fa-angle-double-left fa-fw" aria-hidden="true"></i> Cuota previa</button>';
+			}
+			$pagoPos = $config->buscarDato("SELECT NumePago FROM pagos WHERE NumePago > {$item} AND NumeClie = {$pago['NumeClie']} LIMIT 1");
+			if ($pagoPos != '') {
+				echo $crlf.'		<button class="btn btn-sm btn-info clickable" data-js="location.href = \'verCuota.php?id='.$pagoPos.'\';"><i class="fa fa-angle-double-right fa-fw" aria-hidden="true"></i> Cuota siguiente</button>';
+			}
+		?>
 
 		<form id="frmpagos" class="form-horizontal marginTop20" method="post" onSubmit="return false;">
 			<input type="hidden" id="hdnTabla" value="pagos">

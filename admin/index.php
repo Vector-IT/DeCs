@@ -11,6 +11,8 @@
 <html>
 <head>
 	<?php require_once 'php/linksHeader.php';?>
+
+	<script src="js/custom/index.js"></script>
 </head>
 <body>
 	<?php
@@ -19,8 +21,8 @@
 		require_once 'php/header.php';
 	?>
 	
-	<div class="container">
-		<div class="page-header">
+	<div class="container">	
+		<!--<div class="page-header">
 			<h2>Consola de Administraci&oacute;n</h2>
 		</div>
 		
@@ -29,6 +31,21 @@
 			Utilice el men&uacute; situado en el margen izquierdo de la pantalla para acceder a las distintas 
 			secciones del sistema.			
 		</p>
+		<hr>-->
+
+		<h3>Seguimientos sin procesar</h3>
+		<?php
+			$filtro = "NumeTipoCont IS NULL OR NumeTipoResp IS NULL";
+			$seguimientos = $config->tablas["seguimientos"];
+			$btnList = [
+				array('titulo'=>'<i class="fa fa-fw fa-bookmark-o" aria-hidden="true"></i> Ver', 
+					'onclick'=>"verSeguimiento", 
+					'class'=>"btn-success")
+
+			];
+
+			$seguimientos->listar($filtro, false, $btnList, "FechSegu");
+		?>
 	</div>	
 	
 	<?php

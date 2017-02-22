@@ -508,7 +508,7 @@ class Tabla {
 		return $strSalida;
 	}
 
-	public function listar($strFiltro="") {
+	public function listar($strFiltro="", $conBotones = true, $btnList = [], $order = '') {
 		global $config, $crlf;
 
 		$strSalida = '';
@@ -553,8 +553,12 @@ class Tabla {
 				}
 			}
 
-			if ($this->order != '')
+			if ($order != '') {
+				$strSQL.= " ORDER BY ". $order;
+			}
+			else if ($this->order != '') {
 				$strSQL.= " ORDER BY ". $this->order;
+			}
 
 			$tabla = $config->cargarTabla($strSQL);
 
@@ -568,22 +572,32 @@ class Tabla {
 								$strSalida.= $crlf.'<th class="text-'. $field['txtAlign'] .'">'. $field['label'] .'</th>';
 					}
 
-					//Botones opcionales
-					if (count($this->btnList) > 0) {
-						for ($I = 0; $I < count($this->btnList); $I++) {
+					if ($conBotones) {
+						//Botones de la clase
+						if (count($this->btnList) > 0) {
+							for ($I = 0; $I < count($this->btnList); $I++) {
+								$strSalida.= $crlf.'<th></th>';
+							}
+						}
+
+						//Editar
+						if ($this->allowEdit) {
+							$strSalida.= $crlf.'<th></th>';
+						}
+
+						//Borrar
+						if ($this->allowDelete) {
 							$strSalida.= $crlf.'<th></th>';
 						}
 					}
 
-					//Editar
-					if ($this->allowEdit) {
-						$strSalida.= $crlf.'<th></th>';
+					//Botones del método
+					if (count($btnList) > 0) {
+						for ($I = 0; $I < count($btnList); $I++) {
+							$strSalida.= $crlf.'<th></th>';
+						}
 					}
-
-					//Borrar
-					if ($this->allowDelete) {
-						$strSalida.= $crlf.'<th></th>';
-					}
+					
 					$strSalida.= $crlf.'</tr>';
 
 					$strFootValue = 0;
@@ -603,7 +617,9 @@ class Tabla {
 									switch ($field["type"]) {
 										case 'select':
 											$strSalida.= $crlf.'<td class="ucase text-'. $field['txtAlign'] .' '. $field['cssControl'] .'">';
-											$strSalida.= $crlf. $config->buscarDato("SELECT {$field['lookupFieldLabel']} FROM {$field['lookupTable']} WHERE {$field['lookupFieldID']} = {$fila[$field['name']]}");
+											if ($fila[$field['name']] != '') {
+												$strSalida.= $crlf. $config->buscarDato("SELECT {$field['lookupFieldLabel']} FROM {$field['lookupTable']} WHERE {$field['lookupFieldID']} = {$fila[$field['name']]}");
+											}
 											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field['name']].'" />';
 											$strSalida.= $crlf.'</td>';
 											break;
@@ -672,23 +688,30 @@ class Tabla {
 						}
 
 						//Botones
-						//$strSalida.= $crlf.'<td class="text-right">';
-						//Opcionales
-						if (count($this->btnList) > 0) {
-							for ($I = 0; $I < count($this->btnList); $I++) {
-								$strSalida.= $crlf.'<td class="text-center"><button class="btn btn-sm '. $this->btnList[$I]['class'] .'" onclick="'. $this->btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')">'. $this->btnList[$I]['titulo'] .'</button></td>';
+						if ($conBotones) {						
+							//De clase
+							if (count($this->btnList) > 0) {
+								for ($I = 0; $I < count($this->btnList); $I++) {
+									$strSalida.= $crlf.'<td class="text-center"><button class="btn btn-sm '. $this->btnList[$I]['class'] .'" onclick="'. $this->btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')">'. $this->btnList[$I]['titulo'] .'</button></td>';
+								}
+							}
+
+							//Editar
+							if ($this->allowEdit) {
+								$strSalida.= $crlf.'<td class="text-center"><button class="btn btn-sm btn-info" onclick="editar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i> Editar</button></td>';
+							}
+							//Borrar
+							if ($this->allowDelete) {
+								$strSalida.= $crlf.'<td class="text-center"><button class="btn btn-sm btn-danger" onclick="borrar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-trash-o fa-fw" aria-hidden="true"></i> Borrar</button></td>';
 							}
 						}
 
-						//Editar
-						if ($this->allowEdit) {
-							$strSalida.= $crlf.'<td class="text-center"><button class="btn btn-sm btn-info" onclick="editar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i> Editar</button></td>';
+						//Botones del método
+						if (count($btnList) > 0) {
+							for ($I = 0; $I < count($btnList); $I++) {
+								$strSalida.= $crlf.'<td class="text-center"><button class="btn btn-sm '. $btnList[$I]['class'] .'" onclick="'. $btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')">'. $btnList[$I]['titulo'] .'</button></td>';
+							}
 						}
-						//Borrar
-						if ($this->allowDelete) {
-							$strSalida.= $crlf.'<td class="text-center"><button class="btn btn-sm btn-danger" onclick="borrar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-trash-o fa-fw" aria-hidden="true"></i> Borrar</button></td>';
-						}
-						$strSalida.= $crlf.'</td>';
 
 						$strSalida.= $crlf.'</tr>';
 					}

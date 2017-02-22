@@ -18,5 +18,16 @@ class Seguimiento extends Tabla {
 		}
 
 	}
+
+	public function insertar($datos) {
+		global $config; 
+
+		$fecha = $config->buscarDato("SELECT DATE_FORMAT(SYSDATE(), '%Y-%m-%d %H:%i')");
+
+		$datos["FechSegu"] = $fecha;
+		$result = parent::insertar($datos);
+
+		return $result;
+	}
 }
 ?>

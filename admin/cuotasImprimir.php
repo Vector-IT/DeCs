@@ -12,12 +12,30 @@
 		die();
 	}
 
-	$filClientes = $_REQUEST["filClientes"];
+	$filEmpresa = $_REQUEST["filEmpresa"];
+	$filCliente = $_REQUEST["filCliente"];
+
+	$filFecha = $_REQUEST["filFecha"];
+
+	$filtro = "";
+	if ($filEmpresa != '-1') {
+		$filtro.= $crlf."c.NumeEmpr = ". $filEmpresa;
+	}
+
+	if ($filCliente != '-1') {
+		if ($filtro != "") {
+			$filtro.= $crlf." AND ";
+		}
+
+		$filtro.= $crlf."c.NumeClie = ". $filCliente;
+	}
 
 	$strSQL = "SELECT c.NumeClie, c.NombClie, c.DireClie, c.NombBarr, c.NombLoca, c.CodiPost, p.NombProv, c.ValoMovi, c.CodiBarr, c.CodiPagoElec";
 	$strSQL.= $crlf." FROM clientes c";
 	$strSQL.= $crlf." INNER JOIN provincias p ON c.NumeProv = p.NumeProv";
-	$strSQL.= $crlf." WHERE " . $filClientes;
+	if ($filtro != "") {
+		$strSQL.= $crlf." WHERE " . $filtro;
+	}
 
 	$tbClientes = $config->cargarTabla($strSQL);
 
@@ -40,6 +58,7 @@
 		$strSQL.= $crlf." p.CodiBarr";
 		$strSQL.= $crlf." FROM pagos p";
 		$strSQL.= $crlf." WHERE p.NumeClie = ". $cliente["NumeClie"];
+		$strSQL.= $crlf." AND p.FechVenc1 >= STR_TO_DATE('{$filFecha}-01', '%Y-%m-%d')";
 		$strSQL.= $crlf." ORDER BY p.NumeClie, p.NumeCuot";
 		$strSQL.= $crlf." LIMIT 4";
 		
@@ -115,7 +134,7 @@
 	// Y = Talon1 + 48
 		$cuota = $tbCuotas->fetch_assoc();
 		if ($cuota == null) {
-			continue;
+			goto fin;
 		}
 
 		//NumeClie
@@ -175,7 +194,7 @@
 	// Y = Talon2 + 45
 		$cuota = $tbCuotas->fetch_assoc();
 		if ($cuota == null) {
-			continue;
+			goto fin;
 		}
 
 		//NumeClie
@@ -235,7 +254,7 @@
 	//Y = Talon3 + 45
 		$cuota = $tbCuotas->fetch_assoc();
 		if ($cuota == null) {
-			continue;
+			goto fin;
 		}
 
 		//NumeClie
@@ -292,6 +311,7 @@
 		$pdf->Text(50, 219, $cuota["CodiBarr"]);
 
 	//Final
+		fin:
 		//CodiBarrClie
 		$pdf->GDImage(barcode("", $cliente["CodiBarr"], 10, "horizontal", "code128", false, 1, "gd"), 25, 230, 135, 5);
 		$pdf->Text(50, 238, $cliente["CodiBarr"]);
