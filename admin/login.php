@@ -9,6 +9,18 @@ require_once 'php/datos.php';
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#usuario").focus();
+
+			var styleSheets = $("link");
+			var href = 'css/bootstrap-dark.css';
+			for (var i = 0; i < styleSheets.length; i++) {
+				if (styleSheets[i].href != null) {
+				    if (styleSheets[i].href.indexOf(href) >= 0) {
+				        styleSheets[i].disabled = true;
+				        break;
+				    }
+				}
+			}
+			
 		});
 
 
