@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	//Inicializo el menu
 	$(".menuVector").vectorMenu({
 		trigger: ".btnMenu",
 		duration: 200,

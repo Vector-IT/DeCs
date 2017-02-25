@@ -38,7 +38,7 @@ class Cuota extends Tabla {
 						$FechVenc1 = "STR_TO_DATE('".$post['dato']['Fecha']."-".$fila["FechVenc1"]."', '%Y-%m-%d')";
 						$FechVenc1Barr = date_format(new DateTime($post['dato']['Fecha']."-".$fila["FechVenc1"]), 'ymd');
 						
-						if ($fila["FechVenc2"] != "") {
+						if ($fila["FechVenc2"] != "" && $fila["FechVenc2"] != "0") {
 							$FechVenc2 = "STR_TO_DATE('".$post['dato']['Fecha']."-". ($fila["FechVenc1"] + $fila["FechVenc2"]) ."', '%Y-%m-%d')";
 							$FechVenc2Barr = substr('00'.$fila["FechVenc2"], -2);
 						}
@@ -47,7 +47,7 @@ class Cuota extends Tabla {
 							$FechVenc2Barr = '000000';
 						}
 
-						if ($fila["FechVenc3"] != "") {
+						if ($fila["FechVenc3"] != "" && $fila["FechVenc3"] != "0") {
 							$FechVenc3 = "STR_TO_DATE('".$post['dato']['Fecha']."-". ($fila["FechVenc1"] + $fila["FechVenc2"] + $fila["FechVenc3"]) ."', '%Y-%m-%d')";
 							$FechVenc3Barr = substr('00'.$fila["FechVenc3"], -2);
 						}
@@ -112,7 +112,7 @@ class Cuota extends Tabla {
 							$CodiBarr.= $aux;
 						}
 						
-						$strSQL = "INSERT INTO pagos(NumePago, FechPago, NumeClie, NumeCuot, NumeEstaPago, NumeTipoPago, CodiBarr, FechVenc1, FechVenc2, FechVenc3, ImpoPura, ImpoAdmi, ImpoGest, ImpoOtro)";
+						$strSQL = "INSERT INTO pagos(NumePago, FechCuot, NumeClie, NumeCuot, NumeEstaPago, NumeTipoPago, CodiBarr, FechVenc1, FechVenc2, FechVenc3, ImpoPura, ImpoAdmi, ImpoGest, ImpoOtro)";
 						$strSQL.= $crlf." VALUES({$NumePago},";
 						$strSQL.= $crlf." SYSDATE(),";
 						$strSQL.= $crlf." {$fila['NumeClie']},";
@@ -169,8 +169,8 @@ class Cuota extends Tabla {
 	
 	public function listar($strFiltro="", $conBotones = true, $btnList = [], $order = '') {
 		$Filtro = "";
-		if ($strFiltro["FechPago"] != "") {
-			$Filtro.= "DATE_FORMAT(FechVenc1, '%Y-%m') = '{$strFiltro["FechPago"]}'";
+		if ($strFiltro["Fecha"] != "") {
+			$Filtro.= "DATE_FORMAT(FechVenc1, '%Y-%m') = '{$strFiltro["Fecha"]}'";
 		}
 
 		if ($strFiltro["Empresa"] != "-1") {

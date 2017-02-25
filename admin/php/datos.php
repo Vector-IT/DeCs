@@ -60,6 +60,9 @@
 	$tabla->addField("NombBanc", "text", 200, "Nombre");
 	$tabla->fields["NombBanc"]["cssControl"] = "ucase";
 
+	$tabla->addField("ComiBanc", "number", 0, "Porcentaje de Comisión");
+	$tabla->fields["ComiBanc"]["step"] = "0.01";
+
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 
 	$config->tablas["bancos"] = $tabla;
@@ -87,6 +90,9 @@
 	$tabla->addField("NumeTipoPago", "number", 0, "Número", false, true, true);
 	$tabla->addField("NombTipoPago", "text", 100, "Nombre");
 	$tabla->fields["NombTipoPago"]["cssControl"] = "ucase";
+
+	$tabla->addField("ComiTipoPago", "number", 0, "Porcentaje de Comisión");
+	$tabla->fields["ComiTipoPago"]["step"] = "0.01";
 
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 
@@ -142,6 +148,7 @@
 
 	$tabla->addField("ImpoAdmi", "number", 80, "Gastos administrativos");
 	$tabla->fields["ImpoAdmi"]["cssGroup"] = "form-group2";
+	$tabla->fields["ImpoAdmi"]["step"] = "0.01";
 
 	$tabla->addField("PorcAdmi", "checkbox", 100, "Es porcentaje?", true, false, false, true, '1');
 	$tabla->fields["PorcAdmi"]['isHiddenInList'] = true;
@@ -149,6 +156,7 @@
 
 	$tabla->addField("ImpoGest", "number", 80, "Gestión de cobranza");
 	$tabla->fields["ImpoGest"]["cssGroup"] = "form-group2";
+	$tabla->fields["ImpoGest"]["step"] = "0.01";
 
 	$tabla->addField("PorcGest", "checkbox", 100, "Es porcentaje?", true, false, false, true, '1');
 	$tabla->fields["PorcGest"]['isHiddenInList'] = true;
@@ -156,6 +164,7 @@
 
 	$tabla->addField("ImpoOtro", "number", 80, "Otros gastos");
 	$tabla->fields["ImpoOtro"]["cssGroup"] = "form-group2";
+	$tabla->fields["ImpoOtro"]["step"] = "0.01";
 
 	$tabla->addField("PorcOtro", "checkbox", 100, "Es porcentaje?", true, false, false, true, '1');
 	$tabla->fields["PorcOtro"]['isHiddenInList'] = true;
@@ -197,6 +206,9 @@
 	 */
 	$tabla = new Clientes("clientes", "clientes", "Clientes", "el Cliente", true, "objeto/clientes", "fa-id-card-o");
 	$tabla->labelField = "NombClie";
+	$tabla->listarOnLoad = false;
+
+	$tabla->searchFields = array("NumeSoli", "NombClie");
 
 	$tabla->btnForm = [
 			array('titulo'=>'<i class="fa fa-fw fa-money" aria-hidden="true"></i> Generar cuotas', 
@@ -216,6 +228,11 @@
 	$tabla->jsFiles = ['admin/js/custom/clientes.js'];
 
 	$tabla->addField("NumeClie", "number", 0, "Numero", false, true, true);
+	$tabla->fields["NumeClie"]["isHiddenInForm"] = true;
+	$tabla->fields["NumeClie"]["isHiddenInList"] = true;
+
+	$tabla->addField("NumeSoli", "number", 0, "Nro Solicitud");
+
 	$tabla->addField("NombClie", "text", 200, "Nombre");
 	$tabla->addField("NumeEmpr", "select", 200, "Empresa", true, false, false, true, '', '', 'empresas', 'NumeEmpr', 'NombEmpr', '', 'NombEmpr');
 	$tabla->fields["NumeEmpr"]["isHiddenInList"] = true;
@@ -270,6 +287,7 @@
 	$tabla->addField("ValoCuot", "number", 0, "Valor cuota");
 	$tabla->fields["ValoCuot"]["cssGroup"] = "form-group2";
 	$tabla->fields["ValoCuot"]["isHiddenInList"] = true;
+	$tabla->fields["ValoCuot"]["step"] = "0.01";
 
 	$tabla->addField("CodiBarr", "text", 0, "Codigo de barras");
 	$tabla->fields["CodiBarr"]["isHiddenInForm"] = true;
@@ -286,7 +304,7 @@
 	/**
 	 * PAGOS
 	 */
-	$tabla = new Cuota("cuotas", "pagos", "Cuotas", "Cuota", "true", "cuotas.php", "fa-money", "FechPago DESC, NumeClie", false, false, true);
+	$tabla = new Cuota("cuotas", "pagos", "Cuotas", "Cuota", "true", "cuotas.php", "fa-money", "FechCuot DESC, NumeClie", false, false, true);
 	$tabla->jsFiles = ['admin/js/custom/cuotas.js'];
 	$tabla->btnList = [
 			array('titulo'=>'<i class="fa fa-fw fa-eye" aria-hidden="true"></i> Ver', 'onclick'=>"verCuota", 'class'=>"btn-primary"),
@@ -299,8 +317,8 @@
 	$tabla->addField("NumeCuot", "number", 0, "Anticipo Nº");
 	$tabla->fields["NumeCuot"]["cssGroup"] = "form-group2";
 
-	$tabla->addField("FechPago", "datetime", 0, "Fecha Emisión", true, true);
-	$tabla->fields["FechPago"]["cssGroup"] = "form-group2";
+	$tabla->addField("FechCuot", "datetime", 0, "Fecha Emisión", true, true);
+	$tabla->fields["FechCuot"]["cssGroup"] = "form-group2";
 	
 	$tabla->addField("NumeClie", "select", 80, "Cliente", true, false, false, true, '', '', 'clientes', 'NumeClie', 'NombClie', '', 'NombClie');
 
@@ -315,6 +333,14 @@
 	$tabla->fields["ImpoTota"]["formatDb"] = "CONCAT('$ ', (ImpoPura + ImpoAdmi + ImpoGest + ImpoOtro)) ImpoTota";
 	$tabla->fields["ImpoTota"]["showOnForm"] = false;
 	$tabla->fields["ImpoTota"]["txtAlign"] = 'right';
+
+	$tabla->addField("FechPago", "date", 80, "Fecha de Pago", false, true);
+	$tabla->fields["FechPago"]["isHiddenInList"] = true;
+	$tabla->fields["FechPago"]["cssGroup"] = "form-group2";
+
+	$tabla->addField("FechAcre", "date", 80, "Fecha de Pago", false, true);
+	$tabla->fields["FechAcre"]["isHiddenInList"] = true;
+	$tabla->fields["FechAcre"]["cssGroup"] = "form-group2";
 
 	$config->tablas["cuotas"] = $tabla;
 

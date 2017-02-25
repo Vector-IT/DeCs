@@ -90,20 +90,23 @@ function guardarSeguimiento() {
 			},
 			function(data) {
 				$("#actualizandoModal").hide();
+				valor = JSON.parse(data['valor']);
 
-				if (data['valor']['estado'] === true) {
-					$("#txtHint").html("Seguimiento creado!");
+				if (valor['estado'] === true) {
+					$("#txtHintModal").html("Seguimiento creado!");
 
 					$("#divMsjModal").removeClass("alert-danger");
 					$("#divMsjModal").addClass("alert-success");
 
 					$("#divMsjModal").fadeIn(function (){
-						$('#mdlSeguimiento').modal('toggle');
+						setTimeout(function() {
+							$('#mdlSeguimiento').modal('toggle');
+						}, 1000);
 					});
 				}
 				else {
 					//Error
-					$("#txtHint").html(data['valor']['estado']);
+					$("#txtHintModal").html(valor['estado']);
 
 					$("#divMsjModal").removeClass("alert-success");
 					$("#divMsjModal").addClass("alert-danger");

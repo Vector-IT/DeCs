@@ -81,7 +81,7 @@ function listarCuotas() {
 	$.post("php/tablaHandler.php",
 		{ operacion: "10"
 			, tabla: "cuotas"
-			, filtro: {"FechPago": fecha, "Empresa": empresa, "Cliente": cliente}
+			, filtro: {"Fecha": fecha, "Empresa": empresa, "Cliente": cliente}
 		},
 		function(data) {
 			$("#actualizando").hide();

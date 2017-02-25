@@ -30,7 +30,7 @@
 		$filtro.= $crlf."c.NumeClie = ". $filCliente;
 	}
 
-	$strSQL = "SELECT c.NumeClie, c.NombClie, c.DireClie, c.NombBarr, c.NombLoca, c.CodiPost, p.NombProv, c.ValoMovi, c.CodiBarr, c.CodiPagoElec";
+	$strSQL = "SELECT c.NumeClie, c.NumeSoli, c.NombClie, c.DireClie, c.NombBarr, c.NombLoca, c.CodiPost, p.NombProv, c.ValoMovi, c.CodiBarr, c.CodiPagoElec";
 	$strSQL.= $crlf." FROM clientes c";
 	$strSQL.= $crlf." INNER JOIN provincias p ON c.NumeProv = p.NumeProv";
 	if ($filtro != "") {
@@ -44,7 +44,6 @@
 	while ($cliente = $tbClientes->fetch_assoc()) {
 
 		$strSQL = "SELECT p.NumePago,";
-		$strSQL.= $crlf." p.NumeClie,";
 		$strSQL.= $crlf." p.NumeCuot,";
 		$strSQL.= $crlf." DATE_FORMAT(p.FechVenc1, '%d/%m/%Y') FechVenc1,";
 		$strSQL.= $crlf." DATE_FORMAT(p.FechVenc2, '%d/%m/%Y') FechVenc2,";
@@ -54,7 +53,7 @@
 		$strSQL.= $crlf." p.ImpoGest,";
 		$strSQL.= $crlf." p.ImpoOtro,";
 		$strSQL.= $crlf." p.ImpoPura + p.ImpoAdmi + p.ImpoGest + p.ImpoOtro ImpoTota,";
-		$strSQL.= $crlf." DATE_FORMAT(p.FechPago, '%d/%m/%Y') FechPago,";
+		$strSQL.= $crlf." DATE_FORMAT(p.FechCuot, '%d/%m/%Y') FechCuot,";
 		$strSQL.= $crlf." p.CodiBarr";
 		$strSQL.= $crlf." FROM pagos p";
 		$strSQL.= $crlf." WHERE p.NumeClie = ". $cliente["NumeClie"];
@@ -77,16 +76,20 @@
 		}
 
 		$pdf->SetFont('Times', 'B', 8);
-		//NumeClie
-		$pdf->Text(20, 43, $cuota["NumeClie"]);
+		//NumeSoli
+		$pdf->Text(20, 43, $cliente["NumeSoli"]);
 		//NumeCuot
 		$pdf->Text(60, 43, $cuota["NumeCuot"]);
 		//FechVenc1
 		$pdf->Text(101, 44, $cuota["FechVenc1"]);
 		//FechVenc2
-		$pdf->Text(121, 44, $cuota["FechVenc2"]);
+		if ($cuota["FechVenc2"] != '') {
+			$pdf->Text(121, 44, $cuota["FechVenc2"]);
+		}
 		//FechVenc3
-		$pdf->Text(139, 44, $cuota["FechVenc3"]);
+		if ($cuota["FechVenc3"] != '') {
+			$pdf->Text(139, 44, $cuota["FechVenc3"]);
+		}
 		//ImpoTota1
 		$pdf->Text(101, 49, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
 		//ImpoTota2
@@ -95,8 +98,8 @@
 		$pdf->Text(139, 49, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
 		//NumePago
 		$pdf->Text(93, 62, $cuota["NumePago"]);
-		//FechPago
-		$pdf->Text(121, 62, $cuota["FechPago"]);
+		//FechCuot
+		$pdf->Text(121, 62, $cuota["FechCuot"]);
 		//ValoMovi
 		$pdf->Text(143, 62, $cliente["ValoMovi"]);
 		//NombClie
@@ -137,16 +140,20 @@
 			goto fin;
 		}
 
-		//NumeClie
-		$pdf->Text(20, 92, $cuota["NumeClie"]);
+		//NumeSoli
+		$pdf->Text(20, 92, $cliente["NumeSoli"]);
 		//NumeCuot
 		$pdf->Text(60, 92, $cuota["NumeCuot"]);
 		//FechVenc1
 		$pdf->Text(101, 92, $cuota["FechVenc1"]);
 		//FechVenc2
-		$pdf->Text(121, 92, $cuota["FechVenc2"]);
+		if ($cuota["FechVenc2"] != '') {
+			$pdf->Text(121, 92, $cuota["FechVenc2"]);
+		}
 		//FechVenc3
-		$pdf->Text(139, 92, $cuota["FechVenc3"]);
+		if ($cuota["FechVenc3"] != '') {
+			$pdf->Text(139, 92, $cuota["FechVenc3"]);
+		}
 		//ImpoTota1
 		$pdf->Text(101, 97, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
 		//ImpoTota2
@@ -155,8 +162,8 @@
 		$pdf->Text(139, 97, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
 		//NumePago
 		$pdf->Text(93, 111, $cuota["NumePago"]);
-		//FechPago
-		$pdf->Text(121, 111, $cuota["FechPago"]);
+		//FechCuot
+		$pdf->Text(121, 111, $cuota["FechCuot"]);
 		//ValoMovi
 		$pdf->Text(143, 111, $cliente["ValoMovi"]);
 		//NombClie
@@ -197,16 +204,20 @@
 			goto fin;
 		}
 
-		//NumeClie
-		$pdf->Text(20, 138, $cuota["NumeClie"]);
+		//NumeSoli
+		$pdf->Text(20, 138, $cliente["NumeSoli"]);
 		//NumeCuot
 		$pdf->Text(60, 138, $cuota["NumeCuot"]);
 		//FechVenc1
 		$pdf->Text(101, 138, $cuota["FechVenc1"]);
 		//FechVenc2
-		$pdf->Text(121, 138, $cuota["FechVenc2"]);
+		if ($cuota["FechVenc2"] != '') {
+			$pdf->Text(121, 138, $cuota["FechVenc2"]);
+		}
 		//FechVenc3
-		$pdf->Text(139, 138, $cuota["FechVenc3"]);
+		if ($cuota["FechVenc3"] != '') {
+			$pdf->Text(139, 138, $cuota["FechVenc3"]);
+		}
 		//ImpoTota1
 		$pdf->Text(101, 143, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
 		//ImpoTota2
@@ -215,8 +226,8 @@
 		$pdf->Text(139, 143, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
 		//NumePago
 		$pdf->Text(93, 158, $cuota["NumePago"]);
-		//FechPago
-		$pdf->Text(120, 158, $cuota["FechPago"]);
+		//FechCuot
+		$pdf->Text(120, 158, $cuota["FechCuot"]);
 		//ValoMovi
 		$pdf->Text(143, 158, $cliente["ValoMovi"]);
 		//NombClie
@@ -257,16 +268,20 @@
 			goto fin;
 		}
 
-		//NumeClie
-		$pdf->Text(20, 185, $cuota["NumeClie"]);
+		//NumeSoli
+		$pdf->Text(20, 185, $cliente["NumeSoli"]);
 		//NumeCuot
 		$pdf->Text(60, 185, $cuota["NumeCuot"]);
 		//FechVenc1
 		$pdf->Text(101, 185, $cuota["FechVenc1"]);
 		//FechVenc2
-		$pdf->Text(121, 185, $cuota["FechVenc2"]);
+		if ($cuota["FechVenc2"] != '') {
+			$pdf->Text(121, 185, $cuota["FechVenc2"]);
+		}
 		//FechVenc3
-		$pdf->Text(139, 185, $cuota["FechVenc3"]);
+		if ($cuota["FechVenc3"] != '') {
+			$pdf->Text(139, 185, $cuota["FechVenc3"]);
+		}
 		//ImpoTota1
 		$pdf->Text(101, 190, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
 		//ImpoTota2
@@ -275,8 +290,8 @@
 		$pdf->Text(139, 190, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
 		//NumePago
 		$pdf->Text(93, 204, $cuota["NumePago"]);
-		//FechPago
-		$pdf->Text(120, 204, $cuota["FechPago"]);
+		//FechCuot
+		$pdf->Text(120, 204, $cuota["FechCuot"]);
 		//ValoMovi
 		$pdf->Text(143, 204, $cliente["ValoMovi"]);
 		//NombClie

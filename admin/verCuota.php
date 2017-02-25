@@ -26,7 +26,7 @@
 	}
 
 	$strSQL = "SELECT p.NumePago,";
-	$strSQL.= " DATE_FORMAT(p.FechPago, '%d/%m/%Y') FechPago,";
+	$strSQL.= " DATE_FORMAT(p.FechCuot, '%d/%m/%Y') FechCuot,";
 	$strSQL.= " p.NumeClie,";
 	$strSQL.= " p.NumeCuot,";
 	$strSQL.= " p.NumeEstaPago,";
@@ -43,7 +43,9 @@
 	$strSQL.= " (p.ImpoPura + p.ImpoAdmi + p.ImpoGest + p.ImpoOtro) ImpoTota,";
 	$strSQL.= " p.CodiBarr,";
 	$strSQL.= " p.NumeClie,";
-	$strSQL.= " c.NombClie";
+	$strSQL.= " c.NombClie,";
+	$strSQL.= " DATE_FORMAT(p.FechPago, '%d/%m/%Y') FechPago,";
+	$strSQL.= " DATE_FORMAT(p.FechAcre, '%d/%m/%Y') FechAcre";
 	$strSQL.= " FROM pagos p";
 	$strSQL.= " INNER JOIN clientes c ON p.NumeClie = c.NumeClie";
 	$strSQL.= " WHERE p.NumePago = {$item}";
@@ -166,10 +168,10 @@
 				</div>
 			</div>
 			<div class="form-group form-group-sm form-group2">
-				<label for="FechPago" class="control-label col-md-2 col-lg-2">Fecha Emisión:</label>
+				<label for="FechCuot" class="control-label col-md-2 col-lg-2">Fecha Emisión:</label>
 				<div class="col-md-2 col-lg-2">
-					<div class="input-group date margin-bottom-sm inpFechPago">
-						<input type="text" class="form-control input-sm " id="FechPago" size="16" readonly value="<?php echo $pago["FechPago"] ?>">
+					<div class="input-group date margin-bottom-sm inpFechCuot">
+						<input type="text" class="form-control input-sm " id="FechCuot" size="16" readonly value="<?php echo $pago["FechCuot"] ?>">
 						<span class="input-group-addon add-on "><i class="fa fa-calendar fa-fw"></i></span>
 					</div>
 				</div>
@@ -237,6 +239,25 @@
 					<input type="text" class="form-control input-sm text-right" id="ImpoTota" readonly value="$ <?php echo $pago["ImpoTota"] ?>">
 				</div>
 			</div>
+			<div class="form-group form-group-sm form-group2">
+				<label for="FechPago" class="control-label col-md-2 col-lg-2">Fecha de pago:</label>
+				<div class="col-md-2 col-lg-2">
+					<div class="input-group date margin-bottom-sm inpFechPago">
+						<input type="text" class="form-control input-sm " id="FechPago" size="16" readonly value="<?php echo $pago["FechPago"] ?>">
+						<span class="input-group-addon add-on "><i class="fa fa-calendar fa-fw"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group form-group-sm form-group2">
+				<label for="FechAcre" class="control-label col-md-2 col-lg-2">Fecha de acreditación:</label>
+				<div class="col-md-2 col-lg-2">
+					<div class="input-group date margin-bottom-sm inpFechAcre">
+						<input type="text" class="form-control input-sm " id="FechAcre" size="16" readonly  value="<?php echo $pago["FechAcre"] ?>">
+						<span class="input-group-addon add-on "><i class="fa fa-calendar fa-fw"></i></span>
+					</div>
+				</div>
+			</div>
+			
 			<div class="form-group form-group-sm ">
 				<label for="NumeTipoPago" class="control-label col-md-2 col-lg-2">Forma de pago:</label>
 				<div class="col-md-4 col-lg-4">

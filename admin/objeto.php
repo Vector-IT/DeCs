@@ -102,9 +102,11 @@
 		<div id="divMsj" class="alert alert-danger" role="alert">
 			<span id="txtHint">Info</span>
 		</div>
-		
-		<div id="divDatos" class="table-responsive marginTop40 marginBottom60">
-			<?php $tabla->listar(); ?>
+
+		<?php $tabla->searchForm(); ?>
+
+		<div id="divDatos" class="marginTop40 marginBottom60">
+			<?php if ($tabla->listarOnLoad) $tabla->listar(); ?>
 		</div>
 	</div>
 	

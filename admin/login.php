@@ -6,6 +6,8 @@ require_once 'php/datos.php';
 <head>
 	<?php require_once 'php/linksHeader.php'; ?>
 	
+	<link rel="stylesheet" href="<?php echo $config->raiz ?>admin/css/bootstrap-dark.css">
+
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#usuario").focus();
@@ -20,7 +22,7 @@ require_once 'php/datos.php';
 				    }
 				}
 			}
-			
+
 		});
 
 
