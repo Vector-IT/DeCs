@@ -39,6 +39,16 @@
 
 	$tbClientes = $config->cargarTabla($strSQL);
 
+
+	if ($tbClientes) {
+		$strSQL = "UPDATE clientes c SET c.FechImpr = STR_TO_DATE(DATE_FORMAT(SYSDATE(), '%d/%m/%Y'), '%d/%m/%Y')";
+		if ($filtro != "") {
+			$strSQL.= $crlf." WHERE " . $filtro;
+		}
+
+		$config->ejecutarCMD($strSQL);
+	}
+
 	$pdf = new PDF_MemImage('P', 'mm', 'A4');
 	
 	while ($cliente = $tbClientes->fetch_assoc()) {
@@ -99,9 +109,9 @@
 		//NumePago
 		$pdf->Text(93, 62, $cuota["NumePago"]);
 		//FechCuot
-		$pdf->Text(121, 62, $cuota["FechCuot"]);
+		$pdf->Text(123, 62, $cuota["FechCuot"]);
 		//ValoMovi
-		$pdf->Text(143, 62, $cliente["ValoMovi"]);
+		$pdf->Text(145, 62, $cliente["ValoMovi"]);
 		//NombClie
 		$pdf->Text(23, 54, utf8_decode($cliente["NombClie"]));
 		//DireClie
@@ -163,9 +173,9 @@
 		//NumePago
 		$pdf->Text(93, 111, $cuota["NumePago"]);
 		//FechCuot
-		$pdf->Text(121, 111, $cuota["FechCuot"]);
+		$pdf->Text(123, 111, $cuota["FechCuot"]);
 		//ValoMovi
-		$pdf->Text(143, 111, $cliente["ValoMovi"]);
+		$pdf->Text(145, 111, $cliente["ValoMovi"]);
 		//NombClie
 		$pdf->Text(23, 100, utf8_decode($cliente["NombClie"]));
 		//DireClie
@@ -227,9 +237,9 @@
 		//NumePago
 		$pdf->Text(93, 158, $cuota["NumePago"]);
 		//FechCuot
-		$pdf->Text(120, 158, $cuota["FechCuot"]);
+		$pdf->Text(123, 158, $cuota["FechCuot"]);
 		//ValoMovi
-		$pdf->Text(143, 158, $cliente["ValoMovi"]);
+		$pdf->Text(145, 158, $cliente["ValoMovi"]);
 		//NombClie
 		$pdf->Text(23, 147, utf8_decode($cliente["NombClie"]));
 		//DireClie
@@ -291,9 +301,9 @@
 		//NumePago
 		$pdf->Text(93, 204, $cuota["NumePago"]);
 		//FechCuot
-		$pdf->Text(120, 204, $cuota["FechCuot"]);
+		$pdf->Text(123, 204, $cuota["FechCuot"]);
 		//ValoMovi
-		$pdf->Text(143, 204, $cliente["ValoMovi"]);
+		$pdf->Text(145, 204, $cliente["ValoMovi"]);
 		//NombClie
 		$pdf->Text(23, 194, utf8_decode($cliente["NombClie"]));
 		//DireClie
@@ -329,7 +339,7 @@
 		fin:
 		//CodiBarrClie
 		$pdf->GDImage(barcode("", $cliente["CodiBarr"], 10, "horizontal", "code128", false, 1, "gd"), 25, 231, 135, 7);
-		$pdf->Text(50, 238, $cliente["CodiBarr"]);
+		$pdf->Text(50, 241, $cliente["CodiBarr"]);
 
 		//CodiPagoElec
 		$pdf->Text(27, 255, $cliente["CodiPagoElec"]);

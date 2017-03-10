@@ -58,6 +58,10 @@ function verCuotas(strID) {
 	location.href = "cuotas.php?NumeClie=" + strID;
 }
 
+function verCliente(strID) {
+	location.href = "verCliente.php?id=" + strID;
+}
+
 function crearSeguimiento(strID) {
 	$("#spanNombClie").html($("#NombClie"+strID).html());
 	$("#NumeClieSegu").val(strID);

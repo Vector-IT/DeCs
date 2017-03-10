@@ -130,3 +130,10 @@ function filtrarClientes(strNumeEmpr, combo) {
 function verCuota(strID) {
 	location.href = "verCuota.php?id=" + strID;
 }
+
+
+function verCliente(strID) {
+	var idCliente = $("#NumeClie" + strID).val();
+	
+	location.href = "verCliente.php?id=" + idCliente;
+}

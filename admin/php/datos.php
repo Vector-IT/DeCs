@@ -146,6 +146,9 @@
 
 	$tabla->addFieldFileImage("ImagEmpr", "image", 100, "Logo", 'imgEmpresas', false);
 
+	$tabla->addField("NumePlan", "select", 80, "Plantilla de impresión", true, false, false, true, '', '', 'plantillas', 'NumePlan', 'NombPlan', '', 'NombPlan');
+	$tabla->fields["NumePlan"]["isHiddenInList"] = true;
+
 	$tabla->addField("ImpoAdmi", "number", 80, "Gastos administrativos");
 	$tabla->fields["ImpoAdmi"]["cssGroup"] = "form-group2";
 	$tabla->fields["ImpoAdmi"]["step"] = "0.01";
@@ -217,6 +220,9 @@
 	];
 
 	$tabla->btnList = [
+			array("titulo"=> 'Ficha',
+					"onclick"=> "verCliente",
+					"class"=> "btn-default"),
 			array("titulo"=> 'Ver cuotas',
 					"onclick"=> "verCuotas",
 					"class"=> "btn-default"),
@@ -307,6 +313,7 @@
 	$tabla = new Cuota("cuotas", "pagos", "Cuotas", "Cuota", "true", "cuotas.php", "fa-money", "FechCuot DESC, NumeClie", false, false, true);
 	$tabla->jsFiles = ['admin/js/custom/cuotas.js'];
 	$tabla->btnList = [
+			array('titulo'=>'<i class="fa fa-fw fa-id-card-o" aria-hidden="true"></i> Cliente', 'onclick'=>"verCliente", 'class'=>"btn-primary"),
 			array('titulo'=>'<i class="fa fa-fw fa-eye" aria-hidden="true"></i> Ver', 'onclick'=>"verCuota", 'class'=>"btn-primary"),
 	];
 
