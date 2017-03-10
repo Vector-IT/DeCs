@@ -77,7 +77,7 @@
 		</div>
 		
 		<?php
-			if (($tabla->masterTable != '') && isset($_REQUEST[$tabla->masterFieldId])) {
+			if ((($tabla->masterTable != '') && isset($_REQUEST[$tabla->masterFieldId])) || (isset($_REQUEST["id"]))) {
 				//echo '<button class="btn btn-sm btn-info clickable" data-js="location.href = \''. $config->tablas[$tabla->masterTable]->url .'\';"><i class="fa fa-chevron-circle-left fa-fw" aria-hidden="true"></i> Volver</button>';
 				echo '<button class="btn btn-sm btn-info clickable" data-js="history.go(-1);"><i class="fa fa-chevron-circle-left fa-fw" aria-hidden="true"></i> Volver</button>';
 			}

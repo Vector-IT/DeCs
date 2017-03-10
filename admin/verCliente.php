@@ -26,6 +26,7 @@
 	}
 
 	$pagos = $config->tablas['cuotas'];
+	$seguimientos = $config->tablas["seguimientos"];
 
 	$strSQL = "SELECT c.NumeClie,";
 	$strSQL.= " c.NumeSoli,";
@@ -76,6 +77,10 @@
 	<script>
 		function verCuota(strID) {
 			location.href = "verCuota.php?id=" + strID;
+		}
+
+		function verSeguimiento(strID) {
+			location.href = "objeto/seguimientos&id=" + strID;
 		}
 	</script>
 </head>
@@ -229,9 +234,13 @@
 
 		</form>
 
-		<div id="divDatos" class="marginTop40 marginBottom60">
-			<?php $pagos->listar(array('Fecha'=> '', 'Empresa'=> '-1', 'Cliente'=> $cliente["NumeClie"]), false, [array('titulo'=>'<i class="fa fa-fw fa-eye" aria-hidden="true"></i> Ver', 'onclick'=>"verCuota", 'class'=>"btn-primary")]); ?>
-		</div>
+		<hr>
+		<h4 class="marginTop20">Seguimientos</h4>
+		<?php $seguimientos->listar("NumeClie = ". $cliente["NumeClie"], false, [array('titulo'=>'<i class="fa fa-fw fa-bookmark-o" aria-hidden="true"></i> Ver', 'onclick'=>"verSeguimiento", 'class'=>"btn-primary")]); ?>
+
+		<hr>
+		<h4 class="marginTop20">Cuotas</h4>
+		<?php $pagos->listar(array('Fecha'=> '', 'Empresa'=> '-1', 'Cliente'=> $cliente["NumeClie"]), false, [array('titulo'=>'<i class="fa fa-fw fa-eye" aria-hidden="true"></i> Ver', 'onclick'=>"verCuota", 'class'=>"btn-primary")]); ?>
 	</div>
 
 	<?php
