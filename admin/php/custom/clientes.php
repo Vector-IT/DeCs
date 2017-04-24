@@ -1,4 +1,6 @@
 <?php 
+namespace VectorForms;
+
 class Clientes extends Tabla {
 	public function insertar($datos) {
 		global $config, $crlf;
@@ -8,7 +10,7 @@ class Clientes extends Tabla {
 
 		if ($resultAux["estado"] === true) {
 				
-			$NumeClieBarr = substr('00000000'.$resultAux["id"], -8);
+			$NumeClieBarr = substr('00000000'.$datos["NumeSoli"], -8);
 			$CodiBarr = '04470' . $NumeClieBarr . '0000000000000000000000000000000' . '5150041794';
 
 			//Digito verificador
@@ -46,7 +48,7 @@ class Clientes extends Tabla {
 	}
 
 	public function editar($datos) {
-		$NumeClieBarr = substr('00000000'.$datos["NumeClie"], -8);
+		$NumeClieBarr = substr('00000000'.$datos["NumeSoli"], -8);
 		$CodiBarr = '04470' . $NumeClieBarr . '0000000000000000000000000000000' . '5150041794';
 
 		//Digito verificador

@@ -1,5 +1,4 @@
 $(document).ready(function() {
-	//Inicializo el menu
 	$(".menuVector").vectorMenu({
 		trigger: ".btnMenu",
 		duration: 200,
@@ -71,12 +70,14 @@ function borrar(campo) {
 
 //Capturar teclas
 function callkeydownhandler(evnt) {
-   var ev = (evnt) ? evnt : event;
-   var code=(ev.which) ? ev.which : event.keyCode;
+	var ev = (evnt) ? evnt : event;
+	var code=(ev.which) ? ev.which : event.keyCode;
 
-   if (code == 45) {
-	   $("#btnNuevo").click();
-   }
+	if (code == 45) {
+		if (!$($("form")[0]).is(':visible')) {
+			$("#btnNuevo").click();
+		}
+	}
 }
 
 if (window.document.addEventListener) {

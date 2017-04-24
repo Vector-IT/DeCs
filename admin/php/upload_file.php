@@ -31,6 +31,10 @@
                 	}
                 }
 
+				if (!file_exists($ruta) && !is_dir($ruta)) {
+  					mkdir($ruta);         
+				} 
+
                 move_uploaded_file($archivo["tmp_name"], $ruta . "/" . $nombre);
                 
 //                echo "Stored in: " . $ruta . "/" . $nombre."<br/>";

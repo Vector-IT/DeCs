@@ -6,11 +6,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$user = strtoupper(str_replace("'", "", $_POST["usuario"]));
 	$pass = md5(str_replace("'", "", $_POST["password"]));
 	
-	$tabla = $config->cargarTabla("SELECT NumeUser, NombPers, NumeCarg FROM usuarios WHERE NumeEsta = 1 AND UPPER(NombUser) = '{$user}' AND NombPass = '{$pass}'");
+	$tabla = $config->cargarTabla("SELECT NumeUser, NombPers FROM {$config->tbLogin} WHERE NumeEsta = 1 AND UPPER(NombUser) = '{$user}' AND NombPass = '{$pass}'");
 	
 	$strSalida = "";
 	
-	if ($tabla->num_rows > 0)
+	if ($tabla)
 	{
 		session_start();
 		$fila = $tabla->fetch_array();

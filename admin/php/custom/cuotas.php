@@ -1,4 +1,6 @@
 <?php 
+namespace VectorForms;
+
 class Cuota extends Tabla {
 	public function customFunc($post) {
 		global $config, $crlf;

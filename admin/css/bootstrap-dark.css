@@ -7264,9 +7264,9 @@ a.list-group-item-danger.active:hover,
 a.list-group-item-danger.active:focus {
   background-color: #ec4844;
 }
-.jumbotron {
+/*.jumbotron {
   border: 1px solid rgba(0, 0, 0, 0.6);
-}
+}*/
 .panel-primary .panel-heading,
 .panel-success .panel-heading,
 .panel-danger .panel-heading,
@@ -7278,3 +7278,5 @@ a.list-group-item-danger.active:focus {
 [class*=" datetimepicker-dropdown"]:after {
 	border-bottom: 6px solid #c8c8c8 !important;
 }
+
+.sinMargin {margin:0;}

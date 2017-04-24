@@ -1,4 +1,6 @@
 <?php
+namespace VectorForms;
+
 /**
  * Archivo de clase de tabla generica
  *
@@ -14,6 +16,7 @@ class Tabla
     public $tituloSingular;
     
     public $showMenu;
+	public $isSubMenu;
     public $isSubItem;
     
     public $url;
@@ -71,6 +74,7 @@ class Tabla
         $this->tituloSingular = $tituloSingular;
         
         $this->showMenu = $showMenu;
+        $this->isSubMenu = false;
         $this->isSubItem = false;
         
         $this->url = $url;
@@ -152,7 +156,6 @@ class Tabla
                 'value' => $value,
                 'cssControl' => '',
                 'cssGroup' => $cssGroup,
-                'isID' => $isID,
                 'lookupTable' => $lookupTable,
                 'lookupFieldID' => $lookupFieldID,
                 'lookupFieldLabel' => $lookupFieldLabel,
@@ -180,7 +183,51 @@ class Tabla
             $this->IDField = $name;
         }
     }
-    
+
+    /**
+     * Agrega un campo a la tabla de tipo primary key
+     * @param string $name: nombre del campo
+     * @param string $label: etiqueta del control al crear en un form
+     */
+	public function addFieldId($name, $label = "", $isHiddenInList = false, $isHiddenInForm = false) {
+		$this->fields[$name] = array (
+                        'name' => $name,
+                        'type' => 'number',
+                        'size' => 0,
+                        'label' => $label,
+                        'required' => false,
+                        'readOnly' => true,
+                        'isID' => true,
+                        'showOnList' => true,
+                        'value' => '',
+                        'cssControl' => '',
+                        'cssGroup' => '',
+                        'lookupTable' => '',
+                        'lookupFieldID' => '',
+                        'lookupFieldLabel' => '',
+                        'lookupConditions' => '',
+                        'lookupOrder' => '',
+                        'isHiddenInForm' => $isHiddenInForm,
+                        'isHiddenInList' => $isHiddenInList,
+                        'isMasterID' => false,
+                        'onChange' => '',
+                        'showOnForm' => true,
+                        'itBlank' => false,
+                        'hoursDisabled' => '',
+                        'dtpOnRender' => '',
+                        'txtAlign' => 'left',
+                        'ruta' => '',
+                        'nomFileField' => '',
+                        'mirrorField' => '',
+                        'mirrorFormat' => '',
+                        'formatDb' => '',
+                        'isMD5' => false,
+						'step' => "1"
+                );
+
+		$this->IDField = $name;
+	}
+	
     /**
      * Agrega un campo a la tabla de tipo archivo o imagen
      * @param string $name: nombre del campo
@@ -190,12 +237,12 @@ class Tabla
      * @param boolean $required: requerido
      * @param string $ruta: ruta de guardado
      */
-    public function addFieldFileImage($name, $type, $size = 0, $label = '', $ruta = '', $required = true, $isHiddenInList = false)
+    public function addFieldFileImage($name, $size = 0, $label = '', $ruta = '', $required = true, $isHiddenInList = false)
     {
     
                 $this->fields[$name] = array (
                         'name' => $name,
-                        'type' => $type,
+                        'type' => 'image',
                         'size' => $size,
                         'label' => $label,
                         'required' => $required,
@@ -205,7 +252,6 @@ class Tabla
                         'value' => '',
                         'cssControl' => '',
                         'cssGroup' => '',
-                        'isID' => false,
                         'lookupTable' => '',
                         'lookupFieldID' => '',
                         'lookupFieldLabel' => '',
@@ -225,7 +271,8 @@ class Tabla
                         'mirrorField' => '',
                         'mirrorFormat' => '',
                         'formatDb' => '',
-                        'isMD5' => false
+                        'isMD5' => false,
+						'step' => "1"
                 );
     }
     
@@ -282,7 +329,7 @@ class Tabla
 
         //if (!$field['isMasterID'] && $field['showOnForm']) {
         if ($field['showOnForm']) {
-            if ($field['isHiddenInForm']) {
+            if ($field['isHiddenInForm'] || $field["type"] == 'hidden') {
                 $strSalida.= $crlf.'<input type="hidden" id="'.$fname.'" value="'.$field['value'].'" />';
             } else {
                 $strSalida.= $crlf.'<div class="form-group form-group-sm '.$field['cssGroup'].'">';
@@ -341,7 +388,9 @@ class Tabla
 
                     case 'select':
                         $strSalida.= $crlf.'<select class="form-control input-sm ucase '.$field['cssControl'].'" id="'.$fname.'" '. ($field['required']?'required':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['onChange'] !=''?'onchange="'.$field['onChange'].'"':'') .'>';
-                        $strSalida.= $crlf. $this->cargarCombo($field['lookupTable'], $field['lookupFieldID'], $field['lookupFieldLabel'], $field['lookupConditions'], $field['lookupOrder'], $field['value'], $field['itBlank']);
+						if ($field['lookupTable'] != '') {
+                        	$strSalida.= $crlf. $this->cargarCombo($field['lookupTable'], $field['lookupFieldID'], $field['lookupFieldLabel'], $field['lookupConditions'], $field['lookupOrder'], $field['value'], ($prefix == ''? $field['itBlank']: true));
+						}
                         $strSalida.= $crlf.'</select>';
                         break;
 
@@ -558,21 +607,25 @@ class Tabla
 
             $strSQL.= " FROM ". $this->tabladb;
 
+			$filtro = '';
             if ($this->masterFieldId != '') {
-                if (isset($_GET[$this->masterFieldId])) {
-                    $strSQL.= " WHERE ". $this->masterFieldId ." = '" . $_GET[$this->masterFieldId] ."'";
-                } elseif (isset($_POST[$this->masterFieldId])) {
-                    $strSQL.= " WHERE ". $this->masterFieldId ." = '" . $_POST[$this->masterFieldId] ."'";
+                if (isset($_REQUEST[$this->masterFieldId])) {
+                    $filtro.= " WHERE ". $this->masterFieldId ." = '" . $_REQUEST[$this->masterFieldId] ."'";
                 }
+            } 
 
-                if ($strFiltro != "") {
-                    $strSQL.= " AND ". $strFiltro;
-                }
-            } else {
-                if ($strFiltro != "") {
-                    $strSQL.= " WHERE ". $strFiltro;
-                }
-            }
+			if ($strFiltro != "") {
+				if ($filtro == '') {
+					$filtro.= " WHERE ";
+				}
+				else {
+					$filtro.= " AND ";
+				}
+
+				$filtro.= $strFiltro;
+			}
+
+			$strSQL.= $filtro;
 
             if ($order != '') {
                 $strSQL.= " ORDER BY ". $order;
@@ -637,6 +690,7 @@ class Tabla
                                 } else {
                                     switch ($field["type"]) {
                                         case 'select':
+										case 'selectmultiple':
                                             $strSalida.= $crlf.'<td class="ucase text-'. $field['txtAlign'] .' '. $field['cssControl'] .'">';
                                             if ($fila[$field['name']] != '') {
                                                 $strSalida.= $crlf. $config->buscarDato("SELECT {$field['lookupFieldLabel']} FROM {$field['lookupTable']} WHERE {$field['lookupFieldID']} = {$fila[$field['name']]}");
@@ -786,8 +840,6 @@ class Tabla
 			$strSalida.= $crlf.'<hr>';
 			$strSalida.= $crlf.'<h4>Buscar '. $this->titulo .'</h4>';
 			$strSalida.= $crlf.'<form id="frmSearch'. $this->tabladb .'" class="form-horizontal marginTop20" method="post" onSubmit="return false;">';
-			$strSalida.= $crlf.'<input type="hidden" id="hdnTabla" value="'.$this->tabladb.'" />';
-			$strSalida.= $crlf.'<input type="hidden" id="hdnOperacion" value="0" />';
 
 			foreach ($this->searchFields as $field) {
 				$strSalida.= $crlf . $this->createField($this->fields[$field], 'search');
@@ -963,7 +1015,7 @@ class Tabla
             $strSalida.= $crlf.'		}, 1000);';
             $strSalida.= $crlf.'		$("#hdnOperacion").val("1");';
             $strSalida.= $crlf.'		blnEdit = true;';
-            $strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").find(".form-control[type!=\'hidden\'][disabled!=disabled]:first").focus()';
+            $strSalida.= $crlf.'		$("#frm'. $this->tabladb .'").find(".form-control[type!=\'hidden\'][disabled!=disabled][readonly!=readonly]:first").focus()';
     
             if (isset($this->fields)) {
                 foreach ($this->fields as $field) {
@@ -1012,6 +1064,10 @@ class Tabla
                                 }
                             } else {
                                 switch ($field["type"]) {
+									case "ckeditor":
+                                        $strSalida.= $crlf.'		CKEDITOR.instances.'.$field['name'].'.setData($("#'.$field['name'].'" + strID).html());';
+                                        break;
+										
                                     case "image":
                                     case "file":
                                         $strSalida.= $crlf.'		if ($("#'.$field['name'].'" + strID).val() != "") {';
@@ -1110,7 +1166,7 @@ class Tabla
             $strSalida.= $crlf.'	else {';
             $strSalida.= $crlf.'		if (strID == 0) {';
             $strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeIn(function() {';
-            $strSalida.= $crlf.'				$("#frm'. $this->tabladb .'").find(".form-control[type!=\'hidden\'][disabled!=disabled]:first").focus()';
+            $strSalida.= $crlf.'				$("#frm'. $this->tabladb .'").find(".form-control[type!=\'hidden\'][disabled!=disabled][readonly!=readonly]:first").focus()';
             $strSalida.= $crlf.'			});';
             $strSalida.= $crlf.'		}';
             $strSalida.= $crlf.'		else {';
@@ -1480,7 +1536,7 @@ class Tabla
 
         $strSalida = "";
         if ($itBlank) {
-            $strSalida.= $crlf.'<option value="-1">'.$itBlankText.'</option>';
+            $strSalida.= $crlf.'<option value="">'.$itBlankText.'</option>';
         }
 
         while ($fila = $tabla->fetch_assoc()) {

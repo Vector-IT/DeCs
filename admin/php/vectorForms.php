@@ -1,4 +1,6 @@
 <?php
+namespace VectorForms;
+
 /**
  * Archivo de configuracion general
  *
@@ -55,7 +57,7 @@ class VectorForms {
 	private function newConn() {
 		global $config;
 
-		$conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->db);
+		$conn = new \mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->db);
 		$conn->set_charset("utf8");
 
 		return $conn;
@@ -240,31 +242,47 @@ class VectorForms {
 					}
 				}
 		
-				if ($tabla->isSubItem) {
-					$strSalida.= str_replace("#titulo#", $tabla->titulo,
-									str_replace("#icono#", $tabla->icono,
-									str_replace("#url#", $tabla->url, $strSubItem)));
-					$strSalida.= $strSeparador;
-				}
-				else {
+				if ($tabla->isSubMenu) {
 					if ($submenu) {
 						$strSalida.= $strSubMenuFin;
 						$strSalida.= $strSeparador;
-						$submenu = false;
 					}
-						
+
+					$submenu = true;
+					
 					$strSalida.= str_replace("#titulo#", $tabla->titulo,
 									str_replace("#icono#", $tabla->icono,
-									str_replace("#url#", $tabla->url, $strItem)));
+									str_replace("#url#", $tabla->url, $strSubMenuInicio)));
 
-					$strSalida.= $strSeparador;
 					$I++;
+				}
+				else {
+					if ($tabla->isSubItem) {
+						$strSalida.= str_replace("#titulo#", $tabla->titulo,
+										str_replace("#icono#", $tabla->icono,
+										str_replace("#url#", $tabla->url, $strSubItem)));
+						$strSalida.= $strSeparador;
+					}
+					else {
+						if ($submenu) {
+							$strSalida.= $strSubMenuFin;
+							$strSalida.= $strSeparador;
+							$submenu = false;
+						}
+							
+						$strSalida.= str_replace("#titulo#", $tabla->titulo,
+										str_replace("#icono#", $tabla->icono,
+										str_replace("#url#", $tabla->url, $strItem)));
+
+						$strSalida.= $strSeparador;
+						$I++;
+					}
 				}
 			}
 		}
 		
 		foreach ($this->menuItems as $item) {
-			if ($item->Index == '') {
+			if ($item->Index == '' || !$item->Used) {
 				if ($item->NumeCarg != '') {
 					$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
 		

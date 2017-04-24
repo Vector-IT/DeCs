@@ -1,4 +1,6 @@
 <?php
+namespace VectorForms;
+
 class Seguimiento extends Tabla {
 	public function customFunc($post) {
 		global $config, $crlf;

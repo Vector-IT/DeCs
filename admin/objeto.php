@@ -1,4 +1,9 @@
 <?php 
+	namespace VectorForms;
+
+	ini_set("log_errors", 1);
+	ini_set("error_log", "php-error.log");
+
 	session_start();
 	require_once 'php/datos.php';
 
@@ -82,7 +87,7 @@
 				echo '<button class="btn btn-sm btn-info clickable" data-js="history.go(-1);"><i class="fa fa-chevron-circle-left fa-fw" aria-hidden="true"></i> Volver</button>';
 			}
 			
-			if ($tabla->allowNew) {
+			if ($tabla->allowNew || $tabla->allowEdit) {
 				$tabla->createForm();
 			} 
 			else {

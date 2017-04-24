@@ -1,4 +1,9 @@
 <?php
+	namespace VectorForms;
+
+	ini_set("log_errors", 1);
+	ini_set("error_log", "php-error.log");
+	
 	require_once 'datosdb.php';
 	require_once 'vectorForms.php';
 
@@ -12,6 +17,7 @@
 	//Datos de configuracion iniciales
 	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "Departamento de Cobranzas y Servicios", "img/logo.png", true);
 	$config->cssFiles = ["admin/css/custom.css"];
+	$config->tbLogin = 'usuarios';
 
 	$_SESSION['imgCKEditor'] = '/VectorForms/admin/ckeditor/imgup';
 
