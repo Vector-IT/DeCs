@@ -25,7 +25,7 @@
 		require_once 'php/header.php';
 	?>
 	
-	<div class="container">	
+	<div class="container-fluid">	
 		<!--<div class="page-header">
 			<h2>Consola de Administraci&oacute;n</h2>
 		</div>

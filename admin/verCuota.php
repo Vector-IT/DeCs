@@ -137,7 +137,7 @@
 		require_once 'php/header.php';
 	?>
 
-	<div class="container">
+	<div class="container-fluid">
 		<div class="page-header">
 			<h2><?php echo $cuotas->tituloSingular. ' ' .$pago["NumeCuot"]. ' de ' .$pago["NombClie"]?></h2>
 		</div>

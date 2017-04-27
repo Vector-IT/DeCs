@@ -43,7 +43,7 @@ require_once 'php/datos.php';
 <body>
 	<?php require_once 'php/header.php'; ?>	
 	
-	<div class="container">
+	<div class="container-fluid">
 		<div class="page-header">
 			<h2>Acceso al sistema</h2>
 		</div>

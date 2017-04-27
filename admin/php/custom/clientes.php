@@ -2,6 +2,114 @@
 namespace VectorForms;
 
 class Clientes extends Tabla {
+	public function customFunc($post) {
+		global $config;
+
+		switch ($post['field']) {
+			case 'CSV':		
+				$NumeEmpr = $post['NumeEmpr'];
+
+				$NumeClie = array();
+
+				$archivo = $_FILES["Archivo"]["tmp_name"];
+
+				$file = fopen($archivo,"r");
+
+				$blnSalida = true;
+				$mensaje = "";
+				$I = 0;
+
+				while(! feof($file))
+				{
+					if ($I == 0) {
+						$fila = explode(";", utf8_decode(fgets($file)));
+					}
+					$I++;	
+
+					$strAux = utf8_decode(fgets($file));
+
+					$fila = explode(";", $strAux);
+
+					if (strlen(trim(str_replace(";", "", $strAux))) > 0) {
+						$NumeProv = $config->buscarDato("SELECT NumeProv FROM provincias WHERE UPPER(NombProv) = '". strtoupper($fila[8]) ."'");
+						$NumeVend = $config->buscarDato("SELECT NumeVend FROM vendedores WHERE UPPER(NombVend) = '". strtoupper($fila[10]) ."'");
+
+						if ($NumeProv != '') {
+							$datos = array(
+								"NumeClie"=> '',
+								"NumeSoli"=> $fila[0],
+								"NombClie"=> $fila[1],
+								"NumeEmpr"=> $NumeEmpr,
+								"NumeTele"=> $fila[2],
+								"NumeCelu" => $fila[3],
+								"MailClie" => $fila[4],
+								"DireClie" => $fila[5],
+								"NombBarr" => $fila[6],
+								"NombLoca" => $fila[7],
+								"NumeProv" => $NumeProv,
+								"CodiPost" => $fila[9],
+								"NumeVend" => $NumeVend,
+								"ObseClie" => trim($fila[14]),
+								"NumeEstaClie" => 1,
+								"ValoMovi" => $fila[11],
+								"ValoCuot" => $fila[12],
+								"FechIngr" => substr($fila[13], 6, 4).'-'.substr($fila[13], 3, 2).'-'.substr($fila[13], 0, 2),
+								//"FechPagoDesd" => '',
+								//"FechPagoHast" => '',
+								//"CantCuot" => '',
+								//"CodiBarr" => '',
+								//"CodiPagoElec" => '',
+								//"FechImpr" => ''
+							);	
+
+							if ($NumeVend == '') {
+								unset($datos["NumeVend"]);
+							}
+
+							$result = $this->insertar($datos);
+							$resultAux = json_decode($result, true);
+
+							if ($resultAux["estado"] === true) {
+								$NumeClie[] = $resultAux["id"];
+							}
+							else {
+								//Elimino los clientes ya creados
+								for ($J = 0; $J < count($NumeClie); $J++) {
+									$this->borrar(["NumeClie" => $NumeClie[$J]]);
+								}
+
+								$blnSalida = false;
+								$mensaje = "Fila: ". ($I+1) ." - Mensaje: ". $resultAux["estado"];
+								break;
+							}
+						}
+						else {
+							for ($J = 0; $J < count($NumeClie); $J++) {
+								$this->borrar(["NumeClie" => $NumeClie[$J]]);
+							}
+
+							$blnSalida = false;
+							$mensaje = "Fila: ". ($I+1) ." - Mensaje: Provincia incorrecta!";
+							break;
+						}
+					}
+				}
+
+				fclose($file);
+
+				$salida["estado"] = $blnSalida;
+				if ($blnSalida) {
+					$salida["mensaje"] = count($NumeClie) ." Clientes cargados!";
+				}
+				else {
+					$salida["mensaje"] = $mensaje;
+				}
+
+            	return json_encode($salida);
+			break;
+		}
+	}
+
 	public function insertar($datos) {
 		global $config, $crlf;
 
@@ -42,9 +150,8 @@ class Clientes extends Tabla {
 			$strSQL.= ", CodiPagoElec = '{$CodiPagoElec}'";
 			$strSQL.= " WHERE NumeClie = " . $resultAux["id"];
 			$config->ejecutarCMD($strSQL);
-
-			return $result;
 		}
+		return $result;
 	}
 
 	public function editar($datos) {

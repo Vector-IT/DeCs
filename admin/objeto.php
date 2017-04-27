@@ -110,7 +110,7 @@
 
 		<?php $tabla->searchForm(); ?>
 
-		<div id="divDatos" class="marginTop40 marginBottom60">
+		<div id="divDatos" class="marginTop40">
 			<?php if ($tabla->listarOnLoad) $tabla->listar(); ?>
 		</div>
 	</div>

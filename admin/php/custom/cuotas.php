@@ -38,7 +38,7 @@ class Cuota extends Tabla {
 
 						//Vencimientos
 						$FechVenc1 = "STR_TO_DATE('".$post['dato']['Fecha']."-".$fila["FechVenc1"]."', '%Y-%m-%d')";
-						$FechVenc1Barr = date_format(new DateTime($post['dato']['Fecha']."-".$fila["FechVenc1"]), 'ymd');
+						$FechVenc1Barr = date_format(new \DateTime($post['dato']['Fecha']."-".$fila["FechVenc1"]), 'ymd');
 						
 						if ($fila["FechVenc2"] != "" && $fila["FechVenc2"] != "0") {
 							$FechVenc2 = "STR_TO_DATE('".$post['dato']['Fecha']."-". ($fila["FechVenc1"] + $fila["FechVenc2"]) ."', '%Y-%m-%d')";

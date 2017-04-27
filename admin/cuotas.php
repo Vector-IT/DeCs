@@ -78,7 +78,7 @@
 			<span id="txtHint">Info</span>
 		</div>
 
-		<div id="divDatos" class="table-responsive marginTop40 marginBottom60">
+		<div id="divDatos" class="table-responsive marginTop40">
 		</div>
 	</div>
 

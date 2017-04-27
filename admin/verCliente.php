@@ -55,7 +55,7 @@
 	$strSQL.= " FROM clientes c";
 	$strSQL.= " INNER JOIN empresas e ON c.NumeEmpr = e.NumeEmpr";
 	$strSQL.= " INNER JOIN provincias p ON c.NumeProv = p.NumeProv";
-	$strSQL.= " INNER JOIN vendedores v ON c.NumeVend = v.NumeVend";
+	$strSQL.= " LEFT JOIN vendedores v ON c.NumeVend = v.NumeVend";
 	$strSQL.= " INNER JOIN estadosclientes ec ON c.NumeEstaClie = ec.NumeEstaClie";
 	$strSQL.= " WHERE c.NumeClie = {$item}";
 
@@ -91,7 +91,7 @@
 		require_once 'php/header.php';
 	?>
 
-	<div class="container">
+	<div class="container-fluid">
 		<div class="page-header">
 			<h2><?php echo 'Ficha de ' .$cliente["NombClie"]?></h2>
 		</div>

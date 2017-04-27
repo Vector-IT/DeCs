@@ -135,6 +135,21 @@
 	$config->tablas["tiposrespuestas"] = $tabla;
 
 	/**
+	 * PROVINCIAS
+	 */
+	$tabla = new Tabla("provincias", "provincias", "Provincias", "la provincia", true, "objeto/provincias", "fa-linode");
+	$tabla->labelField = "NombProv";
+	$tabla->isSubItem = true;
+	$tabla->allowDelete = false;
+	$tabla->allowEdit = false;
+	$tabla->allowNew = false;
+
+	$tabla->addFieldId("NumeProv", "Número");
+	$tabla->addField("NombProv", "text", 200, "Nombre");
+
+	$config->tablas["provincias"] = $tabla;
+
+	/**
 	 * EMPRESAS
 	 */
 	$tabla = new Tabla('empresas', 'empresas', 'Empresas', 'la Empresa', true, 'objeto/empresas', 'fa-industry');
@@ -150,7 +165,7 @@
 	$tabla->addField("NumeBanc", "select", 200, "Banco", true, false, false, true, '', '', 'bancos', 'NumeBanc', 'NombBanc', '', 'NombBanc');
 	$tabla->addField("NumeCuen", "text", 200, "Nro Cuenta");
 
-	$tabla->addFieldFileImage("ImagEmpr", "image", 100, "Logo", 'imgEmpresas', false);
+	$tabla->addFieldFileImage("ImagEmpr", 100, "Logo", 'imgEmpresas', false);
 
 	$tabla->addField("NumePlan", "select", 80, "Plantilla de impresión", true, false, false, true, '', '', 'plantillas', 'NumePlan', 'NombPlan', '', 'NombPlan');
 	$tabla->fields["NumePlan"]["isHiddenInList"] = true;
@@ -217,12 +232,15 @@
 	$tabla->labelField = "NombClie";
 	$tabla->listarOnLoad = false;
 
-	$tabla->searchFields = array("NumeSoli", "NombClie");
+	$tabla->searchFields = array("NumeSoli", "NombClie", "NumeEmpr");
 
 	$tabla->btnForm = [
 			array('titulo'=>'<i class="fa fa-fw fa-money" aria-hidden="true"></i> Generar cuotas', 
 					'onclick'=>"generarCuotas()", 
-					'class'=>"btn-success")
+					'class'=>"btn-success"),
+			array('titulo'=>'<i class="fa fa-fw fa-cloud-upload" aria-hidden="true"></i> Cargar clientes por archivo', 
+					'onclick'=>"location.href = 'cargarClientes.php';", 
+					'class'=>"btn-success"),
 	];
 
 	$tabla->btnList = [
@@ -247,7 +265,7 @@
 
 	$tabla->addField("NombClie", "text", 200, "Nombre");
 	$tabla->addField("NumeEmpr", "select", 200, "Empresa", true, false, false, true, '', '', 'empresas', 'NumeEmpr', 'NombEmpr', '', 'NombEmpr');
-	$tabla->fields["NumeEmpr"]["isHiddenInList"] = true;
+	//$tabla->fields["NumeEmpr"]["isHiddenInList"] = true;
 
 	$tabla->addField("NumeTele", "text", 100, "Teléfono", false);
 	$tabla->fields["NumeTele"]["cssGroup"] = "form-group2";
@@ -308,8 +326,9 @@
 	$tabla->addField("CodiPagoElec", "text", 0, "Codigo de pago electrónico");
 	$tabla->fields["CodiPagoElec"]["isHiddenInForm"] = true;
 	$tabla->fields["CodiPagoElec"]["isHiddenInList"] = true;
-	// $tabla->addField("CantCuot", "number", 0, "Cuotas restantes");
-	// $tabla->fields["CantCuot"]["cssGroup"] = "form-group2";
+
+	$tabla->addField("CantCuot", "number", 0, "Cuotas restantes");
+	$tabla->fields["CantCuot"]["isHiddenInList"] = true;
 
 	$config->tablas["clientes"] = $tabla;
 
