@@ -18,11 +18,11 @@
 	$filFecha = $_REQUEST["filFecha"];
 
 	$filtro = "";
-	if ($filEmpresa != '-1') {
+	if ($filEmpresa != '-1' && $filEmpresa != '') {
 		$filtro.= $crlf."c.NumeEmpr = ". $filEmpresa;
 	}
 
-	if ($filCliente != '-1') {
+	if ($filCliente != '-1' && $filCliente != '') {
 		if ($filtro != "") {
 			$filtro.= $crlf." AND ";
 		}

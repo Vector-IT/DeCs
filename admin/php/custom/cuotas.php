@@ -17,7 +17,7 @@ class Cuota extends Tabla {
 				if ($post["dato"]["Empresa"] != '-1') {
 					$Filtro.= $crlf." WHERE e.NumeEmpr = ". $post["dato"]["Empresa"];
 				}
-				if ($post["dato"]["Cliente"] != '-1') {
+				if ($post["dato"]["Cliente"] != '-1' && $post["dato"]["Cliente"] != '') {
 					if ($Filtro == "") {
 						$Filtro.= $crlf." WHERE ";
 					}
@@ -175,7 +175,7 @@ class Cuota extends Tabla {
 			$Filtro.= "DATE_FORMAT(FechVenc1, '%Y-%m') = '{$strFiltro["Fecha"]}'";
 		}
 
-		if ($strFiltro["Empresa"] != "-1") {
+		if ($strFiltro["Empresa"] != "-1" && $strFiltro["Empresa"] != "") {
 			if ($Filtro != "") {
 				$Filtro.= " AND ";
 			}
@@ -183,7 +183,7 @@ class Cuota extends Tabla {
 			$Filtro.= "NumeClie IN (SELECT NumeClie FROM clientes WHERE NumeEmpr = {$strFiltro["Empresa"]})";
 		}
 
-		if ($strFiltro["Cliente"] != "-1") {
+		if ($strFiltro["Cliente"] != "-1" && $strFiltro["Cliente"] != "") {
 			if ($Filtro != "") {
 				$Filtro.= " AND ";
 			}
