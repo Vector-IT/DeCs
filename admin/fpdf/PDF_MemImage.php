@@ -55,11 +55,13 @@ class VariableStream
 
 class PDF_MemImage extends FPDF
 {
-    function __construct($orientation='P', $unit='mm', $format='A4')
+    function __construct($orientation='P', $unit='mm', $format='A4', $blnRegVar=true)
     {
         parent::__construct($orientation, $unit, $format);
         // Register var stream protocol
-        stream_wrapper_register('var', 'VariableStream');
+		if ($blnRegVar) {
+        	stream_wrapper_register('var', 'VariableStream');
+		}
     }
 
     function MemImage($data, $x=null, $y=null, $w=0, $h=0, $link='')

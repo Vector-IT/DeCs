@@ -30,9 +30,10 @@
 		$filtro.= $crlf."c.NumeClie = ". $filCliente;
 	}
 
-	$strSQL = "SELECT c.NumeClie, c.NumeSoli, c.NombClie, c.DireClie, c.NombBarr, c.NombLoca, c.CodiPost, p.NombProv, c.ValoMovi, c.CodiBarr, c.CodiPagoElec";
+	$strSQL = "SELECT c.NumeClie, c.NumeSoli, c.NombClie, c.DireClie, c.NombBarr, c.NombLoca, c.CodiPost, p.NombProv, c.ValoMovi, c.CodiBarr, c.CodiPagoElec, e.NombEmpr";
 	$strSQL.= $crlf." FROM clientes c";
 	$strSQL.= $crlf." INNER JOIN provincias p ON c.NumeProv = p.NumeProv";
+	$strSQL.= $crlf." INNER JOIN empresas e ON c.NumeEmpr = e.NumeEmpr";
 	if ($filtro != "") {
 		$strSQL.= $crlf." WHERE " . $filtro;
 	}
@@ -49,9 +50,15 @@
 		$config->ejecutarCMD($strSQL);
 	}
 
-	$pdf = new PDF_MemImage('P', 'mm', 'A4');
-	
+	$blnRegVar = true;
+
 	while ($cliente = $tbClientes->fetch_assoc()) {
+		$pdf = new PDF_MemImage('P', 'mm', 'A4', $blnRegVar);
+
+		if ($blnRegVar) {
+			$blnRegVar = false;
+		}
+
 
 		$strSQL = "SELECT p.NumePago,";
 		$strSQL.= $crlf." p.NumeCuot,";
@@ -343,7 +350,27 @@
 
 		//CodiPagoElec
 		$pdf->Text(27, 255, $cliente["CodiPagoElec"]);
+
+		//Creo la ruta de directorios
+		if (!file_exists('pdfs') && !is_dir('pdfs')) {
+			mkdir('pdfs');         
+			if (!file_exists('pdfs/'.$cliente["NombEmpr"]) && !is_dir('pdfs/'.$cliente["NombEmpr"])) {
+				mkdir('pdfs/'.$cliente["NombEmpr"]);
+				if (!file_exists('pdfs/'.$cliente["NombEmpr"].'/'.$filFecha) && !is_dir('pdfs/'.$cliente["NombEmpr"].'/'.$filFecha)) {
+					mkdir('pdfs/'.$cliente["NombEmpr"].'/'.$filFecha);
+				}
+			}
+		} 
+
+		//Si ya se generó el pdf lo elimino
+		if (file_exists('pdfs/'.$cliente["NombEmpr"].'/'.$filFecha.'/'.$cliente["NumeSoli"].'-'.$cliente["NombClie"].'.pdf')) {
+			unlink('pdfs/'.$cliente["NombEmpr"].'/'.$filFecha.'/'.$cliente["NumeSoli"].'-'.$cliente["NombClie"].'.pdf');
+		}
+
+		//Grabo el nuevo pdf
+		$pdf->Output('F', 'pdfs/'.$cliente["NombEmpr"].'/'.$filFecha.'/'.$cliente["NumeSoli"].'-'.$cliente["NombClie"].'.pdf');
+		$pdf = null;
 	}
-	$pdf->Output();
-	
+
+	header("Location:explorar.php");
 ?>

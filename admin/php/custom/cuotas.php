@@ -175,6 +175,38 @@ class Cuota extends Tabla {
 
 				return $result;
 				break;
+
+			case "Explorar":
+				$dir = '../'.$post['dato'];
+
+				$ffs = scandir($dir);
+				$salida = "";
+				$salida.= '<ul>';
+				foreach($ffs as $ff){
+					if($ff != '.' && $ff != '..'){
+						
+						if(!is_dir($dir.'/'.$ff)) {
+							//Es archivo
+							$salida.= '<li><a href="'.$post['dato'].'/'.$ff.'" download>'.$ff.'</a>';
+						}
+						else {
+							//Es directorio
+							$rndID = $config->get_random_string("abcdefghijklmnopqrstuvwxyz", 5);
+							$salida.= '<li><span class="clickable" id="'.$rndID.'" class="clickable" onclick="verDir(\''.$post['dato'].'/'.$ff.'\', \'#'.$rndID.'\')">'.$ff.'</span>';
+						}
+						/*
+						if(is_dir($dir.'/'.$ff)) {
+							$salida.= listFolderFiles($dir.'/'.$ff);
+						} 
+						*/
+						$salida.= '</li>';
+					}
+				}
+				$salida.= '</ul>';
+
+				return $salida;
+			
+				break;
 		}
 	
 	}
