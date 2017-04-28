@@ -68,7 +68,7 @@
 	
 	.alert {margin-top: 10px;}
 
-	footer { font-size:12px; text-align:center; padding: 5px 0; position:fixed; bottom: 0; width: 100%;}
+	footer { font-size:12px; text-align:center; padding: 5px 0; position:fixed; bottom: 0; width: 100%; z-index: 2; }
 
 	.border-bottom {border-bottom: 1px solid #CCC; -webkit-print-color-adjust: exact;}
 	.border-bottom2 {border-bottom: 1px dotted #CCC; -webkit-print-color-adjust: exact;}

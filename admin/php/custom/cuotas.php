@@ -35,11 +35,15 @@ class Cuota extends Tabla {
 					while ($fila = $clientes->fetch_assoc()) {
 						$NumePago = $config->buscarDato("SELECT NumePago FROM pagos WHERE NumeClie = {$fila["NumeClie"]} AND FechVenc1 = STR_TO_DATE('".$post['dato']['Fecha']."-".$fila["FechVenc1"]."', '%Y-%m-%d')");
 						if ($NumePago != '') {
+							$NumeCuot = $config->buscarDato("SELECT NumeCuot FROM pagos WHERE NumeClie = ". $fila["NumeClie"] ." AND FechVenc1 = STR_TO_DATE('".$post['dato']['Fecha']."-".$fila["FechVenc1"]."', '%Y-%m-%d')");
 							$this->borrar(array("NumePago"=>$NumePago));
+						}
+						else {
+							$NumeCuot = $config->buscarDato("SELECT COALESCE(MAX(NumeCuot), 0) + 1 FROM pagos WHERE NumeClie = ". $fila["NumeClie"]);
 						}
 
 						$NumePago = $config->buscarDato("SELECT COALESCE(MAX(NumePago), 0) + 1 FROM pagos");
-						$NumeCuot = $config->buscarDato("SELECT COALESCE(MAX(NumeCuot), 0) + 1 FROM pagos WHERE NumeClie = ". $fila["NumeClie"]);
+						
 
 						//Vencimientos
 						$FechVenc1 = "STR_TO_DATE('".$post['dato']['Fecha']."-".$fila["FechVenc1"]."', '%Y-%m-%d')";
