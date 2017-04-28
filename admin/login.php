@@ -59,8 +59,13 @@ require_once 'php/datos.php';
 					echo $strSalida;
 				}
 				
-				if (isset($_REQUEST["returnUrl"])) 
-					echo '<input type="hidden" name="returnUrl" value="'.$_REQUEST["returnUrl"].'" />';
+				if (isset($_REQUEST["returnUrl"])) {
+					$returnUrl = $_REQUEST["returnUrl"];
+				}
+				else {
+					$returnUrl = '';
+				}
+				echo '<input type="hidden" name="returnUrl" value="'.$returnUrl.'" />';
 			?>
 			
 			<div class="panel panel-default">

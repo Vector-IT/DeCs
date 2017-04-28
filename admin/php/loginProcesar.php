@@ -17,29 +17,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$_SESSION['is_logged_in'] = 1;
 		$_SESSION['NumeUser'] = $fila['NumeUser'];
 		$_SESSION['NombUsua'] = $fila['NombPers'];
-		$_SESSION['DarkTheme'] = $_POST['theme'];
+		if (isset($_POST['theme'])) {
+			$_SESSION['DarkTheme'] = $_POST['theme'];
+		}
 	
 		$tabla->free();
 	}
 	else {
 		//Error
-		if ($_POST["returnUrl"] == "-1") {
-			echo "ERROR";
-		}
-		else {
-			header("Location:../login.php?error=1");
-			die();
-		}
+		header("Location:../login.php?returnUrl={$_POST["returnUrl"]}&error=1");
+		die();
+	}
+
+	if ($_POST["returnUrl"] == "") {
+		header("Location:../");
+	}
+	else {
+		header("Location:".$_POST["returnUrl"]);
 	}
 }
-
-if ($_POST["returnUrl"] == "-1") {
-	echo "Ok";
-}
-else if ($_POST["returnUrl"] == "")
-	header("Location:../");
-else
-	header("Location:".$_POST["returnUrl"]);
-//die();
-
 ?>
