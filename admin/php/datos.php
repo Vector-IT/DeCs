@@ -170,6 +170,9 @@
 	$tabla->addField("NumePlan", "select", 80, "Plantilla de impresión", true, false, false, true, '', '', 'plantillas', 'NumePlan', 'NombPlan', '', 'NombPlan');
 	$tabla->fields["NumePlan"]["isHiddenInList"] = true;
 
+	$tabla->addField("NumeTipoComi", "select", 80, "Cálculo de gastos", true, false, false, true, '', '', 'tiposcomisiones', 'NumeTipoComi', 'NombTipoComi');
+	$tabla->fields["NumeTipoComi"]["isHiddenInList"] = true;
+
 	$tabla->addField("ImpoAdmi", "number", 80, "Gastos administrativos");
 	$tabla->fields["ImpoAdmi"]["cssGroup"] = "form-group2";
 	$tabla->fields["ImpoAdmi"]["step"] = "0.01";

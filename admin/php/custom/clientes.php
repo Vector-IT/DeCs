@@ -22,11 +22,11 @@ class Clientes extends Tabla {
 				while(! feof($file))
 				{
 					if ($I == 0) {
-						$fila = explode(";", utf8_decode(fgets($file)));
+						fgets($file);
 					}
 					$I++;	
 
-					$strAux = utf8_decode(fgets($file));
+					$strAux = utf8_encode(fgets($file));
 
 					$fila = explode(";", $strAux);
 

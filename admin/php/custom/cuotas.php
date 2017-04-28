@@ -10,7 +10,7 @@ class Cuota extends Tabla {
 				$Filtro = "";
 
 				$strSQL = "SELECT c.NumeClie, c.ValoCuot, c.NumeEmpr,";
-				$strSQL.= $crlf." e.ImpoAdmi, e.PorcAdmi, e.ImpoGest, e.PorcGest, e.ImpoOtro, e.PorcOtro,";
+				$strSQL.= $crlf." e.NumeTipoComi, e.ImpoAdmi, e.PorcAdmi, e.ImpoGest, e.PorcGest, e.ImpoOtro, e.PorcOtro,";
 				$strSQL.= $crlf." e.FechVenc1, e.FechVenc2, e.FechVenc3";
 				$strSQL.= $crlf." FROM clientes c";
 				$strSQL.= $crlf." INNER JOIN empresas e ON c.NumeEmpr = e.NumeEmpr";
@@ -85,7 +85,17 @@ class Cuota extends Tabla {
 							$ImpoOtro = floatval($fila["ImpoOtro"]);
 						}
 
-						$ImpoAux = number_format($ImpoPura + $ImpoAdmi + $ImpoGest + $ImpoOtro, 2, "", "");
+						switch ($fila["NumeTipoComi"]) {
+							case '1': //Los gastos se suman al valor de la cuota pura
+								$ImpoAux = number_format($ImpoPura + $ImpoAdmi + $ImpoGest + $ImpoOtro, 2, "", "");
+								break;
+
+							case '2': //Los gastos se restan al valor de la cuota pura
+								$ImpoAux = number_format($ImpoPura, 2, "", "");
+								$ImpoPura = $ImpoPura - $ImpoAdmi - $ImpoGest - $ImpoOtro;
+								break;
+						}
+
 						$Impo1Barr = substr('0000000'.$ImpoAux, -7);
 
 						$NumeClieBarr = substr('00000000'.$fila["NumeClie"], -8);
