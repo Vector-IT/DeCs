@@ -56,15 +56,19 @@
 		</div>
 
 		<div class="row">
-			<div class="col-md-4 text-center">
+			<div class="col-md-3 text-center">
 				<h4>Generar cuotas</h4>
 				<button type="button" class="btn btn-sm btn-info marginBottom10 clickable" data-js="abrirModal('Generar')"><i class="fa fa-fw fa-plus-square" aria-hidden="true"></i> Generar</button>
 			</div>
-			<div class="col-md-4 text-center">
+			<div class="col-md-3 text-center">
 				<h4>Imprimir</h4>
 				<button type="button" class="btn btn-sm btn-info marginBottom10 clickable" data-js="abrirModal('Imprimir')"><i class="fa fa-fw fa-print" aria-hidden="true"></i> Imprimir</button>
 			</div>
-			<div class="col-md-4 text-center">
+			<div class="col-md-3 text-center">
+				<h4>Explorar PDFs</h4>
+				<button type="button" class="btn btn-sm btn-info marginBottom10 clickable" data-url="explorar.php"><i class="fa fa-fw fa-file-pdf-o" aria-hidden="true"></i> Explorar</button>
+			</div>
+			<div class="col-md-3 text-center">
 				<h4>Buscar cuotas</h4>
 				<button type="button" class="btn btn-sm btn-info marginBottom10 clickable" data-js="abrirModal('Buscar')"><i class="fa fa-fw fa-search" aria-hidden="true"></i> Buscar</button>
 			</div>

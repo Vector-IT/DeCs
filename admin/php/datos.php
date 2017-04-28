@@ -208,6 +208,22 @@
 	$tabla->fields["FechVenc3"]["cssGroup"] = "form-group2";
 	$tabla->fields["FechVenc3"]['isHiddenInList'] = true;
 
+	$tabla->addField("DireEmpr", "text", 200, "Dirección");
+	$tabla->fields["DireEmpr"]["cssGroup"] = "form-group2";
+	$tabla->fields["DireEmpr"]['isHiddenInList'] = true;
+
+	$tabla->addField("TeleEmpr", "text", 200, "Teléfono");
+	$tabla->fields["TeleEmpr"]["cssGroup"] = "form-group2";
+	$tabla->fields["TeleEmpr"]['isHiddenInList'] = true;
+
+	$tabla->addField("MailEmpr", "text", 200, "E-mail");
+	$tabla->fields["MailEmpr"]["cssGroup"] = "form-group2";
+	$tabla->fields["MailEmpr"]['isHiddenInList'] = true;
+
+	$tabla->addField("WebsEmpr", "text", 200, "Página Web");
+	$tabla->fields["WebsEmpr"]["cssGroup"] = "form-group2";
+	$tabla->fields["WebsEmpr"]['isHiddenInList'] = true;
+
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 
 	$config->tablas["empresas"] = $tabla;
