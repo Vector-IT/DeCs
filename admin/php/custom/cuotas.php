@@ -9,12 +9,12 @@ class Cuota extends Tabla {
 			case 'Generar':
 				$Filtro = "";
 
-				$strSQL = "SELECT c.NumeClie, c.ValoCuot, c.NumeEmpr,";
+				$strSQL = "SELECT c.NumeClie, c.NumeSoli, c.ValoCuot, c.NumeEmpr,";
 				$strSQL.= $crlf." e.NumeTipoComi, e.ImpoAdmi, e.PorcAdmi, e.ImpoGest, e.PorcGest, e.ImpoOtro, e.PorcOtro,";
 				$strSQL.= $crlf." e.FechVenc1, e.FechVenc2, e.FechVenc3";
 				$strSQL.= $crlf." FROM clientes c";
 				$strSQL.= $crlf." INNER JOIN empresas e ON c.NumeEmpr = e.NumeEmpr";
-				if ($post["dato"]["Empresa"] != '-1') {
+				if ($post["dato"]["Empresa"] != '-1'&& $post["dato"]["Empresa"] != '') {
 					$Filtro.= $crlf." WHERE e.NumeEmpr = ". $post["dato"]["Empresa"];
 				}
 				if ($post["dato"]["Cliente"] != '-1' && $post["dato"]["Cliente"] != '') {
@@ -33,6 +33,11 @@ class Cuota extends Tabla {
 				$clientes = $config->cargarTabla($strSQL);
 				if ($clientes) {
 					while ($fila = $clientes->fetch_assoc()) {
+						$NumePago = $config->buscarDato("SELECT NumePago FROM pagos WHERE NumeClie = {$fila["NumeClie"]} AND FechVenc1 = STR_TO_DATE('".$post['dato']['Fecha']."-".$fila["FechVenc1"]."', '%Y-%m-%d')");
+						if ($NumePago != '') {
+							$this->borrar(array("NumePago"=>$NumePago));
+						}
+
 						$NumePago = $config->buscarDato("SELECT COALESCE(MAX(NumePago), 0) + 1 FROM pagos");
 						$NumeCuot = $config->buscarDato("SELECT COALESCE(MAX(NumeCuot), 0) + 1 FROM pagos WHERE NumeClie = ". $fila["NumeClie"]);
 
@@ -41,7 +46,8 @@ class Cuota extends Tabla {
 						$FechVenc1Barr = date_format(new \DateTime($post['dato']['Fecha']."-".$fila["FechVenc1"]), 'ymd');
 						
 						if ($fila["FechVenc2"] != "" && $fila["FechVenc2"] != "0") {
-							$FechVenc2 = "STR_TO_DATE('".$post['dato']['Fecha']."-". ($fila["FechVenc1"] + $fila["FechVenc2"]) ."', '%Y-%m-%d')";
+							//$FechVenc2 = "STR_TO_DATE('".$post['dato']['Fecha']."-". ($fila["FechVenc1"] + $fila["FechVenc2"]) ."', '%Y-%m-%d')";
+							$FechVenc2 = "DATE_ADD(".$FechVenc1.", INTERVAL ". $fila["FechVenc2"] . " DAY)";
 							$FechVenc2Barr = substr('00'.$fila["FechVenc2"], -2);
 						}
 						else {
@@ -50,7 +56,8 @@ class Cuota extends Tabla {
 						}
 
 						if ($fila["FechVenc3"] != "" && $fila["FechVenc3"] != "0") {
-							$FechVenc3 = "STR_TO_DATE('".$post['dato']['Fecha']."-". ($fila["FechVenc1"] + $fila["FechVenc2"] + $fila["FechVenc3"]) ."', '%Y-%m-%d')";
+							//$FechVenc3 = "STR_TO_DATE('".$post['dato']['Fecha']."-". ($fila["FechVenc1"] + $fila["FechVenc2"] + $fila["FechVenc3"]) ."', '%Y-%m-%d')";
+							$FechVenc3 = "DATE_ADD(".$FechVenc2.", INTERVAL ". $fila["FechVenc3"] . " DAY)";
 							$FechVenc3Barr = substr('00'.$fila["FechVenc3"], -2);
 						}
 						else {
@@ -98,7 +105,7 @@ class Cuota extends Tabla {
 
 						$Impo1Barr = substr('0000000'.$ImpoAux, -7);
 
-						$NumeClieBarr = substr('00000000'.$fila["NumeClie"], -8);
+						$NumeClieBarr = substr('00000000'.$fila["NumeSoli"], -8);
 
 						$CodiBarr = '04470' . $NumeClieBarr . $FechVenc1Barr . $Impo1Barr . $FechVenc2Barr . $Impo1Barr . $FechVenc3Barr . $Impo1Barr . '5150041794';
 
@@ -187,7 +194,7 @@ class Cuota extends Tabla {
 						
 						if(!is_dir($dir.'/'.$ff)) {
 							//Es archivo
-							$salida.= '<li><a href="'.$post['dato'].'/'.$ff.'" download>'.$ff.'</a>';
+							$salida.= '<li><a href="'.$post['dato'].'/'.$ff.'" download target="_blank">'.$ff.'</a>';
 						}
 						else {
 							//Es directorio
@@ -206,6 +213,9 @@ class Cuota extends Tabla {
 
 				return $salida;
 			
+				break;
+
+			case "Borrar PDF":
 				break;
 		}
 	

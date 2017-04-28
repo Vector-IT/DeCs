@@ -147,8 +147,8 @@
 					<div id="divMsjModal" class="alert alert-danger text-left" role="alert">
 						<span id="txtHintModal">Info</span>
 					</div>
-					<button type="submit" class="btn btn-primary clickable" data-js="cerrarModal();">Aceptar</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+					<button type="submit" id="btnAceptar" class="btn btn-primary clickable" data-js="cerrarModal();">Aceptar</button>
+					<button type="button" id="btnCancelar" class="btn btn-default" data-dismiss="modal">Cancelar</button>
 				</div>
 			</form>
 		</div>

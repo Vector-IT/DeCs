@@ -104,7 +104,25 @@ function imprimirCuotas() {
 		return false;
 	}
 
-	location.href = "cuotasImprimir.php?filFecha="+fecha+"&filEmpresa="+empresa+"&filCliente="+cliente;
+	$("#modalFiltros").modal('hide');
+
+	$("#actualizando").show();
+	$.get("cuotasImprimir.php",
+		{
+			'filFecha': fecha,
+			'filEmpresa': empresa,
+			'filCliente': cliente
+		},
+		function(data) {
+			$("#actualizando").hide();
+			$("#divMsj").removeClass("alert-danger");
+			$("#divMsj").addClass("alert-success");
+			
+			$("#txtHint").html(data);
+
+			location.href = "explorar.php";
+		}
+	);
 }
 
 function filtrarClientes(strNumeEmpr, combo) {

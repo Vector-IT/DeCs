@@ -13,7 +13,7 @@
 	}
 
 	ini_set('max_execution_time', 300);
-	
+
 	$filEmpresa = $_REQUEST["filEmpresa"];
 	$filCliente = $_REQUEST["filCliente"];
 
@@ -54,6 +54,7 @@
 	}
 
 	$blnRegVar = true;
+	$I = 0;
 
 	while ($cliente = $tbClientes->fetch_assoc()) {
 		$strSQL = "SELECT p.NumePago,";
@@ -91,6 +92,8 @@
 		if ($cuota == null) {
 			continue;
 		}
+		$I++;
+
 		$pdf->AddPage();
 
 	//Encabezado
@@ -147,9 +150,13 @@
 		//ImpoTota1
 		$pdf->Text(101, 49, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
 		//ImpoTota2
-		$pdf->Text(121, 49, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		if ($cuota["FechVenc2"] != '') {
+			$pdf->Text(121, 49, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		}
 		//ImpoTota3
-		$pdf->Text(139, 49, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		if ($cuota["FechVenc3"] != '') {
+			$pdf->Text(139, 49, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		}
 
 
 		//NumePago
@@ -271,9 +278,13 @@
 		//ImpoTota1
 		$pdf->Text(101, 97, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
 		//ImpoTota2
-		$pdf->Text(121, 97, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		if ($cuota["FechVenc2"] != '') {
+			$pdf->Text(121, 97, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		}
 		//ImpoTota3
-		$pdf->Text(139, 97, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		if ($cuota["FechVenc3"] != '') {
+			$pdf->Text(139, 97, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		}
 		
 		//NumePago
 		$pdf->Text(91, 107, utf8_decode('Nº Comprobante'));
@@ -392,9 +403,13 @@
 		//ImpoTota1
 		$pdf->Text(101, 143, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
 		//ImpoTota2
-		$pdf->Text(121, 143, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		if ($cuota["FechVenc2"] != '') {
+			$pdf->Text(121, 143, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		}
 		//ImpoTota3
-		$pdf->Text(139, 143, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		if ($cuota["FechVenc3"] != '') {
+			$pdf->Text(139, 143, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		}
 		
 		//NumePago
 		$pdf->Text(91, 154, utf8_decode('Nº Comprobante'));
@@ -513,9 +528,13 @@
 		//ImpoTota1
 		$pdf->Text(101, 190, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
 		//ImpoTota2
-		$pdf->Text(121, 190, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		if ($cuota["FechVenc2"] != '') {
+			$pdf->Text(121, 190, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		}
 		//ImpoTota3
-		$pdf->Text(139, 190, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		if ($cuota["FechVenc3"] != '') {
+			$pdf->Text(139, 190, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		}
 
 		//NumePago
 		$pdf->Text(91, 200, utf8_decode('Nº Comprobante'));
@@ -610,12 +629,12 @@
 		//Creo la ruta de directorios
 		if (!file_exists('pdfs') && !is_dir('pdfs')) {
 			mkdir('pdfs');         
-			if (!file_exists('pdfs/'.$cliente["NombEmpr"]) && !is_dir('pdfs/'.$cliente["NombEmpr"])) {
-				mkdir('pdfs/'.$cliente["NombEmpr"]);
-				if (!file_exists('pdfs/'.$cliente["NombEmpr"].'/'.$filFecha) && !is_dir('pdfs/'.$cliente["NombEmpr"].'/'.$filFecha)) {
-					mkdir('pdfs/'.$cliente["NombEmpr"].'/'.$filFecha);
-				}
-			}
+		}
+		if (!file_exists('pdfs/'.$cliente["NombEmpr"]) && !is_dir('pdfs/'.$cliente["NombEmpr"])) {
+			mkdir('pdfs/'.$cliente["NombEmpr"]);
+		}
+		if (!file_exists('pdfs/'.$cliente["NombEmpr"].'/'.$filFecha) && !is_dir('pdfs/'.$cliente["NombEmpr"].'/'.$filFecha)) {
+			mkdir('pdfs/'.$cliente["NombEmpr"].'/'.$filFecha);
 		} 
 
 		//Si ya se generó el pdf lo elimino
@@ -627,7 +646,8 @@
 		$pdf->Output('F', 'pdfs/'.$cliente["NombEmpr"].'/'.$filFecha.'/'.$cliente["NumeSoli"].'-'.$cliente["NombClie"].'.pdf');
 		//$pdf->Output();
 		$pdf = null;
-	}
 
-	header("Location:explorar.php");
+	}
+	echo $I." PDFs generados";
+	//header("Location:explorar.php");
 ?>

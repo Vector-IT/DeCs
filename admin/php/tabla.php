@@ -838,8 +838,8 @@ class Tabla
 
 		if (count($this->searchFields) > 0) {
 			$strSalida.= $crlf.'<hr>';
-			$strSalida.= $crlf.'<h4>Buscar '. $this->titulo .'</h4>';
-			$strSalida.= $crlf.'<form id="frmSearch'. $this->tabladb .'" class="form-horizontal marginTop20" method="post" onSubmit="return false;">';
+			$strSalida.= $crlf.'<h4>Buscar '. $this->titulo .'</h4>'; 
+			$strSalida.= $crlf.'<form id="frmSearch'. $this->tabladb .'" class="form-horizontal marginTop20" method="post" onSubmit="return false;" novalidate>';
 
 			foreach ($this->searchFields as $field) {
 				$strSalida.= $crlf . $this->createField($this->fields[$field], 'search');
@@ -847,7 +847,7 @@ class Tabla
 
 			$strSalida.= $crlf.'<div class="form-group">';
 			$strSalida.= $crlf.'	<div class="col-md-offset-2 col-lg-offset-2 col-md-4 col-lg-4">';
-			$strSalida.= $crlf.'		<button type="button" class="btn btn-sm btn-primary clickable" data-js="listar'. $this->tabladb .'()"><i class="fa fa-search fa-fw" aria-hidden="true"></i> Buscar</button>';
+			$strSalida.= $crlf.'		<button type="submit" class="btn btn-sm btn-primary clickable" data-js="listar'. $this->tabladb .'()"><i class="fa fa-search fa-fw" aria-hidden="true"></i> Buscar</button>';
 			$strSalida.= $crlf.'	</div>';
 			$strSalida.= $crlf.'</div>';
 			$strSalida.= '</form>';
@@ -909,6 +909,7 @@ class Tabla
         //Listar
         $strSalida.= $crlf.'';
         $strSalida.= $crlf.'function listar'. $this->tabladb .'() {';
+		$strSalida.= $crlf.'	$("#actualizando").show();';
         $strSalida.= $crlf.'	$("#divDatos").html("");';
 		$strSalida.= $crlf.'';
 		$strSalida.= $crlf.'	var filtros = "";';
