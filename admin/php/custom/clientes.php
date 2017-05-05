@@ -104,8 +104,9 @@ class Clientes extends Tabla {
 				else {
 					$salida["mensaje"] = $mensaje;
 				}
+				$salida["clientes"] = $NumeClie;
 
-            	return json_encode($salida);
+            	return $salida;
 			break;
 		}
 	}

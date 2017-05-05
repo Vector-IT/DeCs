@@ -1,13 +1,15 @@
 <?php
-require_once 'php/datos.php';
+	require_once 'php/datos.php';
+
+	header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	header("Pragma: no-cache"); // HTTP 1.0.
+	header("Expires: 0"); // Proxies.	
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<?php require_once 'php/linksHeader.php'; ?>
 	
-	<link rel="stylesheet" href="<?php echo $config->raiz ?>admin/css/bootstrap-dark.css">
-
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#usuario").focus();

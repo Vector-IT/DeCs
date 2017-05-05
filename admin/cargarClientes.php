@@ -11,6 +11,10 @@
 	}
 
 	$clientes = $config->getTabla("clientes");
+
+	header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	header("Pragma: no-cache"); // HTTP 1.0.
+	header("Expires: 0"); // Proxies.	
 ?>
 <!DOCTYPE html>
 <html>
@@ -19,60 +23,7 @@
 		require_once 'php/linksHeader.php';
 	?>
 
-	<script>
-		$(document).ready(function() {
-			$("#actualizando").hide();
-			$("#divMsj").hide();
-			$("#frmCarga").submit(function() {aceptarcarga();});
-		});
-
-		function aceptarcarga() {
-			$("#btnAceptar, #btnCancelar").addClass("disabled");
-			$("#actualizando").show();
-
-			var frmData = new FormData();
-			frmData.append("operacion", 100);
-			frmData.append("tabla", 'clientes');
-			frmData.append("field", 'CSV');
-
-			frmData.append("NumeEmpr", $("#NumeEmpr").val());
-			frmData.append("Archivo", $("#Archivo").get(0).files[0]);
-
-			if (window.XMLHttpRequest)
-			{// code for IE7+, Firefox, Chrome, Opera, Safari
-				xmlhttp = new XMLHttpRequest();
-			}
-			else
-			{// code for IE6, IE5
-				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			
-			xmlhttp.onreadystatechange = function() {
-				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-					if (JSON.parse(JSON.parse(xmlhttp.responseText)["valor"]).estado) {
-						$("#txtHint").html("Carga Exitosa!<br>"+ JSON.parse(JSON.parse(xmlhttp.responseText)["valor"]).mensaje);
-				
-						$("#divMsj").removeClass("alert-danger");
-						$("#divMsj").addClass("alert-success");
-
-						$('#frmCarga')[0].reset();
-					}
-					else {
-						$("#txtHint").html("Error en la Carga!<br>"+ JSON.parse(JSON.parse(xmlhttp.responseText)["valor"]).mensaje);
-						$("#divMsj").removeClass("alert-success");
-						$("#divMsj").addClass("alert-danger");
-					}
-			
-					$("#actualizando").hide();
-					$("#divMsj").show();
-					$("#btnAceptar, #btnCancelar").removeClass("disabled");
-				}
-			};
-			
-			xmlhttp.open("POST","php/tablaHandler.php",true);
-			xmlhttp.send(frmData);
-		}
-	</script>
+	<script src="js/custom/cargarClientes.js"></script>
 </head>
 <body>
 	<?php
@@ -101,6 +52,38 @@
 					<input type="file" class="form-control input-sm " id="Archivo" required>
 				</div>
 			</div>
+			<div class="form-group form-group-sm ">
+				<label for="Fecha" class="control-label col-md-2">Fecha de la primer cuota:</label>
+				<div class="col-md-6">
+					<div class="input-group date margin-bottom-sm inpFecha">
+						<input type="text" class="form-control" id="Fecha" size="16" value="" required onkeydown="return false;">
+						<span class="input-group-addon add-on clickable" title="Abrir Calendario"><i class="fa fa-calendar fa-fw"></i></span>
+					</div>
+					<input type="hidden" id="filFecha" name="filFecha">
+					<script type="text/javascript">
+						$(".inpFecha").datetimepicker({
+							language: "es",
+							format: "MM yyyy",
+							minView: 3,
+							startView: 3,
+							autoclose: true,
+							todayBtn: true,
+							todayHighlight: false,
+							minuteStep: 15,
+							pickerPosition: "bottom-left",
+							linkField: "filFecha",
+							linkFormat: "yyyy-mm",
+							fontAwesome: true
+						});
+					</script>
+				</div>
+			</div>
+			<div class="form-group form-group-sm ">
+				<label for="CantCuot" class="control-label col-md-2">Cantidad de cuotas a generar:</label>
+				<div class="col-md-6">
+					<input type="number" class="form-control input-sm " id="CantCuot" required min="0">
+				</div>
+			</div>
 			<div class="form-group">
 				<div class="col-md-offset-2 col-lg-offset-2 col-md-4 col-lg-4">
 					<button type="submit" id="btnAceptar" class="btn btn-sm btn-primary"><i class="fa fa-check fa-fw" aria-hidden="true"></i> Aceptar</button>
@@ -109,12 +92,12 @@
 				</div>
 			</div>
 		</form>
-		<div id="actualizando" class="alert alert-info" role="alert">
-			<i class="fa fa-refresh fa-fw fa-spin"></i> Actualizando datos, por favor espere...
-		</div>
-		
 		<div id="divMsj" class="alert alert-danger" role="alert">
 			<span id="txtHint">Info</span>
+		</div>
+
+		<div id="actualizando" class="alert alert-info" role="alert">
+			<i class="fa fa-refresh fa-fw fa-spin"></i> Actualizando datos, por favor espere...
 		</div>
 	</div>
 	

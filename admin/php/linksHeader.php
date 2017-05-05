@@ -19,13 +19,12 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 	<?php
-		if (isset($_SESSION['DarkTheme'])) {
+		if (isset($_SESSION['DarkTheme']) || !isset($_SESSION['is_logged_in'])) {
 			echo '<link rel="stylesheet" href="'.$config->raiz.'admin/css/bootstrap-dark.css">';
 		}
 	?>
 
 	<!-- FONT AWESOME -->
-	<!--<script src="https://use.fontawesome.com/5765698947.js"></script>-->
 	<link rel="stylesheet" href="<?php echo $config->raiz ?>admin/css/font-awesome.css">
 	
 

@@ -20,7 +20,10 @@
 	}
 
 	(isset($_REQUEST["NumeClie"]))? $NumeClie = $_REQUEST["NumeClie"]: $NumeClie= "";
-	
+
+	header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	header("Pragma: no-cache"); // HTTP 1.0.
+	header("Expires: 0"); // Proxies.	
 ?>
 <!DOCTYPE html>
 <html>
@@ -118,10 +121,11 @@
 
 					<div class="form-group form-group-sm ">
 						<label for="Fecha" class="control-label col-md-2">Mes:</label>
-						<div class="col-md-5">
+						<div class="col-md-8">
 							<div class="input-group date margin-bottom-sm inpFecha">
 								<input type="text" class="form-control" id="Fecha" size="16" value="" readonly required>
 								<span class="input-group-addon add-on clickable" title="Abrir Calendario"><i class="fa fa-calendar fa-fw"></i></span>
+								<span class="input-group-addon add-on clickable btnLimpiarCal" title="Limpiar"><i class="fa fa-times fa-fw"></i></span>
 							</div>
 							<input type="hidden" id="filFecha" name="filFecha">
 							<script type="text/javascript">
@@ -140,6 +144,13 @@
 									fontAwesome: true
 								});
 							</script>
+						</div>
+					</div>
+
+					<div id="CantCuot" class="form-group form-group-sm">
+						<label for="filCuotas" class="control-label col-md-2">Cantidad a generar:</label>
+						<div class="col-md-8">
+							<input type="number" min="1" class="form-control ucase" id="filCuotas" name="filCuotas" required value="1">
 						</div>
 					</div>
 				</div>

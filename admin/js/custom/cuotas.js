@@ -1,12 +1,34 @@
 var cmbCliente;
 var modal;
 
+$(document).ready(function() {
+	$('#modalFiltros').on('shown.bs.modal', function() {
+		$("#divMsjModal").hide();
+
+		switch (modal) {
+			case 'Generar':
+				$(".btnLimpiarCal").hide();
+				$("#CantCuot").show();
+				break;
+
+			case 'Imprimir': 
+				$(".btnLimpiarCal").hide();
+				$("#CantCuot").hide();
+				break;
+
+			case 'Buscar':
+				$(".btnLimpiarCal").show();
+				$("#CantCuot").hide();
+				break;
+		}
+    });
+});
+
 function abrirModal(objeto) {
 	modal = objeto;
 
 	$("#operacion").html(modal);
 
-	$("#divMsjModal").hide();
 	$("#modalFiltros").modal();
 }
 
@@ -27,6 +49,7 @@ function generarCuotas() {
 	var fecha = $("#filFecha").val();
 	var empresa = $("#filEmpresa").val();
 	var cliente = $("#filCliente").val();
+	var cantCuotas = parseInt($("#filCuotas").val());
 	
 	if (fecha == '') {
 		$("#divMsjModal").addClass("alert-danger");
@@ -43,7 +66,7 @@ function generarCuotas() {
 				operacion: '100', 
 				tabla: 'cuotas', 
 				field: 'Generar', 
-				dato: {"Fecha": fecha, "Empresa": empresa, "Cliente": cliente}
+				dato: {"Fecha": fecha, "Empresa": empresa, "Cliente": cliente, "Cantidad": cantCuotas}
 			}, 
 			function(data) {
 				$("#txtHint").html(data['valor']);

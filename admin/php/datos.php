@@ -354,7 +354,7 @@
 	/**
 	 * PAGOS
 	 */
-	$tabla = new Cuota("cuotas", "pagos", "Cuotas", "Cuota", "true", "cuotas.php", "fa-money", "FechCuot DESC, NumeClie", false, false, true);
+	$tabla = new Cuota("cuotas", "pagos", "Cuotas", "Cuota", "true", "cuotas.php", "fa-money", "FechVenc1 DESC, NumeClie", false, false, true);
 	$tabla->jsFiles = ['admin/js/custom/cuotas.js'];
 	$tabla->btnList = [
 			array('titulo'=>'<i class="fa fa-fw fa-id-card-o" aria-hidden="true"></i> Cliente', 'onclick'=>"verCliente", 'class'=>"btn-primary"),

@@ -32,129 +32,139 @@ class Cuota extends Tabla {
 				
 				$clientes = $config->cargarTabla($strSQL);
 				if ($clientes) {
+
 					while ($fila = $clientes->fetch_assoc()) {
-						$NumePago = $config->buscarDato("SELECT NumePago FROM pagos WHERE NumeClie = {$fila["NumeClie"]} AND FechVenc1 = STR_TO_DATE('".$post['dato']['Fecha']."-".$fila["FechVenc1"]."', '%Y-%m-%d')");
-						if ($NumePago != '') {
-							$NumeCuot = $config->buscarDato("SELECT NumeCuot FROM pagos WHERE NumeClie = ". $fila["NumeClie"] ." AND FechVenc1 = STR_TO_DATE('".$post['dato']['Fecha']."-".$fila["FechVenc1"]."', '%Y-%m-%d')");
-							$this->borrar(array("NumePago"=>$NumePago));
-						}
-						else {
-							$NumeCuot = $config->buscarDato("SELECT COALESCE(MAX(NumeCuot), 0) + 1 FROM pagos WHERE NumeClie = ". $fila["NumeClie"]);
-						}
+						$fecha = new \DateTime($post['dato']['Fecha']. '-01');
 
-						$NumePago = $config->buscarDato("SELECT COALESCE(MAX(NumePago), 0) + 1 FROM pagos");
-						
+						//Itero por la cantidad de cuotas a generar
+						for ($cuota = 0; $cuota < $post["dato"]["Cantidad"]; $cuota++) {
 
-						//Vencimientos
-						$FechVenc1 = "STR_TO_DATE('".$post['dato']['Fecha']."-".$fila["FechVenc1"]."', '%Y-%m-%d')";
-						$FechVenc1Barr = date_format(new \DateTime($post['dato']['Fecha']."-".$fila["FechVenc1"]), 'ymd');
-						
-						if ($fila["FechVenc2"] != "" && $fila["FechVenc2"] != "0") {
-							//$FechVenc2 = "STR_TO_DATE('".$post['dato']['Fecha']."-". ($fila["FechVenc1"] + $fila["FechVenc2"]) ."', '%Y-%m-%d')";
-							$FechVenc2 = "DATE_ADD(".$FechVenc1.", INTERVAL ". $fila["FechVenc2"] . " DAY)";
-							$FechVenc2Barr = substr('00'.$fila["FechVenc2"], -2);
-						}
-						else {
-							$FechVenc2 = "''";
-							$FechVenc2Barr = '000000';
-						}
-
-						if ($fila["FechVenc3"] != "" && $fila["FechVenc3"] != "0") {
-							//$FechVenc3 = "STR_TO_DATE('".$post['dato']['Fecha']."-". ($fila["FechVenc1"] + $fila["FechVenc2"] + $fila["FechVenc3"]) ."', '%Y-%m-%d')";
-							$FechVenc3 = "DATE_ADD(".$FechVenc2.", INTERVAL ". $fila["FechVenc3"] . " DAY)";
-							$FechVenc3Barr = substr('00'.$fila["FechVenc3"], -2);
-						}
-						else {
-							$FechVenc3 = "''";
-							$FechVenc3Barr = '000000';
-						}
-
-						//Importes
-						$ImpoPura = $fila["ValoCuot"];
-
-						//Gastos Administrativos
-						if (boolval($fila["PorcAdmi"])) {
-							$ImpoAdmi = $ImpoPura * floatval($fila["ImpoAdmi"]) / 100;
-						}
-						else {
-							$ImpoAdmi = floatval($fila["ImpoAdmi"]);
-						}
-
-						//Gastos de Gestión
-						if (boolval($fila["PorcGest"])) {
-							$ImpoGest = $ImpoPura * floatval($fila["ImpoGest"]) / 100;
-						}
-						else {
-							$ImpoGest = floatval($fila["ImpoGest"]);
-						}
-
-						//Otros Gastos
-						if (boolval($fila["PorcOtro"])) {
-							$ImpoOtro = $ImpoPura * floatval($fila["ImpoOtro"]) / 100;
-						}
-						else {
-							$ImpoOtro = floatval($fila["ImpoOtro"]);
-						}
-
-						switch ($fila["NumeTipoComi"]) {
-							case '1': //Los gastos se suman al valor de la cuota pura
-								$ImpoAux = number_format($ImpoPura + $ImpoAdmi + $ImpoGest + $ImpoOtro, 2, "", "");
-								break;
-
-							case '2': //Los gastos se restan al valor de la cuota pura
-								$ImpoAux = number_format($ImpoPura, 2, "", "");
-								$ImpoPura = $ImpoPura - $ImpoAdmi - $ImpoGest - $ImpoOtro;
-								break;
-						}
-
-						$Impo1Barr = substr('0000000'.$ImpoAux, -7);
-
-						$NumeClieBarr = substr('00000000'.$fila["NumeSoli"], -8);
-
-						$CodiBarr = '04470' . $NumeClieBarr . $FechVenc1Barr . $Impo1Barr . $FechVenc2Barr . $Impo1Barr . $FechVenc3Barr . $Impo1Barr . '5150041794';
-
-						//Digito verificador
-						$serie = array(3,5,7,9);
-						for ($k = 0; $k < 2; $k++) {
-							$j = 0;
-							$aux = 0;
-
-							for ($I = 1; $I < strlen($CodiBarr); $I++) {
-								$aux+= substr($CodiBarr, $I, 1) * $serie[$j];
-
-								if ($j < 3) {
-									$j++;
-								}
-								else {
-									$j = 0;
-								}
+							$NumePago = $config->buscarDato("SELECT NumePago FROM pagos WHERE NumeClie = {$fila["NumeClie"]} AND DATE_FORMAT(FechVenc1, '%Y-%m') = '".$fecha->format('Y-m')."'");
+							if ($NumePago != '') {
+								$NumeCuot = $config->buscarDato("SELECT NumeCuot FROM pagos WHERE NumeClie = ". $fila["NumeClie"] ." AND DATE_FORMAT(FechVenc1, '%Y-%m') = '".$fecha->format('Y-m')."'");
+								$this->borrar(array("NumePago"=>$NumePago));
+							}
+							else {
+								$NumeCuot = $config->buscarDato("SELECT COALESCE(MAX(NumeCuot), 0) + 1 FROM pagos WHERE NumeClie = ". $fila["NumeClie"]);
 							}
 
-							$aux = intval($aux / 2);
-							$aux = $aux % 10;
-							$CodiBarr.= $aux;
-						}
-						
-						$strSQL = "INSERT INTO pagos(NumePago, FechCuot, NumeClie, NumeCuot, NumeEstaPago, NumeTipoPago, CodiBarr, FechVenc1, FechVenc2, FechVenc3, ImpoPura, ImpoAdmi, ImpoGest, ImpoOtro)";
-						$strSQL.= $crlf." VALUES({$NumePago},";
-						$strSQL.= $crlf." SYSDATE(),";
-						$strSQL.= $crlf." {$fila['NumeClie']},";
-						$strSQL.= $crlf." {$NumeCuot},";
-						$strSQL.= $crlf." 0,";
-						$strSQL.= $crlf." 1,";
-						$strSQL.= $crlf." '{$CodiBarr}',";
-						$strSQL.= $crlf." {$FechVenc1},";
-						$strSQL.= $crlf." {$FechVenc2},";
-						$strSQL.= $crlf." {$FechVenc3},";
-						$strSQL.= $crlf." {$ImpoPura},";
-						$strSQL.= $crlf." {$ImpoAdmi},";
-						$strSQL.= $crlf." {$ImpoGest},";
-						$strSQL.= $crlf." {$ImpoOtro})";
-						
-						$result = $config->ejecutarCMD($strSQL);
-						
-						if ($result !== true) {
-							continue;
+							$NumePago = $config->buscarDato("SELECT COALESCE(MAX(NumePago), 0) + 1 FROM pagos");
+							
+
+							//Vencimientos
+							$FechVenc1 = "STR_TO_DATE('".$fecha->format('Y-m')."-".$fila["FechVenc1"]."', '%Y-%m-%d')";
+							$FechVenc1Barr = date_format(new \DateTime($fecha->format('Y-m')."-".$fila["FechVenc1"]), 'ymd');
+							
+							if ($fila["FechVenc2"] != "" && $fila["FechVenc2"] != "0") {
+								//$FechVenc2 = "STR_TO_DATE('".$fecha->format('Y-m')."-". ($fila["FechVenc1"] + $fila["FechVenc2"]) ."', '%Y-%m-%d')";
+								$FechVenc2 = "DATE_ADD(".$FechVenc1.", INTERVAL ". $fila["FechVenc2"] . " DAY)";
+								$FechVenc2Barr = substr('00'.$fila["FechVenc2"], -2);
+							}
+							else {
+								$FechVenc2 = "''";
+								$FechVenc2Barr = '000000';
+							}
+
+							if ($fila["FechVenc3"] != "" && $fila["FechVenc3"] != "0") {
+								//$FechVenc3 = "STR_TO_DATE('".$fecha->format('Y-m')."-". ($fila["FechVenc1"] + $fila["FechVenc2"] + $fila["FechVenc3"]) ."', '%Y-%m-%d')";
+								$FechVenc3 = "DATE_ADD(".$FechVenc2.", INTERVAL ". $fila["FechVenc3"] . " DAY)";
+								$FechVenc3Barr = substr('00'.$fila["FechVenc3"], -2);
+							}
+							else {
+								$FechVenc3 = "''";
+								$FechVenc3Barr = '000000';
+							}
+
+							//Importes
+							$ImpoPura = $fila["ValoCuot"];
+
+							//Gastos Administrativos
+							if (boolval($fila["PorcAdmi"])) {
+								$ImpoAdmi = $ImpoPura * floatval($fila["ImpoAdmi"]) / 100;
+							}
+							else {
+								$ImpoAdmi = floatval($fila["ImpoAdmi"]);
+							}
+
+							//Gastos de Gestión
+							if (boolval($fila["PorcGest"])) {
+								$ImpoGest = $ImpoPura * floatval($fila["ImpoGest"]) / 100;
+							}
+							else {
+								$ImpoGest = floatval($fila["ImpoGest"]);
+							}
+
+							//Otros Gastos
+							if (boolval($fila["PorcOtro"])) {
+								$ImpoOtro = $ImpoPura * floatval($fila["ImpoOtro"]) / 100;
+							}
+							else {
+								$ImpoOtro = floatval($fila["ImpoOtro"]);
+							}
+
+							switch ($fila["NumeTipoComi"]) {
+								case '1': //Los gastos se suman al valor de la cuota pura
+									$ImpoAux = number_format($ImpoPura + $ImpoAdmi + $ImpoGest + $ImpoOtro, 2, "", "");
+									break;
+
+								case '2': //Los gastos se restan al valor de la cuota pura
+									$ImpoAux = number_format($ImpoPura, 2, "", "");
+									$ImpoPura = $ImpoPura - $ImpoAdmi - $ImpoGest - $ImpoOtro;
+									break;
+							}
+
+							$Impo1Barr = substr('0000000'.$ImpoAux, -7);
+
+							$NumeClieBarr = substr('00000000'.$fila["NumeSoli"], -8);
+
+							$CodiBarr = '04470' . $NumeClieBarr . $FechVenc1Barr . $Impo1Barr . $FechVenc2Barr . $Impo1Barr . $FechVenc3Barr . $Impo1Barr . '5150041794';
+
+							//Digito verificador
+							$serie = array(3,5,7,9);
+							for ($k = 0; $k < 2; $k++) {
+								$j = 0;
+								$aux = 0;
+
+								for ($I = 1; $I < strlen($CodiBarr); $I++) {
+									$aux+= substr($CodiBarr, $I, 1) * $serie[$j];
+
+									if ($j < 3) {
+										$j++;
+									}
+									else {
+										$j = 0;
+									}
+								}
+
+								$aux = intval($aux / 2);
+								$aux = $aux % 10;
+								$CodiBarr.= $aux;
+							}
+							
+							$strSQL = "INSERT INTO pagos(NumePago, FechCuot, NumeClie, NumeCuot, NumeEstaPago, NumeTipoPago, CodiBarr, FechVenc1, FechVenc2, FechVenc3, ImpoPura, ImpoAdmi, ImpoGest, ImpoOtro)";
+							$strSQL.= $crlf." VALUES({$NumePago},";
+							$strSQL.= $crlf." SYSDATE(),";
+							$strSQL.= $crlf." {$fila['NumeClie']},";
+							$strSQL.= $crlf." {$NumeCuot},";
+							$strSQL.= $crlf." 0,";
+							$strSQL.= $crlf." 1,";
+							$strSQL.= $crlf." '{$CodiBarr}',";
+							$strSQL.= $crlf." {$FechVenc1},";
+							$strSQL.= $crlf." {$FechVenc2},";
+							$strSQL.= $crlf." {$FechVenc3},";
+							$strSQL.= $crlf." {$ImpoPura},";
+							$strSQL.= $crlf." {$ImpoAdmi},";
+							$strSQL.= $crlf." {$ImpoGest},";
+							$strSQL.= $crlf." {$ImpoOtro})";
+							
+							$result = $config->ejecutarCMD($strSQL);
+							
+							if ($result !== true) {
+								continue;
+							}
+
+							//Sumo un mes
+							$fecha->add(new \DateInterval('P1M'));
 						}
 					}
 				}
@@ -217,9 +227,6 @@ class Cuota extends Tabla {
 
 				return $salida;
 			
-				break;
-
-			case "Borrar PDF":
 				break;
 		}
 	
