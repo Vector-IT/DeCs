@@ -189,4 +189,37 @@ class Clientes extends Tabla {
 		$result = parent::editar($datos);
 		return $result;
 	}
+
+	public function borrar($datos, $filtro = '') {
+		global $config, $crlf;
+
+		$nombEmpr = $config->buscarDato("SELECT NombEmpr FROM empresas WHERE NumeEmpr IN (SELECT NumeEmpr FROM clientes WHERE NumeClie = ".$datos["NumeClie"].")");
+		$archivo = $config->buscarDato("SELECT CONCAT(NumeSoli, '-', NombClie, '.pdf') Nombre FROM clientes WHERE NumeClie = ".$datos["NumeClie"]);
+
+		$result = $config->ejecutarCMD("DELETE FROM pagos WHERE NumeClie = ".$datos["NumeClie"]);
+
+		$result = parent::borrar($datos, $filtro);
+		$resultAux = json_decode($result, true);
+
+		if ($resultAux["estado"] === true) {
+			$dir = "../pdfs/".$nombEmpr;
+			if (file_exists($dir)) {
+				$ffs = scandir($dir);
+
+				foreach($ffs as $ff){
+					if($ff != '.' && $ff != '..'){
+						
+						if(is_dir($dir.'/'.$ff)) {
+							//Es directorio
+							if (file_exists($dir.'/'.$ff.'/'.$archivo)) {
+								unlink($dir.'/'.$ff.'/'.$archivo);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $result;
+	}
 }
