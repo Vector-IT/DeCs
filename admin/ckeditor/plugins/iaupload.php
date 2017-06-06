@@ -1,11 +1,13 @@
 <?php
 session_start();
+require_once '../../php/datos.php';
+
 // PHP Upload Script for CKEditor:  http://coursesweb.net/
 
 // HERE SET THE PATH TO THE FOLDERS FOR IMAGES AND AUDIO ON YOUR SERVER (RELATIVE TO THE ROOT OF YOUR WEBSITE ON SERVER)
 $upload_dir = array(
- 'img'=> $_SESSION['imgCKEditor'],
- 'audio'=> $_SESSION['imgCKEditor']
+	'img'=> $config->imgCKEditor,
+	'audio'=> $config->imgCKEditor
 );
 
 // HERE PERMISSIONS FOR IMAGE
@@ -26,7 +28,7 @@ $audioset = array(
 
 // If 1 and filename exists, RENAME file, adding "_NR" to the end of filename (name_1.ext, name_2.ext, ..)
 // If 0, will OVERWRITE the existing file
-define('RENAME_F', 1);
+define('RENAME_F', 0);
 
 $re = '';
 if(isset($_FILES['upload']) && strlen($_FILES['upload']['name']) >1) {

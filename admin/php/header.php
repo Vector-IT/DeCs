@@ -1,6 +1,7 @@
+<?php if (!isset($_REQUEST["header"]) || $_REQUEST["header"] == 1) {?>
 	<div class="jumbotron" style="padding:10px 0;">
 		<div class="container-fluid" style="min-height:50px;">
-			<div class="row">
+			<div>
 				<img class="logo" alt="Logo" src="<?php echo $config->logo?>" />
 				<?php if ($config->showTitulo) { ?>
 				<span class="titulo">
@@ -20,3 +21,4 @@
 		</div>
 		<?php }?>
 	</div>
+<?php } ?>

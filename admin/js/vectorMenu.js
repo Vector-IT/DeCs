@@ -290,6 +290,13 @@ if (window.document.addEventListener) {
 
 				vsMenu.animate({"margin-left": mLeft}, settings.duration, settings.easing);
 			}
+
+			vsMenu.find(".menuVector-content").css({
+				"height": vsMenu.height() + "px",
+				"overflow": "auto",
+				"margin-right": vsMenu.find(".menuVector-content")[0].clientWidth - vsMenu.find(".menuVector-content")[0].offsetWidth + "px"
+			});
+
 		});
 
 		//Click en el item

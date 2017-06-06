@@ -36,7 +36,9 @@ CKEDITOR.editorConfig = function( config ) {
 	config.removeDialogTabs = 'image:advanced;link:advanced';
 
 	config.extraPlugins = 'imgbrowse';
-	config.filebrowserImageBrowseUrl = 'ckeditor/plugins/imgbrowse/imgbrowse.html';
 
-	config.filebrowserImageUploadUrl = '/VectorForms/admin/ckeditor/plugins/iaupload.php';
+	var dir = location.href.substr(0, location.href.indexOf("admin")+6);
+	config.filebrowserImageBrowseUrl = dir + 'ckeditor/plugins/imgbrowse/imgbrowse.html';
+
+	config.filebrowserImageUploadUrl = dir + 'ckeditor/plugins/iaupload.php';
 };
