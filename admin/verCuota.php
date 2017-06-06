@@ -273,7 +273,7 @@
 			<div class="form-group form-group-sm ">
 				<label for="NumeEstaPago" class="control-label col-md-2 col-lg-2">Estado:</label>
 				<div class="col-md-4 col-lg-4">
-					<select class="form-control input-sm ucase " id="NumeEstaPago" required="">
+					<select class="form-control input-sm ucase " id="NumeEstaPago" required>
 						<?php echo $cuotas->cargarCombo('estadospagos', 'NumeEstaPago', 'NombEstaPago', 'NumeEsta = 1', 'NumeEstaPago', $pago["NumeEstaPago"])?>
 					</select>
 				</div>

@@ -43,7 +43,11 @@
 
 		<h3>Seguimientos sin procesar</h3>
 		<?php
-			$filtro = "NumeTipoCont IS NULL OR NumeTipoResp IS NULL";
+			$filtro = array(
+					"NumeTipoCont"=> array('type'=>'number', 'operator'=>'IS', 'value'=>'NULL', 'join'=>'OR'),
+					"NumeTipoResp" => array('type'=>'number', 'operator'=>'IS', 'value'=>'NULL', 'join'=>'OR')
+			);
+			
 			$seguimientos = $config->tablas["seguimientos"];
 			$btnList = [
 				array('titulo'=>'<i class="fa fa-fw fa-bookmark-o" aria-hidden="true"></i> Ver', 

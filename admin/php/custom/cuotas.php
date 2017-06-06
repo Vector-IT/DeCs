@@ -233,25 +233,17 @@ class Cuota extends Tabla {
 	}
 	
 	public function listar($strFiltro="", $conBotones = true, $btnList = [], $order = '') {
-		$Filtro = "";
+		$Filtro = [];
 		if ($strFiltro["Fecha"] != "") {
-			$Filtro.= "DATE_FORMAT(FechVenc1, '%Y-%m') = '{$strFiltro["Fecha"]}'";
+			$Filtro["DATE_FORMAT(FechVenc1, '%Y-%m')"] = array("operator"=> '=', 'value'=> "'{$strFiltro["Fecha"]}'");
 		}
 
 		if ($strFiltro["Empresa"] != "-1" && $strFiltro["Empresa"] != "") {
-			if ($Filtro != "") {
-				$Filtro.= " AND ";
-			}
-
-			$Filtro.= "NumeClie IN (SELECT NumeClie FROM clientes WHERE NumeEmpr = {$strFiltro["Empresa"]})";
+			$Filtro["NumeClie"] = array("operator"=> 'IN', "value"=> "(SELECT NumeClie FROM clientes WHERE NumeEmpr = {$strFiltro["Empresa"]})");
 		}
 
 		if ($strFiltro["Cliente"] != "-1" && $strFiltro["Cliente"] != "") {
-			if ($Filtro != "") {
-				$Filtro.= " AND ";
-			}
-
-			$Filtro.= "NumeClie = {$strFiltro["Cliente"]}";
+			$Filtro["NumeClie"] = array("operator"=> "=", "value"=> $strFiltro["Cliente"]);
 		}
 
 		parent::listar($Filtro, $conBotones, $btnList, $order);

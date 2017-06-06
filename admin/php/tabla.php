@@ -635,25 +635,30 @@ class Tabla
             }
 
             if ($strFiltro != "") {
-                foreach ($strFiltro as $key => $value) {
+                foreach ($strFiltro as $key => $data) {
                     if ($filtro != "") {
-                        $filtro.= $crlf." AND ";
+                        $filtro.= $crlf." ".$data["join"];
                     }
 
-                    switch ($this->fields[$key]["type"]) {
+                    $filtro.= $crlf. $key ." ". $data["operator"] ." ". $data["value"];
+                    
+                    /*
+                    //switch ($this->fields[$key]["type"]) {
+                    switch ($data["type"]) {
                         case "number":
-                            $filtro.= $crlf. $key." = ".$value;
+                        	$filtro.= $crlf. $key." = ".$data["value"];
                             break;
                         
                         case "text":
                         case "textarea":
-                            $filtro.= $crlf. $key." LIKE '%".$value."%'";
+                        	$filtro.= $crlf. $key." LIKE '%".$data["value"]."%'";
                             break;
 
                         default:
-                            $filtro.= $crlf. $key." = '".$value."'";
+                        	$filtro.= $crlf. $key." = '".$data["value"]."'";
                             break;
                     }
+                    */
                 }
             }
 
@@ -965,7 +970,12 @@ class Tabla
         if (count($this->searchFields) > 0) {
             foreach ($this->searchFields as $field) {
                 $strSalida.= $crlf.'	if ($("#search-'.$field.'").val() != "") {';
-                $strSalida.= $crlf.'        filtros["'.$field.'"] = $("#search-'.$field.'").val()';
+                $strSalida.= $crlf.'        filtros["'.$field.'"] = {';
+                $strSalida.= $crlf.'        	"type": "'.$this->fields[$field]["type"].'",';
+                $strSalida.= $crlf.'        	"operator":"=",';
+                $strSalida.= $crlf.'        	"join":"AND",';
+                $strSalida.= $crlf.'        	"value":$("#search-'.$field.'").val()';
+                $strSalida.= $crlf.'        }';
                 $strSalida.= $crlf.'	}';
 
                 //$strSalida.= $crlf.'	if ($("#search-'.$field.'").val() != "") {';

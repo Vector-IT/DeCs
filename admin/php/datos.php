@@ -157,7 +157,7 @@
 	$tabla->labelField = 'NombEmpr';
 	$tabla->jsFiles = ["admin/js/custom/empresas.js"];
 	$tabla->btnList = [
-			array('titulo'=>"Vendedores", 'onclick'=>"verVendedores", 'class'=>"btn-default")
+			array('id'=>'btnVendedores', 'titulo'=>"Vendedores", 'onclick'=>"verVendedores", 'class'=>"btn-default")
 	];
 
 	$tabla->addField("NumeEmpr", "number", 0, "Número", false, true, true);
@@ -263,13 +263,16 @@
 	];
 
 	$tabla->btnList = [
-			array("titulo"=> 'Ficha',
+			array("id"=>'btnFicha',
+					"titulo"=> 'Ficha',
 					"onclick"=> "verCliente",
 					"class"=> "btn-default"),
-			array("titulo"=> 'Ver cuotas',
+			array('id'=>'btnCuotas',
+					"titulo"=> 'Ver cuotas',
 					"onclick"=> "verCuotas",
 					"class"=> "btn-default"),
-			array("titulo"=> "Crear Seguimiento",
+			array('id'=> 'btnSeguimiento',
+					"titulo"=> "Crear Seguimiento",
 					"onclick"=>"crearSeguimiento",
 					"class"=>"btn-default")
 	];
@@ -357,8 +360,8 @@
 	$tabla = new Cuota("cuotas", "pagos", "Cuotas", "Cuota", "true", "cuotas.php", "fa-money", "FechVenc1 DESC, NumeClie", false, false, true);
 	$tabla->jsFiles = ['admin/js/custom/cuotas.js'];
 	$tabla->btnList = [
-			array('titulo'=>'<i class="fa fa-fw fa-id-card-o" aria-hidden="true"></i> Cliente', 'onclick'=>"verCliente", 'class'=>"btn-primary"),
-			array('titulo'=>'<i class="fa fa-fw fa-eye" aria-hidden="true"></i> Ver', 'onclick'=>"verCuota", 'class'=>"btn-primary"),
+			array('id'=>'btnCliente', 'titulo'=>'<i class="fa fa-fw fa-id-card-o" aria-hidden="true"></i> Cliente', 'onclick'=>"verCliente", 'class'=>"btn-primary"),
+			array('id'=>'btnCuota', 'titulo'=>'<i class="fa fa-fw fa-eye" aria-hidden="true"></i> Ver', 'onclick'=>"verCuota", 'class'=>"btn-primary"),
 	];
 
 	$tabla->addField("NumePago", "number", 0, "Número", false, true, true);
