@@ -10,9 +10,8 @@ class imgbrowse {
 
   function __construct() {
     session_start();
-	require_once '../../../php/datos.php';
 
-    $this->root = $config->imgCKEditor;
+    $this->root = $_SESSION['imgCKEditor'];
 
     if(isset($_POST['imgroot'])) $this->root = trim(strip_tags($_POST['imgroot']));
     $this->root = trim($this->root, '/') .'/';

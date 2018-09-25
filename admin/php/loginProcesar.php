@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	
 	$strSalida = "";
 	
-	if ($tabla)
+	if ($tabla->num_rows == 1)
 	{
 		session_start();
 		$fila = $tabla->fetch_array();
