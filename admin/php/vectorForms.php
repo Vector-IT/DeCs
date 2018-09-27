@@ -59,6 +59,7 @@ class VectorForms {
 
 		$conn = new \mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->db);
 		$conn->set_charset("utf8");
+		$conn->query("SET lc_time_names = 'es_ES';");
 
 		return $conn;
 	}

@@ -38,6 +38,7 @@
 	.clickable {cursor:pointer;}
 	.labelCheck {display:block; cursor:pointer; font-weight:normal;}
 
+	.jumbotron .container-fluid { padding-bottom: 0; }
 	.jumbotron .logo {
 		height:50px;
 		width:auto;
@@ -50,6 +51,8 @@
 		margin:0 15px;
 	}
 
+	.page-header { margin-top: 0; }
+	
 	.container-fluid {padding-left: 45px; padding-bottom: 60px;}
 	
 	form.frmObjeto { display: none; }

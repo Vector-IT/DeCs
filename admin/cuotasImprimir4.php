@@ -67,6 +67,9 @@
 		$strSQL.= $crlf." p.ImpoGest,";
 		$strSQL.= $crlf." p.ImpoOtro,";
 		$strSQL.= $crlf." p.ImpoPura + p.ImpoAdmi + p.ImpoGest + p.ImpoOtro ImpoTota,";
+		$strSQL.= $crlf." p.ImpoVenc1,";
+		$strSQL.= $crlf." p.ImpoVenc2,";
+		$strSQL.= $crlf." p.ImpoVenc3,";
 		$strSQL.= $crlf." DATE_FORMAT(p.FechCuot, '%d/%m/%Y') FechCuot,";
 		$strSQL.= $crlf." p.CodiBarr";
 		$strSQL.= $crlf." FROM pagos p";
@@ -148,14 +151,14 @@
 			$pdf->Text(139, 44, $cuota["FechVenc3"]);
 		}
 		//ImpoTota1
-		$pdf->Text(101, 49, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+		$pdf->Text(101, 49, "$ ".number_format(floatval($cuota["ImpoVenc1"]), 2));
 		//ImpoTota2
 		if ($cuota["FechVenc2"] != '') {
-			$pdf->Text(121, 49, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+			$pdf->Text(121, 49, "$ ".number_format(floatval($cuota["ImpoVenc2"]), 2));
 		}
 		//ImpoTota3
 		if ($cuota["FechVenc3"] != '') {
-			$pdf->Text(139, 49, "$ ".number_format(floatval($cuota["ImpoTota"]), 2));
+			$pdf->Text(139, 49, "$ ".number_format(floatval($cuota["ImpoVenc3"]), 2));
 		}
 
 

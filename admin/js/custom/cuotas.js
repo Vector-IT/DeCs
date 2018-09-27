@@ -21,7 +21,10 @@ $(document).ready(function() {
 				$("#CantCuot").hide();
 				break;
 		}
-    });
+	});
+	
+	filtrarClientes($('#filEmpresa').val(), '#filCliente');
+	$('#Fecha').val('');
 });
 
 function abrirModal(objeto) {
@@ -119,6 +122,7 @@ function imprimirCuotas() {
 	var fecha = $("#filFecha").val();
 	var empresa = $("#filEmpresa").val();
 	var cliente = $("#filCliente").val();
+	var plantilla = $("#filPlantilla").val();
 
 	if (fecha == "") {
 		$("#divMsjModal").addClass("alert-danger");
@@ -130,7 +134,7 @@ function imprimirCuotas() {
 	$("#modalFiltros").modal('hide');
 
 	$("#actualizando").show();
-	$.get("cuotasImprimir.php",
+	$.get(plantilla,
 		{
 			'filFecha': fecha,
 			'filEmpresa': empresa,
@@ -163,7 +167,8 @@ function filtrarClientes(strNumeEmpr, combo) {
 		}, 
 		success: 
 			function(data) {
-				$(cmbCliente).html(data['valor']);
+				$(cmbCliente).html(data['valor']['clientes']);
+				$('#filPlantilla').val(data['valor']['plantilla']);
 			}
 	});
 }
