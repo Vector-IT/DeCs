@@ -41,6 +41,9 @@
 	$strSQL.= " p.ImpoGest,";
 	$strSQL.= " p.ImpoOtro,";
 	$strSQL.= " (p.ImpoPura + p.ImpoAdmi + p.ImpoGest + p.ImpoOtro) ImpoTota,";
+	$strSQL.= " p.ImpoVenc1,";
+	$strSQL.= " p.ImpoVenc2,";
+	$strSQL.= " p.ImpoVenc3,";
 	$strSQL.= " p.CodiBarr,";
 	$strSQL.= " p.NumeClie,";
 	$strSQL.= " c.NombClie,";
@@ -238,11 +241,29 @@
 				</div>
 			</div>
 			<div class="form-group form-group-sm ">
+				<label for="ImpoVenc1" class="control-label col-md-2 col-lg-2">Importe 1er venc:</label>
+				<div class="col-md-4 col-lg-4">
+					<input type="text" class="form-control input-sm text-right" id="ImpoVenc1" readonly value="$ <?php echo $pago["ImpoVenc1"] ?>">
+				</div>
+			</div>
+			<div class="form-group form-group-sm form-group2">
+				<label for="ImpoVenc2" class="control-label col-md-2 col-lg-2">Importe 2do venc:</label>
+				<div class="col-md-4 col-lg-4">
+					<input type="text" class="form-control input-sm text-right" id="ImpoVenc2" readonly value="$ <?php echo $pago["ImpoVenc2"] ?>">
+				</div>
+			</div>
+			<div class="form-group form-group-sm form-group2">
+				<label for="ImpoVenc3" class="control-label col-md-2 col-lg-2">Importe 3er venc:</label>
+				<div class="col-md-4 col-lg-4">
+					<input type="text" class="form-control input-sm text-right" id="ImpoVenc3" readonly value="$ <?php echo $pago["ImpoVenc3"] ?>">
+				</div>
+			</div>
+			<!-- <div class="form-group form-group-sm ">
 				<label for="ImpoTota" class="control-label col-md-2 col-lg-2">Importe Total:</label>
 				<div class="col-md-4 col-lg-4">
 					<input type="text" class="form-control input-sm text-right" id="ImpoTota" readonly value="$ <?php echo $pago["ImpoTota"] ?>">
 				</div>
-			</div>
+			</div> -->
 			<div class="form-group form-group-sm form-group2">
 				<label for="FechPago" class="control-label col-md-2 col-lg-2">Fecha de pago:</label>
 				<div class="col-md-2 col-lg-2">
@@ -273,7 +294,7 @@
 			<div class="form-group form-group-sm ">
 				<label for="NumeEstaPago" class="control-label col-md-2 col-lg-2">Estado:</label>
 				<div class="col-md-4 col-lg-4">
-					<select class="form-control input-sm ucase " id="NumeEstaPago" required>
+					<select class="form-control input-sm ucase " id="NumeEstaPago" required="">
 						<?php echo $cuotas->cargarCombo('estadospagos', 'NumeEstaPago', 'NombEstaPago', 'NumeEsta = 1', 'NumeEstaPago', $pago["NumeEstaPago"])?>
 					</select>
 				</div>

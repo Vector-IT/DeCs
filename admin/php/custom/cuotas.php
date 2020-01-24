@@ -11,7 +11,7 @@ class Cuota extends Tabla {
 
 				$strSQL = "SELECT c.NumeClie, c.NumeSoli, c.ValoCuot, c.NumeEmpr,";
 				$strSQL.= $crlf." e.NumeTipoComi, e.ImpoAdmi, e.PorcAdmi, e.ImpoGest, e.PorcGest, e.ImpoOtro, e.PorcOtro,";
-				$strSQL.= $crlf." e.FechVenc1, e.FechVenc2, e.FechVenc3";
+				$strSQL.= $crlf." e.FechVenc1, e.FechVenc2, e.PorcVenc2, e.FechVenc3, e.PorcVenc3";
 				$strSQL.= $crlf." FROM clientes c";
 				$strSQL.= $crlf." INNER JOIN empresas e ON c.NumeEmpr = e.NumeEmpr";
 				if ($post["dato"]["Empresa"] != '-1'&& $post["dato"]["Empresa"] != '') {
@@ -59,20 +59,24 @@ class Cuota extends Tabla {
 								//$FechVenc2 = "STR_TO_DATE('".$fecha->format('Y-m')."-". ($fila["FechVenc1"] + $fila["FechVenc2"]) ."', '%Y-%m-%d')";
 								$FechVenc2 = "DATE_ADD(".$FechVenc1.", INTERVAL ". $fila["FechVenc2"] . " DAY)";
 								$FechVenc2Barr = substr('00'.$fila["FechVenc2"], -2);
+								$PorcVenc2 = $fila["PorcVenc2"];
 							}
 							else {
 								$FechVenc2 = "''";
 								$FechVenc2Barr = '000000';
+								$PorcVenc2 = '0';
 							}
 
 							if ($fila["FechVenc3"] != "" && $fila["FechVenc3"] != "0") {
 								//$FechVenc3 = "STR_TO_DATE('".$fecha->format('Y-m')."-". ($fila["FechVenc1"] + $fila["FechVenc2"] + $fila["FechVenc3"]) ."', '%Y-%m-%d')";
 								$FechVenc3 = "DATE_ADD(".$FechVenc2.", INTERVAL ". $fila["FechVenc3"] . " DAY)";
 								$FechVenc3Barr = substr('00'.$fila["FechVenc3"], -2);
+								$PorcVenc3 = $fila["PorcVenc3"];
 							}
 							else {
 								$FechVenc3 = "''";
 								$FechVenc3Barr = '000000';
+								$PorcVenc3 = '0';
 							}
 
 							//Importes
@@ -102,22 +106,41 @@ class Cuota extends Tabla {
 								$ImpoOtro = floatval($fila["ImpoOtro"]);
 							}
 
+							/**
+							 * Importe 1er venc
+							 */
 							switch ($fila["NumeTipoComi"]) {
 								case '1': //Los gastos se suman al valor de la cuota pura
-									$ImpoAux = number_format($ImpoPura + $ImpoAdmi + $ImpoGest + $ImpoOtro, 2, "", "");
+									$ImpoVenc1 = $ImpoPura + $ImpoAdmi + $ImpoGest + $ImpoOtro;
+									$ImpoAux = number_format($ImpoVenc1, 2, "", "");
 									break;
 
 								case '2': //Los gastos se restan al valor de la cuota pura
-									$ImpoAux = number_format($ImpoPura, 2, "", "");
+									$ImpoVenc1 = $ImpoPura;
+									$ImpoAux = number_format($ImpoVenc1, 2, "", "");
 									$ImpoPura = $ImpoPura - $ImpoAdmi - $ImpoGest - $ImpoOtro;
 									break;
 							}
-
 							$Impo1Barr = substr('0000000'.$ImpoAux, -7);
+							
+
+							/**
+							 * Importe 2do venc
+							 */
+							$ImpoVenc2 = $ImpoVenc1 + ($ImpoVenc1 * floatval($PorcVenc2) / 100);
+							$ImpoAux = number_format($ImpoVenc2, 2, "", "");
+							$Impo2Barr = substr('0000000'.$ImpoAux, -7);
+
+							/**
+							 * Importe 3er venc
+							 */
+							$ImpoVenc3 = $ImpoVenc2 + ($ImpoVenc2 * floatval($PorcVenc3) / 100);
+							$ImpoAux = number_format($ImpoVenc3, 2, "", "");
+							$Impo3Barr = substr('0000000'.$ImpoAux, -7);
 
 							$NumeClieBarr = substr('00000000'.$fila["NumeSoli"], -8);
 
-							$CodiBarr = '04470' . $NumeClieBarr . $FechVenc1Barr . $Impo1Barr . $FechVenc2Barr . $Impo1Barr . $FechVenc3Barr . $Impo1Barr . '5150041794';
+							$CodiBarr = '04470' . $NumeClieBarr . $FechVenc1Barr . $Impo1Barr . $FechVenc2Barr . $Impo2Barr . $FechVenc3Barr . $Impo3Barr . '5150041794';
 
 							//Digito verificador
 							$serie = array(3,5,7,9);
@@ -141,7 +164,7 @@ class Cuota extends Tabla {
 								$CodiBarr.= $aux;
 							}
 							
-							$strSQL = "INSERT INTO pagos(NumePago, FechCuot, NumeClie, NumeCuot, NumeEstaPago, NumeTipoPago, CodiBarr, FechVenc1, FechVenc2, FechVenc3, ImpoPura, ImpoAdmi, ImpoGest, ImpoOtro)";
+							$strSQL = "INSERT INTO pagos(NumePago, FechCuot, NumeClie, NumeCuot, NumeEstaPago, NumeTipoPago, CodiBarr, FechVenc1, FechVenc2, FechVenc3, ImpoPura, ImpoAdmi, ImpoGest, ImpoOtro, ImpoVenc1, ImpoVenc2, ImpoVenc3)";
 							$strSQL.= $crlf." VALUES({$NumePago},";
 							$strSQL.= $crlf." SYSDATE(),";
 							$strSQL.= $crlf." {$fila['NumeClie']},";
@@ -155,7 +178,10 @@ class Cuota extends Tabla {
 							$strSQL.= $crlf." {$ImpoPura},";
 							$strSQL.= $crlf." {$ImpoAdmi},";
 							$strSQL.= $crlf." {$ImpoGest},";
-							$strSQL.= $crlf." {$ImpoOtro})";
+							$strSQL.= $crlf." {$ImpoOtro},";
+							$strSQL.= $crlf." {$ImpoVenc1},";
+							$strSQL.= $crlf." {$ImpoVenc2},";
+							$strSQL.= $crlf." {$ImpoVenc3})";
 							
 							$result = $config->ejecutarCMD($strSQL);
 							
@@ -191,8 +217,9 @@ class Cuota extends Tabla {
 				else {
 					$filtro = "";
 				}
-				
-				$result = $this->cargarCombo("clientes", "NumeClie", "NombClie", $filtro, "NombClie", "", true, "TODOS LOS CLIENTES");
+				$result = [];
+				$result["clientes"] = $this->cargarCombo("clientes", "NumeClie", "NombClie", $filtro, "NombClie", "", true, "TODOS LOS CLIENTES");
+				$result["plantilla"] = $config->buscarDato("SELECT NombArch FROM plantillas WHERE NumePlan IN (SELECT NumePlan FROM empresas WHERE NumeEmpr = {$post["dato"]})");
 
 				return $result;
 				break;
@@ -233,17 +260,25 @@ class Cuota extends Tabla {
 	}
 	
 	public function listar($strFiltro="", $conBotones = true, $btnList = [], $order = '') {
-		$Filtro = [];
+		$Filtro = "";
 		if ($strFiltro["Fecha"] != "") {
-			$Filtro["DATE_FORMAT(FechVenc1, '%Y-%m')"] = array("operator"=> '=', 'value'=> "'{$strFiltro["Fecha"]}'");
+			$Filtro.= "DATE_FORMAT(FechVenc1, '%Y-%m') = '{$strFiltro["Fecha"]}'";
 		}
 
 		if ($strFiltro["Empresa"] != "-1" && $strFiltro["Empresa"] != "") {
-			$Filtro["NumeClie"] = array("operator"=> 'IN', "value"=> "(SELECT NumeClie FROM clientes WHERE NumeEmpr = {$strFiltro["Empresa"]})");
+			if ($Filtro != "") {
+				$Filtro.= " AND ";
+			}
+
+			$Filtro.= "NumeClie IN (SELECT NumeClie FROM clientes WHERE NumeEmpr = {$strFiltro["Empresa"]})";
 		}
 
 		if ($strFiltro["Cliente"] != "-1" && $strFiltro["Cliente"] != "") {
-			$Filtro["NumeClie"] = array("operator"=> "=", "value"=> $strFiltro["Cliente"]);
+			if ($Filtro != "") {
+				$Filtro.= " AND ";
+			}
+
+			$Filtro.= "NumeClie = {$strFiltro["Cliente"]}";
 		}
 
 		parent::listar($Filtro, $conBotones, $btnList, $order);

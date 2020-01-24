@@ -27,8 +27,6 @@ class VectorForms {
 	
 	public $imgCKEditor = '';
 
-	public $theme;
-
 	/**
 	 * Constructor de la clase Configuracion
 	 *
@@ -57,8 +55,11 @@ class VectorForms {
 	 * @return mysqli
 	 */
 	private function newConn() {
+		global $config;
+
 		$conn = new \mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->db);
 		$conn->set_charset("utf8");
+		$conn->query("SET lc_time_names = 'es_ES';");
 
 		return $conn;
 	}
@@ -103,13 +104,8 @@ class VectorForms {
 		}
 		else {
 			if ($tabla->num_rows > 0) {
-				if ($tabla->field_count == 1) {
-					$fila = $tabla->fetch_row();
-					$strSalida = $fila[0];
-				}
-				else {
-					$strSalida = $tabla->fetch_assoc();
-				}
+				$fila = $tabla->fetch_array();
+				$strSalida = $fila[0];
 				$tabla->free();
 			}
 			else {
@@ -123,50 +119,6 @@ class VectorForms {
 
 		return $strSalida;
 	}
-
-	public function cargarCombo($tabla, $CampoNumero, $CampoTexto, $filtro = "", $orden = "", $seleccion = "", $itBlank = false, $itBlankText = 'Seleccione...')
-    {
-        global $crlf;
-
-        $strSQL = "SELECT ". $CampoNumero;
-        if ($CampoTexto != "") {
-            $strSQL.= ",". $CampoTexto;
-        }
-        $strSQL.= " FROM ". $tabla;
-
-        if ($filtro != "") {
-            $strSQL.= " WHERE $filtro";
-        }
-
-        if ($orden != "") {
-            $strSQL.= " ORDER BY $orden";
-        }
-
-        $tabla = $this->cargarTabla($strSQL);
-
-        $strSalida = "";
-        if ($itBlank) {
-            $strSalida.= $crlf.'<option value="">'.$itBlankText.'</option>';
-        }
-
-        while ($fila = $tabla->fetch_assoc()) {
-            if ($CampoTexto != "") {
-                if (strcmp($fila[$CampoNumero], $seleccion) != "0") {
-                    $strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'">'.htmlentities($fila[$CampoTexto]).'</option>';
-                } else {
-                    $strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" selected>'.htmlentities($fila[$CampoTexto]).'</option>';
-                }
-            } else {
-                if (strcmp($fila[$CampoNumero], $seleccion) != "0") {
-                    $strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" />';
-                } else {
-                    $strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" selected />';
-                }
-            }
-        }
-
-        return $strSalida;
-    }
 
 	/**
 	 * Ejecutar query en la BD y devolver el resultado
@@ -188,7 +140,7 @@ class VectorForms {
 	 * Crear menu de opciones
 	 */
 	public function crearMenu() {
-		global $crlf, $config;
+		global $config, $crlf;
 
 		$strSalida = '';
 		$strSeparador = $crlf.'<div class="separator"></div>';
@@ -215,7 +167,6 @@ class VectorForms {
 		$strSalida.= $crlf.'<div class="absolute top5 right3">';
 		$strSalida.= $crlf.'<button class="btnMenu btn btn-default btn-xs noMobile" data-toggle="tooltip" data-placement="right" title="Men&uacute;"><i class="fa fa-bars"></i></button>';
 		$strSalida.= $crlf.'</div>';
-		$strSalida.= $crlf.'<div id="sidebar-content" class="menuVector-content">';
 
 		$strSalida.= str_replace("#titulo#", "Inicio", str_replace("#icono#", "fa-home", str_replace("#url#", $this->raiz."admin/", $strItem)));
 		$strSalida.= $strSeparador;
@@ -231,7 +182,7 @@ class VectorForms {
 			foreach ($this->menuItems as $item) {
 				if (!$item->Used) {
 					if ($item->NumeCarg != '') {
-						$NumeCarg = intval($this->buscarDato("SELECT NumeCarg FROM ".$config->tbLogin." WHERE NumeUser = ". $_SESSION["NumeUser"]));
+						$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
 							
 						if (intval($item->NumeCarg) < $NumeCarg) {
 							continue;
@@ -285,7 +236,7 @@ class VectorForms {
 			//Tablas
 			if ($tabla->showMenu) {
 				if ($tabla->numeCarg != '') {
-					$NumeCarg = intval($this->buscarDato("SELECT NumeCarg FROM ".$config->tbLogin." WHERE NumeUser = ". $_SESSION["NumeUser"]));
+					$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
 		
 					if (intval($tabla->numeCarg) < $NumeCarg) {
 						continue;
@@ -334,7 +285,7 @@ class VectorForms {
 		foreach ($this->menuItems as $item) {
 			if ($item->Index == '' || !$item->Used) {
 				if ($item->NumeCarg != '') {
-					$NumeCarg = intval($this->buscarDato("SELECT NumeCarg FROM ".$config->tbLogin." WHERE NumeUser = ". $_SESSION["NumeUser"]));
+					$NumeCarg = intval($config->buscarDato("SELECT NumeCarg FROM usuarios WHERE NumeUser = ". $_SESSION["NumeUser"]));
 		
 					if (intval($item->NumeCarg) < $NumeCarg) {
 						continue;
@@ -390,7 +341,6 @@ class VectorForms {
 			$strSalida.= $strSeparador;
 		}
 
-		$strSalida.= $crlf.'</div>';
 		$strSalida.= $crlf.'</div>';
 
 		$strSalida.= $crlf.'<button class="btnMenu btn btn-default btn-xs fixed top5 left5 noDesktop" title="Men&uacute;"><i class="fa fa-bars"></i></button>';

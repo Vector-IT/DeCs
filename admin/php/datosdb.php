@@ -1,8 +1,8 @@
 <?php
 	$dbhost = "localhost";
 	$dbschema = "decs";
-	$dbuser = "decs";
-	$dbpass = "decs";
+	$dbuser = "vuser";
+	$dbpass = "vpass";
 	
 	$raiz = "/DeCs/";
 ?>

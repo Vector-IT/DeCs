@@ -97,6 +97,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<form class="form-horizontal" method="post" onsubmit="return false;">
+				<input type="hidden" id="filPlantilla">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title"><span id="operacion"></span> cuotas</h4>
@@ -106,15 +107,19 @@
 						<label for="filEmpresa" class="control-label col-md-2">Empresa:</label>
 						<div class="col-md-8">
 							<select class="form-control ucase" id="filEmpresa" name="filEmpresa" onchange="filtrarClientes(this.value, '#filCliente')">
-								<?php echo $config->cargarCombo('empresas', 'NumeEmpr', 'NombEmpr', '', 'NombEmpr', '-1', true, 'TODAS LAS EMPRESAS')?>
+								<?php 
+									// echo $cuotas->cargarCombo('empresas', 'NumeEmpr', 'NombEmpr', '', 'NombEmpr', '-1', true, 'TODAS LAS EMPRESAS');
+									echo $cuotas->cargarCombo('empresas', 'NumeEmpr', 'NombEmpr', '', 'NombEmpr', '-1', false);
+								?>
 							</select>
 						</div>
 					</div>
+					
 					<div class="form-group form-group-sm">
 						<label for="filCliente" class="control-label col-md-2">Cliente:</label>
 						<div class="col-md-8">
 							<select class="form-control ucase" id="filCliente" name="filCliente">
-								<?php echo $config->cargarCombo('clientes', 'NumeClie', 'NombClie', '', 'NombClie', '-1', true, 'TODOS LOS CLIENTES')?>
+								<?php //echo $cuotas->cargarCombo('clientes', 'NumeClie', 'NombClie', '', 'NombClie', '-1', true, 'TODOS LOS CLIENTES')?>
 							</select>
 						</div>
 					</div>

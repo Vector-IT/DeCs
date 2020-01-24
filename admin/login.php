@@ -25,7 +25,6 @@
 				}
 			}
 
-			<?php echo ($config->theme == 'dark'? '$("#theme").click();': '').$crlf?>
 		});
 
 

@@ -186,7 +186,7 @@
 			<div class="form-group form-group-sm ">
 				<label for="ObseClie" class="control-label col-md-2">Observaciones:</label>
 				<div class="col-md-10">
-					<textarea class="form-control input-sm autogrow " id="ObseClie" readonly><?php echo $cliente['ObseClie']?></textarea>
+					<textarea class="form-control input-sm autogrow " id="ObseClie" readonly value="<?php echo $cliente['ObseClie']?>"></textarea>
 					<script type="text/javascript">
 						$("#ObseClie").autogrow({vertical: true, horizontal: false, minHeight: 36});
 					</script>
@@ -240,7 +240,7 @@
 
 		<hr>
 		<h4 class="marginTop20">Seguimientos</h4>
-		<?php $seguimientos->listar(array("NumeClie"=> array("value"=> $cliente["NumeClie"], "operator"=> '=')), false, [array('titulo'=>'<i class="fa fa-fw fa-bookmark-o" aria-hidden="true"></i> Ver', 'onclick'=>"verSeguimiento", 'class'=>"btn-primary")]); ?>
+		<?php $seguimientos->listar("NumeClie = ". $cliente["NumeClie"], false, [array('titulo'=>'<i class="fa fa-fw fa-bookmark-o" aria-hidden="true"></i> Ver', 'onclick'=>"verSeguimiento", 'class'=>"btn-primary")]); ?>
 
 		<hr>
 		<h4 class="marginTop20">Cuotas</h4>

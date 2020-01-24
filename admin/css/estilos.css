@@ -2,7 +2,6 @@
 	.noDesktop {display:none;}
 
 	.menuVector > div {display:none;}
-	.menuVector-content { overflow: auto; }
 	.btnMenu {z-index:3;}
 
 	.fixed {position:fixed;}
@@ -32,7 +31,6 @@
 	.txtMediano {font-size:16pt;}
 	.txtSmall {font-size: 10px;}
 	.txtXSmall {font-size: 8px;}
-	.txtBold { font-weight: bold; }
 	.ucase {text-transform:uppercase;}
 
 	.thumbnail {width:200px; height:auto; margin:10px 0;}
@@ -40,6 +38,7 @@
 	.clickable {cursor:pointer;}
 	.labelCheck {display:block; cursor:pointer; font-weight:normal;}
 
+	.jumbotron .container-fluid { padding-bottom: 0; }
 	.jumbotron .logo {
 		height:50px;
 		width:auto;
@@ -52,8 +51,9 @@
 		margin:0 15px;
 	}
 
-	.container-fluid {padding-left: 45px;}
-	body > .container-fluid {padding-bottom: 60px;}
+	.page-header { margin-top: 0; }
+	
+	.container-fluid {padding-left: 45px; padding-bottom: 60px;}
 	
 	form.frmObjeto { display: none; }
 
@@ -64,8 +64,8 @@
 	.form-group2 > div {width:66%; z-index:1; padding:0 15px 0 11px;}
 
 	.form-group3 {width:33%; float:left; clear:none;}
-	.form-group3 label {width:50%;}
-	.form-group3 > div {width:50%; z-index:1; padding-right:4px;}
+	.form-group3 label {width:34%;}
+	.form-group3 > div {width:66%; z-index:1;}
 
 	.children {clear:both;}
 	

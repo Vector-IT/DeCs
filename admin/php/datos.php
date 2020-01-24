@@ -157,7 +157,7 @@
 	$tabla->labelField = 'NombEmpr';
 	$tabla->jsFiles = ["admin/js/custom/empresas.js"];
 	$tabla->btnList = [
-			array('id'=>'btnVendedores', 'titulo'=>"Vendedores", 'onclick'=>"verVendedores", 'class'=>"btn-default")
+			array('titulo'=>"Vendedores", 'onclick'=>"verVendedores", 'class'=>"btn-default")
 	];
 
 	$tabla->addField("NumeEmpr", "number", 0, "Número", false, true, true);
@@ -197,16 +197,26 @@
 	$tabla->fields["PorcOtro"]['isHiddenInList'] = true;
 	$tabla->fields["PorcOtro"]["cssGroup"] = "form-group2";
 
-	$tabla->addField("FechVenc1", "number", 0, "1er Vencimiento");
+	$tabla->addField("FechVenc1", "number", 80, "1er Vencimiento");
 	$tabla->fields["FechVenc1"]['isHiddenInList'] = true;
 
 	$tabla->addField("FechVenc2", "number", 0, "2do Vencimiento");
 	$tabla->fields["FechVenc2"]["cssGroup"] = "form-group2";
 	$tabla->fields["FechVenc2"]['isHiddenInList'] = true;
 
+	$tabla->addField("PorcVenc2", "number", 0, "Porcentaje recargo 2do venc.");
+	$tabla->fields['PorcVenc2']['cssGroup'] = 'form-group2';
+	$tabla->fields['PorcVenc2']['isHiddenInList'] = true;
+	$tabla->fields["PorcVenc2"]["step"] = "0.01";
+
 	$tabla->addField("FechVenc3", "number", 0, "3er Vencimiento");
 	$tabla->fields["FechVenc3"]["cssGroup"] = "form-group2";
 	$tabla->fields["FechVenc3"]['isHiddenInList'] = true;
+
+	$tabla->addField("PorcVenc3", "number", 0, "Porcentaje recargo 3er venc.");
+	$tabla->fields['PorcVenc3']['cssGroup'] = 'form-group2';
+	$tabla->fields['PorcVenc3']['isHiddenInList'] = true;
+	$tabla->fields["PorcVenc3"]["step"] = "0.01";
 
 	$tabla->addField("DireEmpr", "text", 200, "Dirección", false);
 	$tabla->fields["DireEmpr"]["cssGroup"] = "form-group2";
@@ -223,6 +233,9 @@
 	$tabla->addField("WebsEmpr", "text", 200, "Página Web", false);
 	$tabla->fields["WebsEmpr"]["cssGroup"] = "form-group2";
 	$tabla->fields["WebsEmpr"]['isHiddenInList'] = true;
+
+	$tabla->addField("ObsePago", "textarea", 400, 'Notificaciones', false);
+	$tabla->fields['ObsePago']['isHiddenInList'] = true;
 
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 
@@ -263,16 +276,13 @@
 	];
 
 	$tabla->btnList = [
-			array("id"=>'btnFicha',
-					"titulo"=> 'Ficha',
+			array("titulo"=> 'Ficha',
 					"onclick"=> "verCliente",
 					"class"=> "btn-default"),
-			array('id'=>'btnCuotas',
-					"titulo"=> 'Ver cuotas',
+			array("titulo"=> 'Ver cuotas',
 					"onclick"=> "verCuotas",
 					"class"=> "btn-default"),
-			array('id'=> 'btnSeguimiento',
-					"titulo"=> "Crear Seguimiento",
+			array("titulo"=> "Crear Seguimiento",
 					"onclick"=>"crearSeguimiento",
 					"class"=>"btn-default")
 	];
@@ -358,10 +368,10 @@
 	 * PAGOS
 	 */
 	$tabla = new Cuota("cuotas", "pagos", "Cuotas", "Cuota", "true", "cuotas.php", "fa-money", "FechVenc1 DESC, NumeClie", false, false, true);
-	$tabla->jsFiles = ['admin/js/custom/cuotas.js'];
+	$tabla->jsFiles = ['admin/js/custom/cuotas.js?'. rand(1, 999)];
 	$tabla->btnList = [
-			array('id'=>'btnCliente', 'titulo'=>'<i class="fa fa-fw fa-id-card-o" aria-hidden="true"></i> Cliente', 'onclick'=>"verCliente", 'class'=>"btn-primary"),
-			array('id'=>'btnCuota', 'titulo'=>'<i class="fa fa-fw fa-eye" aria-hidden="true"></i> Ver', 'onclick'=>"verCuota", 'class'=>"btn-primary"),
+			array('titulo'=>'<i class="fa fa-fw fa-id-card-o" aria-hidden="true"></i> Cliente', 'onclick'=>"verCliente", 'class'=>"btn-primary"),
+			array('titulo'=>'<i class="fa fa-fw fa-eye" aria-hidden="true"></i> Ver', 'onclick'=>"verCuota", 'class'=>"btn-primary"),
 	];
 
 	$tabla->addField("NumePago", "number", 0, "Número", false, true, true);
